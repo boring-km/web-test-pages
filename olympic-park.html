@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>올림픽공원 안내</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a2e; background: #f8f9fa; }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    height: 70vh;
+    min-height: 420px;
+    background: linear-gradient(135deg, #0f3460 0%, #16213e 40%, #1a1a2e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(233,69,96,.25) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(72,149,239,.2) 0%, transparent 50%);
+  }
+  .hero-content { position: relative; z-index: 1; padding: 0 20px; }
+  .hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; margin-bottom: 12px; letter-spacing: -1px; }
+  .hero p { font-size: clamp(1rem, 2vw, 1.25rem); opacity: .85; max-width: 560px; margin: 0 auto; line-height: 1.7; }
+  .olympic-rings { font-size: 2.4rem; margin-bottom: 18px; letter-spacing: 6px; }
+
+  /* Nav tabs */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 16px;
+    flex-wrap: wrap;
+  }
+  .nav-bar a {
+    text-decoration: none;
+    color: #495057;
+    padding: 8px 18px;
+    border-radius: 24px;
+    font-size: .92rem;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .nav-bar a:hover, .nav-bar a.active {
+    background: #0f3460;
+    color: #fff;
+  }
+
+  /* Sections */
+  section { max-width: 1080px; margin: 0 auto; padding: 64px 20px; }
+  section h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #0f3460;
+  }
+  section .subtitle {
+    color: #868e96;
+    margin-bottom: 36px;
+    font-size: 1.05rem;
+  }
+
+  /* Cards grid */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+  .card-icon { font-size: 2rem; margin-bottom: 12px; }
+  .card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+  .card p { color: #495057; line-height: 1.7; font-size: .95rem; }
+
+  /* Info table */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .info-table th, .info-table td {
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 1px solid #f1f3f5;
+    font-size: .95rem;
+  }
+  .info-table th {
+    background: #0f3460;
+    color: #fff;
+    font-weight: 600;
+    width: 160px;
+    white-space: nowrap;
+  }
+  .info-table td { color: #343a40; line-height: 1.6; }
+
+  /* Map */
+  .map-wrap {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    margin-top: 24px;
+  }
+  .map-wrap iframe { width: 100%; height: 400px; border: 0; }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0f3460, #e94560);
+    border-radius: 2px;
+  }
+  .timeline-item { position: relative; margin-bottom: 32px; }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #0f3460;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px #0f3460;
+  }
+  .timeline-item .year {
+    font-weight: 800;
+    color: #e94560;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+  .timeline-item .desc { color: #495057; line-height: 1.6; }
+
+  /* Facility list */
+  .facility-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .facility-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.05);
+    transition: transform .2s;
+  }
+  .facility-item:hover { transform: translateY(-2px); }
+  .facility-item .icon { font-size: 1.6rem; flex-shrink: 0; }
+  .facility-item .name { font-weight: 600; font-size: .95rem; }
+  .facility-item .detail { font-size: .82rem; color: #868e96; margin-top: 2px; }
+
+  /* Tips */
+  .tip-box {
+    background: linear-gradient(135deg, #fff9db, #fff3bf);
+    border-left: 4px solid #fab005;
+    border-radius: 0 12px 12px 0;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .tip-box strong { color: #e67700; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #868e96;
+    font-size: .85rem;
+    border-top: 1px solid #e9ecef;
+  }
+
+  /* Season badges */
+  .season-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: .85rem;
+    font-weight: 600;
+  }
+  .badge-spring { background: #fce4ec; color: #c62828; }
+  .badge-summer { background: #e8f5e9; color: #2e7d32; }
+  .badge-autumn { background: #fff3e0; color: #e65100; }
+  .badge-winter { background: #e3f2fd; color: #1565c0; }
+
+  @media (max-width: 640px) {
+    .info-table th, .info-table td { padding: 12px 16px; }
+    .info-table th { width: 100px; font-size: .85rem; }
+    section { padding: 48px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="olympic-rings">&#127951;</div>
+    <h1>올림픽공원</h1>
+    <p>1988 서울올림픽의 유산, 도심 속 자연과 문화가 어우러지는 서울 최대의 도시공원</p>
+  </div>
+</div>
+
+<nav class="nav-bar">
+  <a href="#overview" class="active">개요</a>
+  <a href="#history">역사</a>
+  <a href="#facilities">시설안내</a>
+  <a href="#attractions">볼거리</a>
+  <a href="#seasonal">계절별 즐기기</a>
+  <a href="#visit">방문정보</a>
+  <a href="#map">오시는 길</a>
+</nav>
+
+<!-- 개요 -->
+<section id="overview">
+  <h2>공원 개요</h2>
+  <p class="subtitle">서울의 대표 복합문화공간</p>
+  <table class="info-table">
+    <tr><th>위치</th><td>서울특별시 송파구 올림픽로 424 (방이동)</td></tr>
+    <tr><th>면적</th><td>약 1,421,000m² (43만 평) — 여의도 면적의 약 1.5배</td></tr>
+    <tr><th>개장</th><td>1986년 (1988 서울올림픽 주경기장)</td></tr>
+    <tr><th>운영시간</th><td>05:00 ~ 22:00 (연중무휴)</td></tr>
+    <tr><th>입장료</th><td>무료 (일부 시설 별도)</td></tr>
+    <tr><th>관리</th><td>국민체육진흥공단 (KSPO)</td></tr>
+    <tr><th>주요특징</th><td>백제 몽촌토성, 올림픽 경기장, 조각공원, 장미정원, 음악분수 등</td></tr>
+  </table>
+</section>
+
+<!-- 역사 -->
+<section id="history" style="background: #fff;">
+  <h2>공원의 역사</h2>
+  <p class="subtitle">고대 백제부터 현대 올림픽까지</p>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="year">3세기경</div>
+      <div class="desc">백제 한성기의 몽촌토성 축조. 현재도 공원 내에 원형이 보존되어 있으며, 사적 제297호로 지정</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">1984</div>
+      <div class="desc">서울올림픽 경기장 및 공원 부지 조성 시작</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">1986</div>
+      <div class="desc">올림픽공원 1차 개장. 체조경기장, 펜싱경기장 등 주요 시설 완공</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">1988</div>
+      <div class="desc">제24회 서울올림픽 개최. 체조, 펜싱, 역도, 수영, 테니스 등 경기 진행</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">2000년대</div>
+      <div class="desc">소마미술관 개관, 올림픽홀 리모델링, 장미정원·들꽃마루 등 조경 정비</div>
+    </div>
+    <div class="timeline-item">
+      <div class="year">현재</div>
+      <div class="desc">연간 방문객 1,000만 명 이상. 문화·체육·여가의 복합공간으로 시민들에게 사랑받는 장소</div>
+    </div>
+  </div>
+</section>
+
+<!-- 시설안내 -->
+<section id="facilities">
+  <h2>주요 시설</h2>
+  <p class="subtitle">체육·문화·자연이 어우러진 공간</p>
+  <div class="facility-grid">
+    <div class="facility-item">
+      <div class="icon">&#127963;</div>
+      <div><div class="name">KSPO DOME (올림픽체조경기장)</div><div class="detail">15,000석 · 대형 콘서트장</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#127925;</div>
+      <div><div class="name">올림픽홀</div><div class="detail">2,400석 · 공연·컨벤션</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#9876;&#65039;</div>
+      <div><div class="name">펜싱경기장</div><div class="detail">올림픽 유산 시설</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#127947;</div>
+      <div><div class="name">역도경기장 (SK핸드볼경기장)</div><div class="detail">5,000석 · 다목적</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#127934;</div>
+      <div><div class="name">테니스경기장</div><div class="detail">센터코트 외 12면</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#127946;</div>
+      <div><div class="name">수영장 (올림픽수영장)</div><div class="detail">실내 경기용 풀</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#127912;</div>
+      <div><div class="name">소마미술관 (SOMA)</div><div class="detail">조각 전문 미술관</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#127981;</div>
+      <div><div class="name">몽촌역사관</div><div class="detail">백제 유물 전시관</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#128692;</div>
+      <div><div class="name">자전거도로</div><div class="detail">공원 순환 약 6.7km</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#127794;</div>
+      <div><div class="name">9경 산책로</div><div class="detail">올림픽공원 9경 코스</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#9917;</div>
+      <div><div class="name">잔디광장·운동장</div><div class="detail">축구, 족구 등 체육활동</div></div>
+    </div>
+    <div class="facility-item">
+      <div class="icon">&#128717;</div>
+      <div><div class="name">편의시설</div><div class="detail">카페, 매점, 주차장</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 볼거리 -->
+<section id="attractions" style="background: #fff;">
+  <h2>올림픽공원 9경</h2>
+  <p class="subtitle">반드시 둘러봐야 할 대표 명소</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">&#127800;</div>
+      <h3>1경 · 세계평화의 문</h3>
+      <p>올림픽공원의 상징. 높이 24m의 대형 조형물로, 하늘과 땅의 만남을 표현합니다. 야간 조명이 아름답습니다.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#127795;</div>
+      <h3>2경 · 몽촌토성 산책로</h3>
+      <p>백제 시대 토성을 따라 걷는 산책로. 봄에는 벚꽃, 가을에는 단풍이 장관을 이룹니다.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#128038;</div>
+      <h3>3경 · 몽촌해자</h3>
+      <p>토성 주변 인공호수. 오리, 백조 등 조류를 관찰할 수 있으며 산책로가 잘 조성되어 있습니다.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#127803;</div>
+      <h3>4경 · 장미광장</h3>
+      <p>200여 종의 장미가 피어나는 정원. 5~6월이 절정이며 포토존으로도 인기 있습니다.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#127796;</div>
+      <h3>5경 · 올림픽 깃발광장</h3>
+      <p>88올림픽 참가국 국기가 휘날리던 광장. 넓은 잔디와 함께 피크닉 장소로 사랑받습니다.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#127752;</div>
+      <h3>6경 · 음악분수</h3>
+      <p>음악에 맞춰 춤추는 분수. 여름 저녁 시간대에 운영하며 시원한 볼거리를 제공합니다.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#127808;</div>
+      <h3>7경 · 들꽃마루</h3>
+      <p>계절마다 다른 들꽃이 피어나는 언덕. 핑크뮬리, 코스모스, 유채꽃 등이 계절별로 펼쳐집니다.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#128508;</div>
+      <h3>8경 · 조각공원</h3>
+      <p>세계적 조각가들의 작품 200여 점이 야외에 전시. 소마미술관과 연계해 감상할 수 있습니다.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#127749;</div>
+      <h3>9경 · 나홀로나무</h3>
+      <p>넓은 잔디밭에 홀로 서 있는 왕버들나무. 사진 명소로 유명하며 인생샷 포인트입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 계절별 -->
+<section id="seasonal">
+  <h2>계절별 즐기기</h2>
+  <p class="subtitle">사계절 다른 매력의 올림픽공원</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">&#127800;</div>
+      <h3>봄 (3~5월)</h3>
+      <p>벚꽃길 산책, 장미정원, 유채꽃밭이 절정. 몽촌토성길 벚꽃터널은 서울 대표 벚꽃 명소입니다.</p>
+      <div class="season-badges"><span class="badge badge-spring">&#127800; 벚꽃 4월초</span><span class="badge badge-spring">&#127803; 장미 5월말</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#9728;&#65039;</div>
+      <h3>여름 (6~8월)</h3>
+      <p>음악분수, 울창한 녹음 속 산책, 야간 조깅 코스. 나무 그늘이 많아 한여름에도 쾌적합니다.</p>
+      <div class="season-badges"><span class="badge badge-summer">&#127754; 음악분수 7~8월</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#127810;</div>
+      <h3>가을 (9~11월)</h3>
+      <p>단풍길, 핑크뮬리, 코스모스가 장관. 들꽃마루의 핑크뮬리는 인생사진 필수 코스입니다.</p>
+      <div class="season-badges"><span class="badge badge-autumn">&#127808; 핑크뮬리 10월</span><span class="badge badge-autumn">&#127809; 단풍 11월</span></div>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#10052;&#65039;</div>
+      <h3>겨울 (12~2월)</h3>
+      <p>눈 내린 몽촌토성, 겨울 조경. 방문객이 적어 조용한 산책을 즐기기 좋습니다.</p>
+      <div class="season-badges"><span class="badge badge-winter">&#10052;&#65039; 설경 12~1월</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 방문정보 -->
+<section id="visit" style="background: #fff;">
+  <h2>방문 정보</h2>
+  <p class="subtitle">알아두면 좋은 실용 정보</p>
+  <div class="tip-box">
+    <strong>&#128161; Tip</strong> — 공원이 매우 넓으므로 자전거 대여(공원 내 따릉이 정류소)나 공원 순환 열차(유료)를 이용하면 편리합니다.
+  </div>
+  <div class="tip-box">
+    <strong>&#128161; Tip</strong> — 9경 스탬프 투어를 하면 기념품을 받을 수 있습니다. 안내센터에서 스탬프 용지를 받아가세요.
+  </div>
+  <table class="info-table" style="margin-top: 20px;">
+    <tr><th>운영시간</th><td>매일 05:00 ~ 22:00 (연중무휴)</td></tr>
+    <tr><th>입장료</th><td>무료 (소마미술관, 몽촌역사관 등 일부 유료)</td></tr>
+    <tr><th>주차</th><td>1면 ~ 5면 주차장 운영 · 기본 2시간 2,000원, 이후 10분당 200원</td></tr>
+    <tr><th>자전거</th><td>서울 따릉이 정류소 다수 · 공원 내 자전거도로 약 6.7km</td></tr>
+    <tr><th>반려동물</th><td>입장 가능 (목줄 착용 필수, 배변봉투 지참)</td></tr>
+    <tr><th>대표전화</th><td>02-410-1114 (KSPO)</td></tr>
+    <tr><th>공식사이트</th><td><a href="https://www.olympicpark.co.kr" target="_blank" style="color:#0f3460; text-decoration:underline;">www.olympicpark.co.kr</a></td></tr>
+  </table>
+</section>
+
+<!-- 오시는 길 -->
+<section id="map">
+  <h2>오시는 길</h2>
+  <p class="subtitle">대중교통 이용이 편리합니다</p>
+  <div class="cards" style="margin-bottom: 24px;">
+    <div class="card">
+      <div class="card-icon">&#128647;</div>
+      <h3>지하철</h3>
+      <p><strong>5호선 올림픽공원역</strong> 3번 출구 — 평화의 문 방면<br>
+      <strong>5호선 방이역</strong> — 테니스장·수영장 방면<br>
+      <strong>8호선 몽촌토성역</strong> 1번 출구 — 소마미술관·몽촌토성 방면<br>
+      <strong>9호선 한성백제역</strong> 2번 출구 — 동문 방면</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#128652;</div>
+      <h3>버스</h3>
+      <p><strong>간선:</strong> 301, 341, 342, 370, 잠실12 등<br>
+      <strong>지선:</strong> 3217, 3314, 3315, 3411, 3414 등<br>
+      올림픽공원 정류장 하차</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#128663;</div>
+      <h3>자가용</h3>
+      <p>네비게이션: "올림픽공원" 또는 "서울 송파구 올림픽로 424"<br>
+      1~5면 주차장 이용 가능 (평일 여유, 주말 혼잡)</p>
+    </div>
+  </div>
+  <div class="map-wrap">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6332.37!2d127.1155!3d37.5209!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca5a1c7bca5e3%3A0x9f5e4e4b4e4b4e4b!2z7Jis66a87ZS16rO17JuQ!5e0!3m2!1sko!2skr!4v1700000000000!5m2!1sko!2skr" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+</section>
+
+<footer>
+  <p>2026 올림픽공원 안내 페이지 · 정보 출처: KSPO · 본 페이지는 비공식 안내 목적으로 제작되었습니다.</p>
+</footer>
+
+<script>
+  // Active nav highlight on scroll
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('.nav-bar a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const active = document.querySelector(`.nav-bar a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
