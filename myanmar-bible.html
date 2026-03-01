@@ -360,10 +360,23 @@
     .search-result:hover { box-shadow: 0 2px 8px var(--shadow); }
 
     .search-result .ref {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--accent);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-result .ref-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
     }
 
     .search-result .text {
@@ -761,7 +774,8 @@
         const myHighlighted = r.matchedKr ? r.text : r.text.replace(qRegex, `<mark>${query}</mark>`);
         const krHighlighted = r.krText ? (r.matchedKr ? r.krText.replace(qRegex, `<mark>${query}</mark>`) : r.krText) : '';
         const krLine = krHighlighted ? `<div class="text" style="font-family:'Noto Sans KR',sans-serif;color:var(--text-muted);font-size:13px;margin-top:4px;">${krHighlighted}</div>` : '';
-        div.innerHTML = `<div class="ref">${r.bookName} ${r.chapter}:${r.verse} (${KR_BOOKS[r.bookNr]} | ${EN_BOOKS[r.bookNr]})</div><div class="text">${myHighlighted}</div>${krLine}`;
+        const krBookName = KR_BOOKS[r.bookNr] || '';
+        div.innerHTML = `<div class="ref"><span class="ref-badge">${krBookName} ${r.chapter}장 ${r.verse}절</span><span style="font-size:12px;color:var(--text-muted)">${r.bookName} ${r.chapter}:${r.verse}</span></div><div class="text">${myHighlighted}</div>${krLine}`;
         div.onclick = async () => {
           await selectBook(r.bookNr);
           loadChapter(r.bookNr, r.chapter);
