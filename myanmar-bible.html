@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Myanmar Bible - Judson (1835)</title>
+  <title>Myanmar Bible - Judson (1835) / 개역개정</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Padauk:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap');
 
     :root {
       --bg: #f8f6f2;
@@ -311,6 +311,16 @@
       min-width: 18px;
     }
 
+    .verse-kr {
+      display: block;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: calc(var(--font-size) - 2px);
+      color: var(--text-muted);
+      margin-left: 22px;
+      margin-top: 2px;
+      line-height: 1.6;
+    }
+
     .chapter-nav {
       display: flex;
       justify-content: space-between;
@@ -413,7 +423,7 @@
   <div class="header">
     <button class="btn" id="menuBtn" title="Menu">&#9776;</button>
     <div class="header-title">
-      သမ္မာကျမ်းစာ <small>Judson (1835)</small>
+      သမ္မာကျမ်းစာ <small>Judson / 개역개정</small>
     </div>
     <div class="header-controls">
       <button class="btn" id="searchBtn" title="Search">&#128269;</button>
@@ -429,7 +439,7 @@
   <!-- Search bar -->
   <div class="search-bar" id="searchBar">
     <div class="search-input-wrap">
-      <input type="text" id="searchInput" placeholder="ရှာရန်... (Search)" />
+      <input type="text" id="searchInput" placeholder="검색어 입력 (미얀마어/한국어)" />
       <button class="btn" id="searchGo">ရှာ</button>
       <button class="btn" id="searchClose">&times;</button>
     </div>
@@ -501,6 +511,25 @@
       64:'3 John',65:'Jude',66:'Revelation'
     };
 
+    const KR_BOOKS = {
+      1:'창세기',2:'출애굽기',3:'레위기',4:'민수기',5:'신명기',
+      6:'여호수아',7:'사사기',8:'룻기',9:'사무엘상',10:'사무엘하',
+      11:'열왕기상',12:'열왕기하',13:'역대상',14:'역대하',
+      15:'에스라',16:'느헤미야',17:'에스더',18:'욥기',19:'시편',
+      20:'잠언',21:'전도서',22:'아가',23:'이사야',
+      24:'예레미야',25:'예레미야애가',26:'에스겔',27:'다니엘',
+      28:'호세아',29:'요엘',30:'아모스',31:'오바댜',32:'요나',
+      33:'미가',34:'나훔',35:'하박국',36:'스바냐',37:'학개',
+      38:'스가랴',39:'말라기',
+      40:'마태복음',41:'마가복음',42:'누가복음',43:'요한복음',44:'사도행전',
+      45:'로마서',46:'고린도전서',47:'고린도후서',48:'갈라디아서',
+      49:'에베소서',50:'빌립보서',51:'골로새서',
+      52:'데살로니가전서',53:'데살로니가후서',54:'디모데전서',
+      55:'디모데후서',56:'디도서',57:'빌레몬서',58:'히브리서',
+      59:'야고보서',60:'베드로전서',61:'베드로후서',62:'요한일서',63:'요한이서',
+      64:'요한삼서',65:'유다서',66:'요한계시록'
+    };
+
     let booksIndex = [];
     let bookCache = {};
     let currentBook = null;
@@ -529,7 +558,7 @@
         const div = document.createElement('div');
         div.className = 'book-item';
         div.dataset.nr = b.nr;
-        div.innerHTML = `<span>${b.name}</span><span class="en-name">${EN_BOOKS[b.nr]}</span>`;
+        div.innerHTML = `<span>${b.name}</span><span class="en-name">${KR_BOOKS[b.nr]}</span>`;
         div.onclick = () => selectBook(b.nr);
         (b.nr <= 39 ? otEl : ntEl).appendChild(div);
       });
@@ -583,7 +612,7 @@
 
       // Header
       document.getElementById('contentTitle').textContent = `${book.name} ${chapterNr}`;
-      document.getElementById('contentSub').textContent = `${EN_BOOKS[bookNr]} ${chapterNr}`;
+      document.getElementById('contentSub').textContent = `${KR_BOOKS[bookNr]} ${chapterNr}장 | ${EN_BOOKS[bookNr]} ${chapterNr}`;
 
       // Verses
       const container = document.getElementById('verses');
@@ -592,7 +621,8 @@
         const div = document.createElement('div');
         div.className = 'verse';
         div.id = `v${v.v}`;
-        div.innerHTML = `<span class="verse-num">${v.v}</span>${v.t}`;
+        const krText = v.k ? `<span class="verse-kr">${v.k}</span>` : '';
+        div.innerHTML = `<span class="verse-num">${v.v}</span>${v.t}${krText}`;
         container.appendChild(div);
       });
 
@@ -669,8 +699,11 @@
       const query = document.getElementById('searchInput').value.trim();
       if (!query) return;
 
-      document.getElementById('searchInfo').textContent = 'ရှာဖွေနေသည်...';
+      document.getElementById('searchInfo').textContent = '검색 중...';
       const results = [];
+
+      // Detect if query is Korean
+      const isKorean = /[\uac00-\ud7af\u1100-\u11ff\u3130-\u318f\ua960-\ua97f\ud7b0-\ud7ff]/.test(query);
 
       // Load all books (with caching)
       for (let i = 1; i <= 66; i++) {
@@ -683,13 +716,17 @@
         const book = bookCache[i];
         for (const [ch, verses] of Object.entries(book.chapters)) {
           for (const v of verses) {
-            if (v.t.includes(query)) {
+            const myMatch = v.t.includes(query);
+            const krMatch = v.k && v.k.includes(query);
+            if (myMatch || krMatch) {
               results.push({
                 bookNr: i,
                 bookName: book.name,
                 chapter: parseInt(ch),
                 verse: v.v,
-                text: v.t
+                text: v.t,
+                krText: v.k || '',
+                matchedKr: krMatch
               });
               if (results.length >= 200) break;
             }
@@ -707,18 +744,21 @@
       container.innerHTML = '';
 
       document.getElementById('searchInfo').textContent =
-        `"${query}" - ${results.length}${results.length >= 200 ? '+' : ''} ရလဒ်`;
+        `"${query}" - ${results.length}${results.length >= 200 ? '+' : ''}개 결과`;
 
       if (results.length === 0) {
-        container.innerHTML = '<div class="loading">ရှာမတွေ့ပါ (No results found)</div>';
+        container.innerHTML = '<div class="loading">검색 결과가 없습니다</div>';
         return;
       }
 
       results.forEach(r => {
         const div = document.createElement('div');
         div.className = 'search-result';
-        const highlighted = r.text.replace(new RegExp(escapeRegex(query), 'g'), `<mark>${query}</mark>`);
-        div.innerHTML = `<div class="ref">${r.bookName} ${r.chapter}:${r.verse} (${EN_BOOKS[r.bookNr]})</div><div class="text">${highlighted}</div>`;
+        const qRegex = new RegExp(escapeRegex(query), 'g');
+        const myHighlighted = r.matchedKr ? r.text : r.text.replace(qRegex, `<mark>${query}</mark>`);
+        const krHighlighted = r.krText ? (r.matchedKr ? r.krText.replace(qRegex, `<mark>${query}</mark>`) : r.krText) : '';
+        const krLine = krHighlighted ? `<div class="text" style="font-family:'Noto Sans KR',sans-serif;color:var(--text-muted);font-size:13px;margin-top:4px;">${krHighlighted}</div>` : '';
+        div.innerHTML = `<div class="ref">${r.bookName} ${r.chapter}:${r.verse} (${KR_BOOKS[r.bookNr]} | ${EN_BOOKS[r.bookNr]})</div><div class="text">${myHighlighted}</div>${krLine}`;
         div.onclick = async () => {
           await selectBook(r.bookNr);
           loadChapter(r.bookNr, r.chapter);
