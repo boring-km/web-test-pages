@@ -139,6 +139,8 @@
     }
 
     .search-bar.open { display: block; }
+    .search-bar.open ~ .layout { margin-top: 120px; }
+    .search-bar.open ~ .layout .sidebar { top: 120px; height: calc(100vh - 120px); }
 
     .search-input-wrap {
       display: flex;
