@@ -29,6 +29,8 @@
     overflow-x: hidden;
   }
 
+  body.modal-open { overflow: hidden; }
+
   /* Hero */
   .hero {
     min-height: 100vh;
@@ -182,12 +184,28 @@
     transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    user-select: none;
   }
 
   .card:hover {
     transform: translateY(-4px);
     border-color: rgba(255,255,255,0.15);
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  .card::after {
+    content: '자세히 보기 →';
+    position: absolute;
+    bottom: 1.2rem;
+    right: 1.5rem;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.25);
+    transition: color 0.3s;
+  }
+
+  .card:hover::after {
+    color: rgba(255,255,255,0.5);
   }
 
   .card-icon {
@@ -341,10 +359,218 @@
     transform: translateY(0);
   }
 
+  /* ===== Modal / Detail Overlay ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s;
+  }
+
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal {
+    background: #14141f;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 2.5rem;
+    position: relative;
+    transform: translateY(30px) scale(0.97);
+    transition: transform 0.35s;
+  }
+
+  .modal-overlay.active .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal::-webkit-scrollbar { width: 6px; }
+  .modal::-webkit-scrollbar-track { background: transparent; }
+  .modal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+  .modal-close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    color: rgba(255,255,255,0.5);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    z-index: 2;
+  }
+
+  .modal-close:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+  }
+
+  .modal-icon {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .modal-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+  }
+
+  .modal h2 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .modal-subtitle {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 2rem;
+  }
+
+  .modal-section {
+    margin-bottom: 2rem;
+  }
+
+  .modal-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .modal-section p, .modal-section li {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.8;
+  }
+
+  .modal-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .modal-section ul li {
+    padding-left: 1.2rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+
+  .modal-section ul li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .modal-refs {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 1.5rem;
+  }
+
+  .modal-refs h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .ref-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .ref-link:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .ref-link-icon {
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    margin-top: 2px;
+    font-size: 0.85rem;
+    opacity: 0.4;
+  }
+
+  .ref-link-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ref-link-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.75);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .ref-link-url {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Theme colors in modal */
+  .modal[data-theme="pink"] .modal-tag { background: rgba(255,60,172,0.15); color: var(--pink); }
+  .modal[data-theme="pink"] .modal-section h3 { color: var(--pink); }
+  .modal[data-theme="cyan"] .modal-tag { background: rgba(0,229,255,0.12); color: var(--cyan); }
+  .modal[data-theme="cyan"] .modal-section h3 { color: var(--cyan); }
+  .modal[data-theme="lime"] .modal-tag { background: rgba(198,241,53,0.12); color: var(--lime); }
+  .modal[data-theme="lime"] .modal-section h3 { color: var(--lime); }
+  .modal[data-theme="orange"] .modal-tag { background: rgba(255,107,53,0.12); color: var(--orange); }
+  .modal[data-theme="orange"] .modal-section h3 { color: var(--orange); }
+  .modal[data-theme="purple"] .modal-tag { background: rgba(120,75,160,0.2); color: #b388ff; }
+  .modal[data-theme="purple"] .modal-section h3 { color: #b388ff; }
+
   @media (max-width: 640px) {
     .card-grid { grid-template-columns: 1fr; }
     .highlight-card { padding: 2rem; }
     section { padding: 4rem 0; }
+    .modal { padding: 1.5rem; border-radius: 18px; }
+    .modal h2 { font-size: 1.4rem; }
   }
 </style>
 </head>
@@ -365,25 +591,25 @@
     <span class="section-label fade-in">GRAPHIC & VISUAL</span>
     <h2 class="section-title fade-in">그래픽 & 비주얼 디자인</h2>
     <div class="card-grid">
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="imperfect">
         <span class="card-icon">🖌️</span>
         <h3>Imperfect by Design</h3>
         <p>매끈한 AI 스타일에 대한 반작용으로, 날것의 인간적 감성이 부상합니다. 핸드메이드 느낌, 콜라주, 혼합 미디어가 스토리텔링을 만들어냅니다.</p>
         <span class="tag">불완전함의 미학</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="typography">
         <span class="card-icon">🔤</span>
         <h3>Bold Typography</h3>
         <p>오버사이즈 산세리프, 풍선처럼 부풀어 오른 글자꼴, 물결치듯 왜곡된 폰트와 손글씨 스크립트로 개성과 재미를 동시에 추구합니다.</p>
         <span class="tag">과감한 타이포그래피</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="dopamine">
         <span class="card-icon">🎨</span>
         <h3>Dopamine Design</h3>
         <p>밝고 채도 높은 팔레트가 부활합니다. Y2K 노스탤지어, 네온 그라데이션, 고대비 조합으로 미니멀한 뮤트톤에서 비비드 컬러로 전환됩니다.</p>
         <span class="tag">도파민 컬러</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="tactile">
         <span class="card-icon">🫧</span>
         <h3>Tactile & Sensory</h3>
         <p>푹신하고 말랑한 텍스처, 초현실적 오브제, 장난스러운 왜곡. 촉감, 소리, 움직임을 시뮬레이션하는 감각적 디자인이 확산됩니다.</p>
@@ -400,31 +626,31 @@
     <span class="section-label fade-in">UI/UX & DIGITAL</span>
     <h2 class="section-title fade-in">UI/UX & 디지털 디자인</h2>
     <div class="card-grid">
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="ai-native">
         <span class="card-icon">🤖</span>
         <h3>AI-Native Interface</h3>
         <p>대화형 UI가 기본이 됩니다. 채팅 인터페이스, 자연어 입력, 프롬프트 기반 인터랙션이 전통적 WIMP를 대체하기 시작합니다.</p>
         <span class="tag">AI 네이티브 UI</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="spatial">
         <span class="card-icon">✨</span>
         <h3>Spatial & Immersive</h3>
         <p>Apple Vision Pro의 등장과 함께 공간 컴퓨팅 인터페이스가 본격화됩니다. 깊이감, 레이어, 3D 요소가 자연스럽게 UI에 녹아듭니다.</p>
         <span class="tag">공간 인터페이스</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="micro">
         <span class="card-icon">🌀</span>
         <h3>Micro-Interaction 2.0</h3>
         <p>스크롤 기반 애니메이션, 물리 기반 모션, 제스처 반응이 더욱 정교해집니다. Lottie, Rive 등 벡터 애니메이션 도구가 표준이 됩니다.</p>
         <span class="tag">마이크로 인터랙션</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="bento">
         <span class="card-icon">🧩</span>
         <h3>Bento Grid Layout</h3>
         <p>Apple이 촉발한 벤토 그리드가 웹/앱 전반에 확산됩니다. 카드 기반의 모듈형 레이아웃으로 정보를 직관적으로 구조화합니다.</p>
         <span class="tag">벤토 레이아웃</span>
       </div>
-      <div class="highlight-card fade-in">
+      <div class="highlight-card fade-in card" data-detail="accessibility">
         <span class="card-icon">🔒</span>
         <h3>접근성 & 인클루시브 디자인</h3>
         <p>접근성이 '옵션'이 아닌 '기본'이 됩니다. WCAG 3.0 대응, 다크모드 우선 설계, 다양한 신체 조건과 문화를 고려한 디자인이 표준으로 자리잡습니다.</p>
@@ -440,19 +666,19 @@
     <span class="section-label fade-in">BRANDING & IDENTITY</span>
     <h2 class="section-title fade-in">브랜딩 & 아이덴티티</h2>
     <div class="card-grid">
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="authentic">
         <span class="card-icon">🌿</span>
         <h3>Authentic & Raw</h3>
         <p>과도하게 다듬어진 브랜딩 대신 진정성 있는 날것의 스토리텔링이 브랜드 신뢰를 형성합니다. UGC와 비하인드 콘텐츠가 핵심입니다.</p>
         <span class="tag">진정성</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="dynamic">
         <span class="card-icon">🔄</span>
         <h3>Dynamic Identity</h3>
         <p>고정된 로고에서 맥락에 따라 변형되는 유동적 아이덴티티로 전환됩니다. AI 생성 변형, 반응형 로고, 생성형 브랜딩이 부상합니다.</p>
         <span class="tag">유동적 아이덴티티</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="sustainability-visual">
         <span class="card-icon">🌍</span>
         <h3>Sustainability Visual</h3>
         <p>지속가능성이 시각 언어로 표현됩니다. 자연 소재 텍스처, 어스톤 팔레트, 미니멀 패키징이 브랜드 가치를 전달합니다.</p>
@@ -469,19 +695,19 @@
     <span class="section-label fade-in">PRODUCT & INDUSTRIAL</span>
     <h2 class="section-title fade-in">제품 & 산업 디자인</h2>
     <div class="card-grid">
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="natural-materials">
         <span class="card-icon">🪵</span>
         <h3>Natural Materials</h3>
         <p>목재, 석재, 세라믹 등 자연 소재가 제품 디자인의 중심이 됩니다. 특히 목조형 가구 분야에서 전통 기법과 현대 디자인의 융합이 활발합니다.</p>
         <span class="tag">자연 소재</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="circular">
         <span class="card-icon">♻️</span>
         <h3>Circular Design</h3>
         <p>분해-재조립 가능한 모듈형 제품, 업사이클링 소재, 수리 가능한 디자인이 산업 표준으로 자리잡습니다.</p>
         <span class="tag">순환 디자인</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="soft-minimal">
         <span class="card-icon">🏠</span>
         <h3>Soft Minimalism</h3>
         <p>차가운 미니멀리즘에서 따뜻한 미니멀리즘으로. 부드러운 곡선, 자연광, 텍스처가 살아있는 소프트 미니멀이 공간과 제품을 지배합니다.</p>
@@ -498,19 +724,19 @@
     <span class="section-label fade-in">SPACE & INTERIOR</span>
     <h2 class="section-title fade-in">공간 & 인테리어 디자인</h2>
     <div class="card-grid">
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="japandi">
         <span class="card-icon">🛋️</span>
         <h3>Japandi Evolution</h3>
         <p>일본 미학과 스칸디나비안 기능주의의 융합이 진화합니다. 와비사비 철학에 따뜻한 목재, 오가닉 형태, 뉴트럴 팔레트가 결합됩니다.</p>
         <span class="tag">자판디 진화</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="biophilic">
         <span class="card-icon">💡</span>
         <h3>Biophilic Design</h3>
         <p>자연을 공간 안으로 적극 끌어들입니다. 실내 정원, 자연광 극대화, 생체리듬 조명, 물소리와 같은 자연 사운드가 공간에 통합됩니다.</p>
         <span class="tag">바이오필릭</span>
       </div>
-      <div class="card fade-in">
+      <div class="card fade-in" data-detail="maximalist">
         <span class="card-icon">🎭</span>
         <h3>Maximalist Comeback</h3>
         <p>일부 공간에서는 과감한 맥시멀리즘이 복귀합니다. 대담한 패턴 믹스, 빈티지와 현대의 충돌, 개인의 취향을 극대화하는 큐레이션 공간이 등장합니다.</p>
@@ -546,6 +772,14 @@
   <p>2026 Design Trends &mdash; Curated with AI</p>
 </footer>
 
+<!-- Modal Overlay -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
 <script>
   // Scroll-based fade-in
   const observer = new IntersectionObserver((entries) => {
@@ -557,6 +791,689 @@
   }, { threshold: 0.15 });
 
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ===== Detail Data =====
+  const details = {
+    imperfect: {
+      icon: '🖌️',
+      theme: 'pink',
+      tag: '불완전함의 미학',
+      category: 'GRAPHIC & VISUAL',
+      title: 'Imperfect by Design',
+      subtitle: '완벽함을 거부하는 디자인 반란',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '2026년을 정의하는 가장 큰 트렌드 중 하나입니다. AI가 만들어낸 매끈하고 완벽한 이미지에 대한 피로감으로, 디자이너들이 의도적으로 불완전함을 선택합니다. Canva는 이를 "Imperfect by Design"이라 명명하며 올해의 핵심 흐름으로 꼽았습니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            'Naive Design — 어린아이가 그린 듯한 불균일한 채색, 거친 선, 삐뚤빼뚤한 일러스트레이션',
+            'Anti-AI Crafting — AI의 과도하게 다듬어진 미학을 의도적으로 거부하는 움직임',
+            '혼합 미디어 콜라주 — 사진, 낙서, 스탬프, 테이프, 브러시 텍스처를 겹겹이 쌓는 레이어링',
+            '핸드메이드 감성 — 손글씨, 스크래치 마크, 잉크 번짐 등 "사람이 만들었다"는 증거를 남기기',
+            '스토리텔링 레이어 — 불완전한 요소들이 내러티브를 형성'
+          ]
+        },
+        {
+          heading: '왜 지금인가?',
+          text: 'AI 생성 콘텐츠가 범람하면서, 사람들은 "이것이 인간이 만든 것인가?"에 대한 증거를 찾기 시작했습니다. 불완전함이 곧 진정성의 신호가 된 것입니다. 창작자들은 더 이상 완벽함, 세련됨, 알고리즘에 맞춘 창작에 연연하지 않고, 개인적이고 날것이며 정직한 작업을 추구합니다.'
+        }
+      ],
+      refs: [
+        { title: "Canva — 'Imperfect by Design': 2026년을 정의할 비주얼 트렌드", url: 'https://www.canva.com/newsroom/news/design-trends-2026/' },
+        { title: 'Kittl Blog — 2026 그래픽 디자인 트렌드 10가지', url: 'https://www.kittl.com/blogs/graphic-design-trends-2026/' },
+        { title: 'Creative Bloq — 텍스처, 따뜻함, 촉각적 반란', url: 'https://www.creativebloq.com/design/graphic-design/texture-warmth-and-tactile-rebellion-the-big-graphic-design-trends-for-2026' },
+        { title: 'Really Good Designs — AI와 인간이 만나는 13가지 스타일', url: 'https://reallygooddesigns.com/graphic-design-trends-2026/' }
+      ]
+    },
+    typography: {
+      icon: '🔤',
+      theme: 'pink',
+      tag: '과감한 타이포그래피',
+      category: 'GRAPHIC & VISUAL',
+      title: 'Bold Typography',
+      subtitle: '글자가 곧 디자인의 주인공',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '타이포그래피가 보조 요소를 넘어 디자인의 중심이 됩니다. 글자 자체가 그래픽이 되고, 감정을 전달하며, 브랜드의 개성을 규정합니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '오버사이즈 산세리프 — 화면을 압도하는 초대형 글자',
+            '풍선형(Bubble) 폰트 — 부풀어 오른 입체감의 장난스러운 서체',
+            '왜곡·변형 타이포 — 물결, 늘이기, 회전 등 키네틱 타이포그래피',
+            '핸드레터링 & 스크립트 — 손글씨 감성의 커스텀 서체',
+            '가변 폰트(Variable Font) 활용 — 하나의 서체 파일로 무한 변형'
+          ]
+        },
+        {
+          heading: '적용 사례',
+          text: '패션 브랜드 캠페인, 뮤직비디오 타이틀, 인스타그램 스토리, 패키징 디자인에서 특히 활발합니다. 글자 하나로 전체 무드를 설정하는 "타이포 퍼스트" 접근이 확산되고 있습니다.'
+        }
+      ],
+      refs: [
+        { title: 'Digital Synopsis — Top 20 그래픽 디자인 트렌드 2026', url: 'https://digitalsynopsis.com/design/graphic-design-trends-2026/' },
+        { title: 'Adobe Express — 2026 디자인 트렌드', url: 'https://www.adobe.com/express/learn/blog/design-trends-2026' },
+        { title: 'VistaPrint — 2026 그래픽 디자인 트렌드 Top 10', url: 'https://www.vistaprint.com/hub/graphic-design-trends' }
+      ]
+    },
+    dopamine: {
+      icon: '🎨',
+      theme: 'pink',
+      tag: '도파민 컬러',
+      category: 'GRAPHIC & VISUAL',
+      title: 'Dopamine Design',
+      subtitle: '보는 것만으로 기분이 좋아지는 컬러',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '"도파민 드레싱"이 패션에서 시작해 디자인 전반으로 확산되었습니다. 밝고 채도 높은 색상을 사용해 사용자에게 즉각적인 긍정적 감정 반응을 유도합니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            'Y2K 노스탤지어 — 2000년대 초반의 네온, 메탈릭, 홀로그래픽 요소 부활',
+            '고채도 팔레트 — 비비드 핑크, 일렉트릭 블루, 라임 그린의 과감한 조합',
+            '네온 그라데이션 — 여러 고채도 색상이 부드럽게 전환되는 그라데이션',
+            '대비 극대화 — 보색, 삼색 조합 등 고대비 컬러 매칭',
+            '컬러 블로킹 — 큰 면적의 단색 영역으로 강렬한 인상'
+          ]
+        },
+        {
+          heading: '전환의 배경',
+          text: '수년간 지배한 뮤트톤·베이지·미니멀 팔레트에서 벗어나, 디자이너들이 "감정을 자극하는 컬러"를 적극적으로 채택하고 있습니다. 팬데믹 이후 기분을 끌어올리는 시각적 자극에 대한 수요가 배경이 됩니다.'
+        }
+      ],
+      refs: [
+        { title: 'Kittl Blog — 도파민 디자인과 비비드 컬러', url: 'https://www.kittl.com/blogs/graphic-design-trends-2026/' },
+        { title: 'Jukeboxprint — 2026년 그래픽 디자인 트렌드 20선', url: 'https://www.jukeboxprint.com/blog/20-of-the-biggest-graphic-design-trends-for-2026' },
+        { title: 'Econoprint — 2026 그래픽 디자인 트렌드', url: 'https://econoprint.com/graphic-design-trends-2026/' }
+      ]
+    },
+    tactile: {
+      icon: '🫧',
+      theme: 'pink',
+      tag: '촉각적 감각',
+      category: 'GRAPHIC & VISUAL',
+      title: 'Tactile & Sensory Design',
+      subtitle: '눈으로 만지는 디자인',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '디지털 디자인에 물리적 질감과 촉각적 요소를 부여합니다. 화면 너머로 "만져지는 듯한" 경험을 추구하며, 감각의 통합(시각+촉각+청각)이 핵심입니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '스퀴시(Squishy) 텍스처 — 푹신하고 말랑한 느낌의 3D 오브제',
+            '초현실적 소재 표현 — 금속, 유리, 젤리, 직물 등 극사실적 머티리얼 렌더링',
+            '촉각 시뮬레이션 — 햅틱 피드백과 연계된 인터페이스 디자인',
+            '자연 텍스처 — 나무결, 석재, 직조 패턴의 디지털 재해석',
+            'ASMR적 비주얼 — 보는 것만으로 감각적 만족감을 주는 영상·이미지'
+          ]
+        },
+        {
+          heading: '배경',
+          text: 'Creative Bloq는 이를 "촉각적 반란(Tactile Rebellion)"이라 부릅니다. 매끈하고 납작한 디지털 표면에 대한 반작용으로, 디자이너들이 텍스처, 질감, 물리적 깊이감에 집착하기 시작했습니다.'
+        }
+      ],
+      refs: [
+        { title: 'Creative Bloq — 텍스처, 따뜻함, 촉각적 반란', url: 'https://www.creativebloq.com/design/graphic-design/texture-warmth-and-tactile-rebellion-the-big-graphic-design-trends-for-2026' },
+        { title: 'DEV Community — 2026 그래픽 디자인 트렌드', url: 'https://dev.to/souptikdn/graphic-design-trends-in-2026-m74' },
+        { title: 'Canva — 감각 디자인과 불완전함의 미학', url: 'https://www.canva.com/newsroom/news/design-trends-2026/' }
+      ]
+    },
+
+    // UI/UX
+    'ai-native': {
+      icon: '🤖',
+      theme: 'cyan',
+      tag: 'AI 네이티브 UI',
+      category: 'UI/UX & DIGITAL',
+      title: 'AI-Native Interface',
+      subtitle: 'AI가 부가 기능이 아닌 경험의 핵심',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '2026년, AI는 더 이상 제품에 덧붙이는 기능이 아닙니다. AI가 사용자 경험의 핵심이 되어 의도를 예측하고, 결정을 자동화하며, 실시간으로 인터페이스를 적응시킵니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '대화형 UI — 채팅 인터페이스가 기본 인터랙션 패턴으로 자리잡음',
+            '생성형 UI (Generative UI) — AI가 사용자 의도에 따라 인터페이스를 실시간 재구성',
+            '설명 가능한 AI (Explainable AI) — AI 결정의 이유를 사용자에게 투명하게 전달',
+            '프롬프트 기반 인터랙션 — 자연어 입력이 클릭·탭을 대체',
+            '감정 인식 UX — 생체 데이터와 행동 패턴으로 사용자 감정을 감지하고 반응'
+          ]
+        },
+        {
+          heading: '설계 과제',
+          text: '디자이너의 역할이 정적 화면 설계에서 AI 행동과 투명성, 신뢰를 설계하는 방향으로 전환됩니다. "언제 AI가 개입하고, 언제 사용자에게 통제권을 돌려줄 것인가"가 핵심 설계 질문이 됩니다.'
+        }
+      ],
+      refs: [
+        { title: 'DEV Community — AI-First, Context-Aware 인터페이스 & 공간 경험', url: 'https://dev.to/pixel_mosaic/top-uiux-design-trends-for-2026-ai-first-context-aware-interfaces-spatial-experiences-166j' },
+        { title: 'UX Collective — 2026년 무시할 수 없는 10가지 UX 변화', url: 'https://uxdesign.cc/10-ux-design-shifts-you-cant-ignore-in-2026-8f0da1c6741d' },
+        { title: 'Veza Digital — AI in UX/UI Design Trends 2026 완전 가이드', url: 'https://www.vezadigital.com/post/ai-ux-ui-design-trends' },
+        { title: 'Index.dev — 데이터 기반 12가지 UI/UX 트렌드', url: 'https://www.index.dev/blog/ui-ux-design-trends' }
+      ]
+    },
+    spatial: {
+      icon: '✨',
+      theme: 'cyan',
+      tag: '공간 인터페이스',
+      category: 'UI/UX & DIGITAL',
+      title: 'Spatial & Immersive',
+      subtitle: '평면을 넘어 공간으로',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: 'Apple Vision Pro의 확산과 함께 공간 컴퓨팅 인터페이스가 본격화됩니다. UI 요소가 3D 공간에 존재하며, 제스처·시선·음성으로 자연스럽게 상호작용합니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '3D 공간 UI — 깊이감, 조명, 물리적 공간을 고려한 인터페이스 설계',
+            '멀티모달 인터랙션 — 제스처, 음성, 시선 추적의 자연스러운 결합',
+            'AR 오버레이 — 현실 공간 위에 디지털 정보를 겹쳐 표시',
+            '환경 반응형 UI — 사용자의 물리적 환경(조도, 공간)에 따라 적응',
+            '깊이감 있는 레이어링 — 평면 디자인에서도 z축 개념을 적용'
+          ]
+        },
+        {
+          heading: '디자이너의 새로운 과제',
+          text: '2026년 공간 UI/UX는 가장 큰 트렌드 중 하나로, 디자이너들이 픽셀이 아닌 깊이, 조명, 물리적 공간을 사고해야 합니다. 평면 화면에서도 이 공간적 사고가 적용되어 글래스모피즘, 레이어드 카드, 패럴랙스 효과가 확산됩니다.'
+        }
+      ],
+      refs: [
+        { title: 'Design Monks — UI/UX 디자인 트렌드 2026: 제품을 미래형으로', url: 'https://www.designmonks.co/blog/ui-ux-design-trends-2026' },
+        { title: 'SkyRye Design — 2026 사용자 인게이지먼트를 높이는 10가지 트렌드', url: 'https://skyryedesign.com/design/ux-ui/ui-ux-design-trends-2026/' },
+        { title: 'AND Academy — 2026 최신 UI UX 디자인 트렌드 8가지', url: 'https://www.andacademy.com/resources/blog/ui-ux-design/latest-ui-ux-design-trends/' }
+      ]
+    },
+    micro: {
+      icon: '🌀',
+      theme: 'cyan',
+      tag: '마이크로 인터랙션',
+      category: 'UI/UX & DIGITAL',
+      title: 'Micro-Interaction 2.0',
+      subtitle: '움직임이 경험을 만든다',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '마이크로 인터랙션이 단순한 호버 효과를 넘어 물리 기반 모션, 스크롤 연동 애니메이션, 제스처 반응형 피드백으로 진화합니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '스크롤 기반 내러티브 — 스크롤에 따라 콘텐츠가 순차적으로 등장·변형',
+            '물리 엔진 모션 — 스프링, 중력, 마찰을 반영한 자연스러운 움직임',
+            'Lottie & Rive — 벡터 기반 인터랙티브 애니메이션 도구가 업계 표준으로',
+            '제스처 반응 — 핀치, 스와이프, 드래그에 따른 즉각적 시각 피드백',
+            '상태 전환 애니메이션 — 로딩, 성공, 에러 등 상태 변화의 부드러운 전환'
+          ]
+        },
+        {
+          heading: '효과',
+          text: '잘 설계된 마이크로 인터랙션은 사용성을 높일 뿐 아니라 제품에 "성격"을 부여합니다. 사용자가 인터페이스를 "살아있다"고 느끼게 만드는 핵심 요소입니다.'
+        }
+      ],
+      refs: [
+        { title: 'UX Collective — 2026 경험 디자인 트렌드', url: 'https://uxdesign.cc/the-most-popular-experience-design-trends-of-2026-3ca85c8a3e3d' },
+        { title: 'Lyssna — UX 디자인 트렌드 2026', url: 'https://www.lyssna.com/blog/ux-design-trends/' },
+        { title: 'Codewave — 2026 UX 디자인 트렌드 Top 10', url: 'https://codewave.com/insights/ux-design-trends-future/' }
+      ]
+    },
+    bento: {
+      icon: '🧩',
+      theme: 'cyan',
+      tag: '벤토 레이아웃',
+      category: 'UI/UX & DIGITAL',
+      title: 'Bento Grid Layout',
+      subtitle: '도시락 상자처럼 깔끔하게',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: 'Apple이 WWDC에서 촉발한 벤토 그리드가 웹·앱 전반으로 확산되었습니다. 일본 도시락에서 영감받은 이 레이아웃은 다양한 크기의 카드를 격자형으로 배치해 정보를 직관적으로 구조화합니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '모듈형 카드 시스템 — 다양한 크기의 카드가 그리드에 자연스럽게 배치',
+            '정보 위계 시각화 — 카드 크기로 정보의 중요도를 즉각 전달',
+            '대시보드 친화적 — 데이터 시각화, 관리 도구에 이상적',
+            '반응형 재배치 — 화면 크기에 따라 카드가 자동으로 재배열',
+            'Feature 하이라이트 — 제품 기능 소개 페이지의 기본 레이아웃으로 자리잡음'
+          ]
+        },
+        {
+          heading: '확산 배경',
+          text: 'Apple의 채택 이후 Microsoft, 구글 등 주요 테크 기업이 잇따라 도입하면서 "벤토 그리드 = 모던 UI"라는 인식이 자리잡았습니다. CSS Grid의 발전으로 구현 난이도도 크게 낮아졌습니다.'
+        }
+      ],
+      refs: [
+        { title: 'Index.dev — Bento Grid를 포함한 2026 UI/UX 트렌드', url: 'https://www.index.dev/blog/ui-ux-design-trends' },
+        { title: 'Design Monks — 벤토 레이아웃과 모듈형 디자인', url: 'https://www.designmonks.co/blog/ui-ux-design-trends-2026' }
+      ]
+    },
+    accessibility: {
+      icon: '🔒',
+      theme: 'cyan',
+      tag: '접근성 우선',
+      category: 'UI/UX & DIGITAL',
+      title: '접근성 & 인클루시브 디자인',
+      subtitle: '선택이 아닌 기본',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '접근성이 "나중에 챙기는 체크리스트"에서 "처음부터 설계하는 기본 원칙"으로 격상됩니다. WCAG 3.0 대응과 함께 다양한 신체 조건, 인지 능력, 문화적 배경을 고려한 디자인이 표준이 됩니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            'WCAG 3.0 대응 — 새로운 접근성 가이드라인에 맞춘 콘트라스트, 타이포, 인터랙션 설계',
+            '다크모드 우선 — 다크모드가 부가 옵션이 아닌 기본 설계의 출발점',
+            '인지 접근성 — 복잡한 UI를 단순화하고, 인지 부하를 줄이는 설계',
+            '다국어·다문화 — RTL 레이아웃, 문화별 컬러 의미, 현지화 고려',
+            '모션 감소 옵션 — 애니메이션에 민감한 사용자를 위한 prefers-reduced-motion 지원'
+          ]
+        },
+        {
+          heading: '비즈니스 임팩트',
+          text: '접근성은 윤리적 의무일 뿐 아니라 비즈니스 기회입니다. 전 세계 인구의 15%가 어떤 형태로든 장애를 가지고 있으며, 접근성 높은 제품은 더 넓은 시장에 도달합니다. EU의 European Accessibility Act 시행으로 법적 요구사항이기도 합니다.'
+        }
+      ],
+      refs: [
+        { title: 'DEV Community — 접근성 우선 인터페이스와 AI', url: 'https://dev.to/pixel_mosaic/top-uiux-design-trends-for-2026-ai-first-context-aware-interfaces-spatial-experiences-166j' },
+        { title: 'Lyssna — 인클루시브 디자인과 UX 트렌드', url: 'https://www.lyssna.com/blog/ux-design-trends/' },
+        { title: 'SkyRye Design — 접근성 중심 2026 트렌드', url: 'https://skyryedesign.com/design/ux-ui/ui-ux-design-trends-2026/' }
+      ]
+    },
+
+    // Branding
+    authentic: {
+      icon: '🌿',
+      theme: 'lime',
+      tag: '진정성',
+      category: 'BRANDING & IDENTITY',
+      title: 'Authentic & Raw',
+      subtitle: '다듬지 않은 것이 진짜다',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '완벽하게 연출된 캠페인 대신, 브랜드의 실제 과정, 실수, 진솔한 목소리를 보여주는 것이 신뢰를 구축합니다. 브랜드가 "기업"이 아닌 "사람"처럼 행동하길 기대하는 소비자가 늘고 있습니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            'UGC(User Generated Content) 중심 — 실제 사용자의 리뷰, 사진, 영상이 마케팅 핵심',
+            '비하인드 콘텐츠 — 제작 과정, 실패담, 솔직한 개발 일지 공개',
+            '다큐멘터리 스타일 비주얼 — 연출되지 않은 자연스러운 촬영',
+            'Anti-Corporate 톤 — 딱딱한 기업체 대신 친구처럼 말하는 브랜드 보이스',
+            'Anti-Design 미학 — DIY 진(Zine), 콜라주, 프로테스트 포스터 감성'
+          ]
+        },
+        {
+          heading: '시대적 맥락',
+          text: '알고리즘적 매끈함의 시대가 저물고 있습니다. 텍스처, 구체성, 분위기, 실제 장소·사람·역사에 속한 느낌을 가진 브랜드가 살아남습니다. "다듬어지지 않음"이 곧 "진짜"의 증거입니다.'
+        }
+      ],
+      refs: [
+        { title: 'The Branding Journal — 2026 브랜딩 & 디자인 트렌드', url: 'https://www.thebrandingjournal.com/2026/01/top-branding-design-trends-2026/' },
+        { title: 'Threerooms — 브랜드 아이덴티티를 정의하는 8가지 변화', url: 'https://www.threerooms.com/blog/8-design-trends-shaping-brand-identity-in-2026' },
+        { title: 'Design Shack — 2026 브랜딩 트렌드 Top 10', url: 'https://designshack.net/articles/trends/top-branding-trends/' },
+        { title: 'Branded Agency — 비즈니스 성공을 이끄는 브랜딩 트렌드', url: 'https://www.brandedagency.com/blog/the-future-of-branding-top-trends-in-2026' }
+      ]
+    },
+    dynamic: {
+      icon: '🔄',
+      theme: 'lime',
+      tag: '유동적 아이덴티티',
+      category: 'BRANDING & IDENTITY',
+      title: 'Dynamic Identity',
+      subtitle: '변하는 것이 일관된 것',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '하나의 고정된 로고·컬러·서체에서 벗어나, 맥락에 따라 유기적으로 변형되는 브랜드 아이덴티티가 부상합니다. AI를 활용해 무한한 변형을 생성하면서도 브랜드의 핵심 인상을 유지합니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '반응형 로고 — 디바이스, 맥락, 사용자에 따라 형태가 변하는 로고',
+            'AI 생성 변형 — 생성형 AI로 브랜드 가이드라인 내에서 무한 변형 생성',
+            '맥락 적응형 — 시간, 날씨, 위치, 이벤트에 따라 브랜드 표현이 달라짐',
+            '모션 아이덴티티 — 정적 로고가 아닌 움직이는 브랜드 표현',
+            '사용자 참여형 — 사용자가 브랜드 요소를 커스터마이즈할 수 있는 인터랙티브 아이덴티티'
+          ]
+        },
+        {
+          heading: '사례와 방향',
+          text: '로고 디자인에서도 이 변화가 뚜렷합니다. Creative Bloq에 따르면 2026년 로고 트렌드는 유동적이고, 생성적이며, 맥락 반응적인 방향으로 이동하고 있습니다.'
+        }
+      ],
+      refs: [
+        { title: 'Creative Bloq — 2026년을 정의할 로고 디자인 트렌드', url: 'https://www.creativebloq.com/design/logos-icons/these-logo-design-trends-will-define-2026' },
+        { title: 'Logomaker — 브랜드 아이덴티티를 재정의할 10가지 트렌드', url: 'https://www.logomaker.com/blog/branding-trends/' },
+        { title: 'Superside — 브랜드 디자인을 한 단계 높이는 6가지 트렌드', url: 'https://www.superside.com/blog/brand-design-trends' }
+      ]
+    },
+    'sustainability-visual': {
+      icon: '🌍',
+      theme: 'lime',
+      tag: '지속가능성',
+      category: 'BRANDING & IDENTITY',
+      title: 'Sustainability Visual',
+      subtitle: '지속가능성을 보여주는 시각 언어',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '지속가능성이 단순한 슬로건이 아닌, 브랜드의 시각 언어 자체에 녹아듭니다. 소재, 컬러, 패키징, 인쇄 방식까지 지속가능한 가치를 직접적으로 표현합니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '어스톤 팔레트 — 흙, 모래, 숲, 바다에서 가져온 자연색 중심 컬러',
+            '자연 소재 텍스처 — 크래프트지, 리넨, 나무결 등을 디지털에서도 활용',
+            '미니멀 패키징 — 과대 포장을 줄이고 재활용 가능한 소재·구조 사용',
+            '투명한 공급망 — 원재료부터 생산 과정까지 시각적으로 공개',
+            '그린워싱 경계 — 진정성 없는 친환경 마케팅에 대한 소비자 반발 증가'
+          ]
+        },
+        {
+          heading: '브랜드 전략',
+          text: '소비자들이 브랜드의 친환경 주장에 점점 회의적이 되면서, "말보다 보여주기"가 중요해졌습니다. 시각 언어 자체가 지속가능성의 증거가 되어야 합니다.'
+        }
+      ],
+      refs: [
+        { title: 'KOTA — 2026 브랜딩 영감: 디자인 트렌드', url: 'https://kota.co.uk/blog/branding-inspiration-brand-design-trends-for-2026' },
+        { title: 'Digital Silk — 2026 브랜딩 트렌드 분석', url: 'https://www.digitalsilk.com/digital-trends/top-branding-trends/' },
+        { title: 'Graphic Village — 업계 리더들이 예측하는 2026', url: 'https://www.graphicvillage.com/graphic-design-trends-2026/' }
+      ]
+    },
+
+    // Product
+    'natural-materials': {
+      icon: '🪵',
+      theme: 'orange',
+      tag: '자연 소재',
+      category: 'PRODUCT & INDUSTRIAL',
+      title: 'Natural Materials',
+      subtitle: '자연에서 온 재료, 현대적 해석',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '목재, 석재, 세라믹, 대나무, 코르크 등 자연 소재가 제품 디자인의 중심으로 돌아옵니다. 특히 목조형 가구 분야에서 전통 수공예 기법과 디지털 제조(CNC, 3D 프린팅)의 융합이 활발합니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '바이오 기반 소재 — 해조류, 농업 폐기물 등에서 추출한 바이오 플라스틱이 기존 자원 의존도를 50%까지 감소',
+            '전통 기법 + 디지털 제조 — 스팀 벤딩, 조인트 기법에 CNC 라우팅을 결합',
+            '촉각적 마감 — 소재의 자연스러운 질감과 결을 살리는 마감 처리',
+            '로컬 소싱 — 지역에서 생산된 재료를 우선 사용하는 움직임',
+            '에이징 미학 — 시간이 지나며 더 아름다워지는 소재의 경년 변화를 디자인에 반영'
+          ]
+        },
+        {
+          heading: 'AI의 역할',
+          text: 'AI가 제품 개발 초기 단계를 변혁하고 있습니다. 시장 트렌드 분석, 컨셉 생성, 다양한 디자인 변형 시뮬레이션, 프로토타이핑 최적화에 AI를 활용하며, 2026년에는 AI 보조 아이데이션이 표준이 됩니다.'
+        }
+      ],
+      refs: [
+        { title: 'Cambridge DT — 2026 제품 디자인 트렌드 전망', url: 'https://www.cambridge-dt.com/product-design-trends-to-watch-in-2026-and-beyond/' },
+        { title: 'Eckstein Design — 2026 산업 디자인 트렌드 Top 6', url: 'https://www.eckstein-design.com/en/news-en/top-6-industrial-design-trends-for-2026/' },
+        { title: 'LKKER SCM — 2026 산업 디자인 제품 트렌드', url: 'https://www.lkkerscm.com/trends-insight/updated-industrial-design-product-trends-2026.html' }
+      ]
+    },
+    circular: {
+      icon: '♻️',
+      theme: 'orange',
+      tag: '순환 디자인',
+      category: 'PRODUCT & INDUSTRIAL',
+      title: 'Circular Design',
+      subtitle: '처음부터 끝을 생각하는 설계',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '순환 디자인은 제품의 전체 수명 주기를 설계 단계에서부터 고려합니다. 분해, 수리, 재사용, 재활용이 가능한 구조가 산업 표준으로 자리잡고 있습니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '소재 분리 가능성 — 종류별로 소재를 쉽게 분리할 수 있는 구조',
+            '쉬운 분해·조립 — 접착 대신 나사 고정, 모듈형 하우징',
+            '수리 가능한 디자인 — 부품 교체가 용이한 구조, Right to Repair 법제화 대응',
+            '업사이클링 소재 — 재활용 금속, 재생 플라스틱 등의 적극 활용',
+            'Take-back 프로그램 — 회수-재정비-재판매의 순환 체계'
+          ]
+        },
+        {
+          heading: '규제 환경',
+          text: '2026년 기업들은 순환 디자인 원칙을 채택하고, 저탄소 소재를 사용하며, 환경 영향 감소를 측정 가능하게 보여줘야 하는 압력이 커지고 있습니다. EU의 에코디자인 규정 등 법적 요구사항도 강화됩니다.'
+        }
+      ],
+      refs: [
+        { title: 'Eckstein Design — 순환 디자인과 지속가능 제품', url: 'https://www.eckstein-design.com/en/news-en/top-6-industrial-design-trends-for-2026/' },
+        { title: 'Cambridge DT — 제품 수명 주기와 순환 설계', url: 'https://www.cambridge-dt.com/product-design-trends-to-watch-in-2026-and-beyond/' },
+        { title: 'Chamillah — 2026 필수 디자인 트렌드 7가지', url: 'https://www.chamillah.com/brand-reviews/design-trends-2026/' }
+      ]
+    },
+    'soft-minimal': {
+      icon: '🏠',
+      theme: 'orange',
+      tag: '소프트 미니멀',
+      category: 'PRODUCT & INDUSTRIAL',
+      title: 'Soft Minimalism',
+      subtitle: '따뜻한 미니멀리즘',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '차가운 미니멀리즘이 따뜻한 미니멀리즘으로 전환됩니다. 깔끔한 구조는 유지하되, 부드러운 곡선, 자연광, 살아있는 텍스처가 온기를 더합니다. "Warm Minimalism"이라고도 불립니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '부드러운 곡선 — 각진 모서리를 둥글게 처리, 유기적 형태',
+            '뮤트 톤 + 자연색 — 흰색, 베이지, 크림, 테라코타 등 따뜻한 중성색',
+            '텍스처 살리기 — 나무결, 리넨, 플라스터 등 소재의 질감을 적극 노출',
+            '자연광 극대화 — 대형 창, 반사 소재, 밝은 공간 설계',
+            '미니멀하되 따뜻하게 — 차가운 완벽함이 아닌, 살기 좋은 미니멀리즘'
+          ]
+        },
+        {
+          heading: '미니멀리즘의 진화',
+          text: '2010년대를 지배한 "스타크 미니멀리즘"이 한 발 물러나고, 편안함과 감각 경험을 위한 공간이 생겼습니다. 디자이너들이 목재, 리넨, 플라스터, 석재 등 자연 소재를 적극적으로 사용하면서 "최소한이되 차갑지 않은" 공간과 제품을 만들어내고 있습니다.'
+        }
+      ],
+      refs: [
+        { title: 'Decorilla — 2026 인테리어 디자인 트렌드 16가지', url: 'https://www.decorilla.com/online-decorating/interior-design-trends-2026/' },
+        { title: 'Homes & Gardens — 2026 리빙룸 트렌드', url: 'https://www.homesandgardens.com/interior-design/living-rooms/living-room-trends-2026' },
+        { title: 'RS Barcelona — 영혼 있는 공간: 2026 인테리어 트렌드', url: 'https://rsbarcelona.com/en-us/blogs/news/interior-design-trends-for-2026-spaces-with-soul' }
+      ]
+    },
+
+    // Space
+    japandi: {
+      icon: '🛋️',
+      theme: 'purple',
+      tag: '자판디 진화',
+      category: 'SPACE & INTERIOR',
+      title: 'Japandi Evolution',
+      subtitle: '동양의 미학 + 북유럽의 기능',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '일본의 와비사비 미학과 스칸디나비안 기능주의가 융합된 "자판디(Japandi)" 스타일이 2026년에도 진화를 이어갑니다. 불필요한 것을 덜어내되, 남은 것에 온기를 불어넣는 철학입니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '와비사비 철학 — 불완전함과 비영속성의 아름다움을 수용',
+            '따뜻한 목재 — 참나무, 호두나무 등 결이 살아있는 원목 중심',
+            '뉴트럴 팔레트 — 베이지, 크림, 차콜, 올리브 등 자연에서 온 색상',
+            '오가닉 형태 — 자연에서 영감받은 불규칙한 유기적 곡선',
+            '의도적 공백 — "마(間)"의 개념, 비어있는 공간이 디자인의 일부'
+          ]
+        },
+        {
+          heading: '2026년의 진화',
+          text: '자판디의 새로운 방향은 더 대담한 텍스처 믹스, 어두운 톤의 도입, 그리고 현대 기술(스마트 조명, 숨겨진 테크놀로지)의 자연스러운 통합입니다. 43%의 디자이너가 곡선형·비정형 가구를 2026년 트렌드로 꼽았습니다.'
+        }
+      ],
+      refs: [
+        { title: 'Domus Academy — 2026 인테리어 디자인 트렌드', url: 'https://www.domusacademy.com/the-envisioner-magazine/trends-stats/interior-design-trends-2026/' },
+        { title: 'Schaeffer Homes — 2026 인테리어 디자인 트렌드 가이드', url: 'https://www.schaefferhomes.com/blog/2026-interior-design-trends/' },
+        { title: 'Modlar — 2026년에도 계속될 인테리어 트렌드 5가지', url: 'https://www.modlar.com/news/424/5-interior-design-trends-we-will-continue-to-see-in-2026/' }
+      ]
+    },
+    biophilic: {
+      icon: '💡',
+      theme: 'purple',
+      tag: '바이오필릭',
+      category: 'SPACE & INTERIOR',
+      title: 'Biophilic Design',
+      subtitle: '자연이 머무는 공간',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '바이오필릭 디자인은 자연을 공간에 적극적으로 끌어들이는 접근입니다. 2026년에는 이것이 장식적 수준을 넘어, 건축의 구조·방향·소재·조명·공간 의도에 처음부터 내장됩니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '실내 정원 & 리빙 월 — 살아있는 식물이 공간의 핵심 요소',
+            '자연광 극대화 — 대형 창호, 스카이라이트, 빛의 동선 설계',
+            '생체리듬 조명 — 시간대에 따라 색온도가 변하는 서카디안 라이팅',
+            '자연 사운드스케이프 — 물소리, 바람소리를 공간에 통합',
+            '재생·순환 원칙 — 환경 시스템에 긍정적으로 기여하는 소재 선택'
+          ]
+        },
+        {
+          heading: '심리적 효과',
+          text: '바이오필릭 디자인은 단순한 미적 선택이 아닙니다. 연구에 따르면 자연 요소가 있는 공간에서 스트레스가 감소하고, 집중력이 향상되며, 전반적 웰빙이 개선됩니다. 자연에 영감받은 공간은 우리를 더 행복하게 만든다는 심리학적 근거가 뒷받침합니다.'
+        }
+      ],
+      refs: [
+        { title: 'Grow Up Green — 바이오필릭 디자인 트렌드 2026: 인간 중심 공간의 미래', url: 'https://www.growup.green/blog/biophilic-design-trends-for-2026-the-future-of-human-centred-spaces' },
+        { title: 'Design Middle East — 2026 바이오필릭 디자인 트렌드', url: 'https://design-middleeast.com/biophilic-design-trends-to-watch-in-2026/' },
+        { title: 'Ecoist World — 바이오필릭 디자인의 심리학: 2026 웰빙 향상', url: 'https://ecoist.world/blogs/eco-bliss/the-psychology-of-biophilic-design-why-nature-inspired-spaces-make-us-happier-in-2026' },
+        { title: 'S3T Koncepts — 2026 바이오필릭 인테리어 디자인 스타일 Top 5', url: 'https://s3tkoncepts.com/top-5-biophilic-interior-design-styles-you-must-follow/' }
+      ]
+    },
+    maximalist: {
+      icon: '🎭',
+      theme: 'purple',
+      tag: '맥시멀리즘',
+      category: 'SPACE & INTERIOR',
+      title: 'Maximalist Comeback',
+      subtitle: '더 많이, 더 대담하게, 더 나답게',
+      sections: [
+        {
+          heading: '핵심 개념',
+          text: '수년간 지배한 미니멀리즘에 대한 반동으로 맥시멀리즘이 복귀합니다. 그러나 2026년의 맥시멀리즘은 단순한 "많이 쌓기"가 아닌, 의도를 가진 풍요로움입니다. "Refined Maximalism"이라 불리며, 더 스마트하고 개인적인 방향으로 진화했습니다.'
+        },
+        {
+          heading: '주요 특징',
+          list: [
+            '대담한 패턴 믹스 — 플로럴, 기하학, 스트라이프를 과감하게 혼합',
+            '빈티지 + 현대 충돌 — 시대를 넘나드는 오브제의 큐레이션',
+            '풍부한 컬러 — 진한 보석 톤(에메랄드, 루비, 사파이어)과 따뜻한 어스톤의 공존',
+            '레이어드 텍스처 — 벨벳, 가죽, 실크, 금속이 한 공간에 공존',
+            '개인 큐레이션 — 트렌드를 따르기보다 개인의 취향을 극대화하는 공간'
+          ]
+        },
+        {
+          heading: '새로운 맥시멀리즘의 원칙',
+          text: '2026년의 맥시멀리즘은 "의도 있는 풍요"입니다. 모든 오브제에 이유가 있고, 모든 패턴에 이야기가 있습니다. 무질서한 집적이 아닌, 개인의 역사와 취향이 정교하게 큐레이션된 공간입니다.'
+        }
+      ],
+      refs: [
+        { title: 'StyleBlueprint — 2026 인테리어 디자인 트렌드 10가지', url: 'https://styleblueprint.com/everyday/interior-design-trends-2026/' },
+        { title: "It's Just A Better House — 2026 홈 디자인 트렌드 12가지", url: 'https://www.itsjustabetterhouse.com/blog/2026-interior-design-trends/' },
+        { title: 'BuzzFeed — 2026년을 장악하는 인테리어 디자인 트렌드 5가지', url: 'https://www.buzzfeed.com/digitalconnect/interior-design-trends-in-2026' }
+      ]
+    }
+  };
+
+  // ===== Modal Logic =====
+  const overlay = document.getElementById('modalOverlay');
+  const modal = document.getElementById('modal');
+  const modalContent = document.getElementById('modalContent');
+  const modalClose = document.getElementById('modalClose');
+
+  function openModal(key) {
+    const d = details[key];
+    if (!d) return;
+
+    modal.setAttribute('data-theme', d.theme);
+
+    let html = '';
+    html += '<span class="modal-icon">' + d.icon + '</span>';
+    html += '<span class="modal-tag">' + d.category + '</span>';
+    html += '<h2>' + d.title + '</h2>';
+    html += '<p class="modal-subtitle">' + d.subtitle + '</p>';
+
+    d.sections.forEach(s => {
+      html += '<div class="modal-section">';
+      html += '<h3>' + s.heading + '</h3>';
+      if (s.text) {
+        html += '<p>' + s.text + '</p>';
+      }
+      if (s.list) {
+        html += '<ul>';
+        s.list.forEach(item => {
+          html += '<li>' + item + '</li>';
+        });
+        html += '</ul>';
+      }
+      html += '</div>';
+    });
+
+    if (d.refs && d.refs.length) {
+      html += '<div class="modal-refs modal-section">';
+      html += '<h3>Reference</h3>';
+      d.refs.forEach(r => {
+        const domain = new URL(r.url).hostname.replace('www.', '');
+        html += '<a class="ref-link" href="' + r.url + '" target="_blank" rel="noopener">';
+        html += '<span class="ref-link-icon">↗</span>';
+        html += '<span class="ref-link-text">';
+        html += '<span class="ref-link-title">' + r.title + '</span>';
+        html += '<span class="ref-link-url">' + domain + '</span>';
+        html += '</span></a>';
+      });
+      html += '</div>';
+    }
+
+    modalContent.innerHTML = html;
+    modal.scrollTop = 0;
+    overlay.classList.add('active');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeModal() {
+    overlay.classList.remove('active');
+    document.body.classList.remove('modal-open');
+  }
+
+  document.querySelectorAll('.card[data-detail]').forEach(card => {
+    card.addEventListener('click', () => {
+      openModal(card.getAttribute('data-detail'));
+    });
+  });
+
+  modalClose.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
 </script>
 </body>
 </html>
