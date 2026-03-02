@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 디자인 트렌드 총정리</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --pink: #ff3cac;
+    --purple: #784ba0;
+    --blue: #2b86c5;
+    --lime: #c6f135;
+    --orange: #ff6b35;
+    --cyan: #00e5ff;
+    --dark: #0a0a0f;
+    --card-bg: rgba(255,255,255,0.04);
+    --card-border: rgba(255,255,255,0.08);
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--dark);
+    color: #e8e8f0;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--pink) 0%, transparent 70%);
+    top: -10%; left: -10%;
+    opacity: 0.25;
+    animation: float1 12s ease-in-out infinite;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
+    bottom: -10%; right: -10%;
+    opacity: 0.2;
+    animation: float2 10s ease-in-out infinite;
+  }
+
+  @keyframes float1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, 40px) scale(1.1); }
+  }
+  @keyframes float2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-40px, -30px) scale(1.15); }
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--cyan);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 1.1;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, #fff 0%, var(--pink) 50%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero p {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.5);
+    max-width: 500px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 3rem;
+  }
+
+  .scroll-hint {
+    position: relative;
+    z-index: 1;
+    width: 28px; height: 44px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    animation: fadeInUp 1s 1s both;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 4px; height: 10px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 2px;
+    margin-top: 8px;
+    animation: scrollDot 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollDot {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    60% { transform: translateY(12px); opacity: 0.3; }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Sections */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  section {
+    padding: 6rem 0;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    margin-bottom: 3rem;
+    line-height: 1.2;
+  }
+
+  /* Cards grid */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.15);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.75;
+  }
+
+  .card .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    margin-top: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  /* Color themes for sections */
+  .theme-visual .section-label { background: rgba(255,60,172,0.15); color: var(--pink); }
+  .theme-visual .card:hover { border-color: rgba(255,60,172,0.3); }
+  .theme-visual .tag { background: rgba(255,60,172,0.15); color: var(--pink); }
+
+  .theme-ui .section-label { background: rgba(0,229,255,0.12); color: var(--cyan); }
+  .theme-ui .card:hover { border-color: rgba(0,229,255,0.3); }
+  .theme-ui .tag { background: rgba(0,229,255,0.12); color: var(--cyan); }
+
+  .theme-brand .section-label { background: rgba(198,241,53,0.12); color: var(--lime); }
+  .theme-brand .card:hover { border-color: rgba(198,241,53,0.3); }
+  .theme-brand .tag { background: rgba(198,241,53,0.12); color: var(--lime); }
+
+  .theme-product .section-label { background: rgba(255,107,53,0.15); color: var(--orange); }
+  .theme-product .card:hover { border-color: rgba(255,107,53,0.3); }
+  .theme-product .tag { background: rgba(255,107,53,0.12); color: var(--orange); }
+
+  .theme-space .section-label { background: rgba(120,75,160,0.2); color: #b388ff; }
+  .theme-space .card:hover { border-color: rgba(120,75,160,0.4); }
+  .theme-space .tag { background: rgba(120,75,160,0.15); color: #b388ff; }
+
+  /* Full-width highlight card */
+  .highlight-card {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(255,60,172,0.08), rgba(0,229,255,0.08));
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+  }
+
+  .highlight-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .highlight-card p {
+    max-width: 600px;
+    margin: 0 auto;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* Divider */
+  .divider {
+    width: 60px;
+    height: 3px;
+    border-radius: 2px;
+    margin: 0 auto 4rem;
+  }
+
+  .divider.pink { background: var(--pink); }
+  .divider.cyan { background: var(--cyan); }
+  .divider.lime { background: var(--lime); }
+  .divider.orange { background: var(--orange); }
+  .divider.purple { background: var(--purple); }
+
+  /* Summary section */
+  .summary {
+    text-align: center;
+    padding: 6rem 0 8rem;
+  }
+
+  .summary h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-weight: 900;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--lime), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .summary p {
+    max-width: 650px;
+    margin: 0 auto 1rem;
+    color: rgba(255,255,255,0.5);
+    font-size: 1.05rem;
+  }
+
+  .keyword-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .keyword {
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .keyword:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.2);
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* Scroll animations */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 640px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .highlight-card { padding: 2rem; }
+    section { padding: 4rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<header class="hero">
+  <span class="hero-badge">Trend Report</span>
+  <h1>2026<br>Design Trends</h1>
+  <p>AI 시대를 지나며 디자인은 다시 인간으로 돌아옵니다. 올해를 관통하는 핵심 트렌드를 정리했습니다.</p>
+  <div class="scroll-hint"></div>
+</header>
+
+<!-- 1. Graphic & Visual -->
+<section class="theme-visual">
+  <div class="container">
+    <div class="divider pink"></div>
+    <span class="section-label fade-in">GRAPHIC & VISUAL</span>
+    <h2 class="section-title fade-in">그래픽 & 비주얼 디자인</h2>
+    <div class="card-grid">
+      <div class="card fade-in">
+        <span class="card-icon">🖌️</span>
+        <h3>Imperfect by Design</h3>
+        <p>매끈한 AI 스타일에 대한 반작용으로, 날것의 인간적 감성이 부상합니다. 핸드메이드 느낌, 콜라주, 혼합 미디어가 스토리텔링을 만들어냅니다.</p>
+        <span class="tag">불완전함의 미학</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🔤</span>
+        <h3>Bold Typography</h3>
+        <p>오버사이즈 산세리프, 풍선처럼 부풀어 오른 글자꼴, 물결치듯 왜곡된 폰트와 손글씨 스크립트로 개성과 재미를 동시에 추구합니다.</p>
+        <span class="tag">과감한 타이포그래피</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🎨</span>
+        <h3>Dopamine Design</h3>
+        <p>밝고 채도 높은 팔레트가 부활합니다. Y2K 노스탤지어, 네온 그라데이션, 고대비 조합으로 미니멀한 뮤트톤에서 비비드 컬러로 전환됩니다.</p>
+        <span class="tag">도파민 컬러</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🫧</span>
+        <h3>Tactile & Sensory</h3>
+        <p>푹신하고 말랑한 텍스처, 초현실적 오브제, 장난스러운 왜곡. 촉감, 소리, 움직임을 시뮬레이션하는 감각적 디자인이 확산됩니다.</p>
+        <span class="tag">촉각적 감각</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. UI/UX & Digital -->
+<section class="theme-ui">
+  <div class="container">
+    <div class="divider cyan"></div>
+    <span class="section-label fade-in">UI/UX & DIGITAL</span>
+    <h2 class="section-title fade-in">UI/UX & 디지털 디자인</h2>
+    <div class="card-grid">
+      <div class="card fade-in">
+        <span class="card-icon">🤖</span>
+        <h3>AI-Native Interface</h3>
+        <p>대화형 UI가 기본이 됩니다. 채팅 인터페이스, 자연어 입력, 프롬프트 기반 인터랙션이 전통적 WIMP를 대체하기 시작합니다.</p>
+        <span class="tag">AI 네이티브 UI</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">✨</span>
+        <h3>Spatial & Immersive</h3>
+        <p>Apple Vision Pro의 등장과 함께 공간 컴퓨팅 인터페이스가 본격화됩니다. 깊이감, 레이어, 3D 요소가 자연스럽게 UI에 녹아듭니다.</p>
+        <span class="tag">공간 인터페이스</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🌀</span>
+        <h3>Micro-Interaction 2.0</h3>
+        <p>스크롤 기반 애니메이션, 물리 기반 모션, 제스처 반응이 더욱 정교해집니다. Lottie, Rive 등 벡터 애니메이션 도구가 표준이 됩니다.</p>
+        <span class="tag">마이크로 인터랙션</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🧩</span>
+        <h3>Bento Grid Layout</h3>
+        <p>Apple이 촉발한 벤토 그리드가 웹/앱 전반에 확산됩니다. 카드 기반의 모듈형 레이아웃으로 정보를 직관적으로 구조화합니다.</p>
+        <span class="tag">벤토 레이아웃</span>
+      </div>
+      <div class="highlight-card fade-in">
+        <span class="card-icon">🔒</span>
+        <h3>접근성 & 인클루시브 디자인</h3>
+        <p>접근성이 '옵션'이 아닌 '기본'이 됩니다. WCAG 3.0 대응, 다크모드 우선 설계, 다양한 신체 조건과 문화를 고려한 디자인이 표준으로 자리잡습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Branding & Identity -->
+<section class="theme-brand">
+  <div class="container">
+    <div class="divider lime"></div>
+    <span class="section-label fade-in">BRANDING & IDENTITY</span>
+    <h2 class="section-title fade-in">브랜딩 & 아이덴티티</h2>
+    <div class="card-grid">
+      <div class="card fade-in">
+        <span class="card-icon">🌿</span>
+        <h3>Authentic & Raw</h3>
+        <p>과도하게 다듬어진 브랜딩 대신 진정성 있는 날것의 스토리텔링이 브랜드 신뢰를 형성합니다. UGC와 비하인드 콘텐츠가 핵심입니다.</p>
+        <span class="tag">진정성</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🔄</span>
+        <h3>Dynamic Identity</h3>
+        <p>고정된 로고에서 맥락에 따라 변형되는 유동적 아이덴티티로 전환됩니다. AI 생성 변형, 반응형 로고, 생성형 브랜딩이 부상합니다.</p>
+        <span class="tag">유동적 아이덴티티</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🌍</span>
+        <h3>Sustainability Visual</h3>
+        <p>지속가능성이 시각 언어로 표현됩니다. 자연 소재 텍스처, 어스톤 팔레트, 미니멀 패키징이 브랜드 가치를 전달합니다.</p>
+        <span class="tag">지속가능성</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Product & Industrial -->
+<section class="theme-product">
+  <div class="container">
+    <div class="divider orange"></div>
+    <span class="section-label fade-in">PRODUCT & INDUSTRIAL</span>
+    <h2 class="section-title fade-in">제품 & 산업 디자인</h2>
+    <div class="card-grid">
+      <div class="card fade-in">
+        <span class="card-icon">🪵</span>
+        <h3>Natural Materials</h3>
+        <p>목재, 석재, 세라믹 등 자연 소재가 제품 디자인의 중심이 됩니다. 특히 목조형 가구 분야에서 전통 기법과 현대 디자인의 융합이 활발합니다.</p>
+        <span class="tag">자연 소재</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">♻️</span>
+        <h3>Circular Design</h3>
+        <p>분해-재조립 가능한 모듈형 제품, 업사이클링 소재, 수리 가능한 디자인이 산업 표준으로 자리잡습니다.</p>
+        <span class="tag">순환 디자인</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🏠</span>
+        <h3>Soft Minimalism</h3>
+        <p>차가운 미니멀리즘에서 따뜻한 미니멀리즘으로. 부드러운 곡선, 자연광, 텍스처가 살아있는 소프트 미니멀이 공간과 제품을 지배합니다.</p>
+        <span class="tag">소프트 미니멀</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Space & Interior -->
+<section class="theme-space">
+  <div class="container">
+    <div class="divider purple"></div>
+    <span class="section-label fade-in">SPACE & INTERIOR</span>
+    <h2 class="section-title fade-in">공간 & 인테리어 디자인</h2>
+    <div class="card-grid">
+      <div class="card fade-in">
+        <span class="card-icon">🛋️</span>
+        <h3>Japandi Evolution</h3>
+        <p>일본 미학과 스칸디나비안 기능주의의 융합이 진화합니다. 와비사비 철학에 따뜻한 목재, 오가닉 형태, 뉴트럴 팔레트가 결합됩니다.</p>
+        <span class="tag">자판디 진화</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">💡</span>
+        <h3>Biophilic Design</h3>
+        <p>자연을 공간 안으로 적극 끌어들입니다. 실내 정원, 자연광 극대화, 생체리듬 조명, 물소리와 같은 자연 사운드가 공간에 통합됩니다.</p>
+        <span class="tag">바이오필릭</span>
+      </div>
+      <div class="card fade-in">
+        <span class="card-icon">🎭</span>
+        <h3>Maximalist Comeback</h3>
+        <p>일부 공간에서는 과감한 맥시멀리즘이 복귀합니다. 대담한 패턴 믹스, 빈티지와 현대의 충돌, 개인의 취향을 극대화하는 큐레이션 공간이 등장합니다.</p>
+        <span class="tag">맥시멀리즘</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Summary -->
+<section class="summary">
+  <div class="container">
+    <h2 class="fade-in">2026 디자인을 관통하는 키워드</h2>
+    <p class="fade-in">AI가 만들어낸 완벽함에 대한 피로, 그리고 인간다움에 대한 갈망.<br>기술은 도구이고, 디자인의 중심은 다시 사람입니다.</p>
+    <div class="keyword-cloud fade-in">
+      <span class="keyword">인간 중심</span>
+      <span class="keyword">불완전함의 미학</span>
+      <span class="keyword">도파민 컬러</span>
+      <span class="keyword">AI 네이티브</span>
+      <span class="keyword">공간 컴퓨팅</span>
+      <span class="keyword">진정성</span>
+      <span class="keyword">지속가능성</span>
+      <span class="keyword">소프트 미니멀</span>
+      <span class="keyword">촉각적 감각</span>
+      <span class="keyword">유동적 아이덴티티</span>
+      <span class="keyword">순환 디자인</span>
+      <span class="keyword">접근성 우선</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>2026 Design Trends &mdash; Curated with AI</p>
+</footer>
+
+<script>
+  // Scroll-based fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
