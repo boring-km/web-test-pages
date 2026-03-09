@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>야근 탈출 가이드 - 칼퇴의 기술</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(255, 107, 53, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 30%, rgba(78, 205, 196, 0.08) 0%, transparent 50%);
+      animation: slowRotate 30s linear infinite;
+    }
+
+    @keyframes slowRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    .hero-emoji {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 7vw, 72px);
+      font-weight: 900;
+      background: linear-gradient(135deg, #ff6b35, #f7c948, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: clamp(16px, 2.5vw, 22px);
+      color: #8892b0;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: #8892b0;
+      font-size: 13px;
+      animation: fadeInUp 1s ease 1s both;
+    }
+
+    .scroll-indicator .arrow {
+      width: 24px;
+      height: 24px;
+      border-right: 2px solid #8892b0;
+      border-bottom: 2px solid #8892b0;
+      transform: rotate(45deg);
+      animation: scrollBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollBounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50% { transform: rotate(45deg) translateY(8px); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: #1a1a2e;
+      border-top: 1px solid #2a2a3e;
+      border-bottom: 1px solid #2a2a3e;
+    }
+
+    .stat-item {
+      padding: 32px 20px;
+      text-align: center;
+      background: #12121e;
+    }
+
+    .stat-number {
+      font-size: 36px;
+      font-weight: 900;
+      color: #ff6b35;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #8892b0;
+    }
+
+    /* Section Common */
+    .section {
+      padding: 80px 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header .tag {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      color: #8892b0;
+      font-size: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Tips Cards */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .tip-card {
+      background: linear-gradient(145deg, #1a1a2e, #16213e);
+      border: 1px solid #2a2a3e;
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s ease;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tip-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--card-color, #ff6b35), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tip-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--card-color, #ff6b35);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .tip-card:hover::before {
+      opacity: 1;
+    }
+
+    .tip-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    .tip-number {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--card-color, #ff6b35);
+      background: rgba(255, 107, 53, 0.1);
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .tip-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .tip-card p {
+      font-size: 15px;
+      color: #8892b0;
+      line-height: 1.7;
+    }
+
+    .tip-card .tip-detail {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #2a2a3e;
+      font-size: 13px;
+      color: #6a7490;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .tip-card.expanded .tip-detail {
+      display: block;
+    }
+
+    .tip-toggle {
+      margin-top: 12px;
+      background: none;
+      border: 1px solid #2a2a3e;
+      color: #8892b0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .tip-toggle:hover {
+      border-color: var(--card-color, #ff6b35);
+      color: var(--card-color, #ff6b35);
+    }
+
+    /* Quote Section */
+    .quote-section {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .quote-text {
+      font-size: clamp(22px, 3.5vw, 36px);
+      font-weight: 300;
+      color: #fff;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      line-height: 1.5;
+    }
+
+    .quote-author {
+      color: #4ecdc4;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    /* Checklist */
+    .checklist {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: #12121e;
+      border: 1px solid #2a2a3e;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .check-item:hover {
+      border-color: #4ecdc4;
+    }
+
+    .check-item.checked {
+      border-color: #4ecdc4;
+      background: rgba(78, 205, 196, 0.05);
+    }
+
+    .check-box {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      border: 2px solid #3a3a4e;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      margin-top: 2px;
+    }
+
+    .check-item.checked .check-box {
+      background: #4ecdc4;
+      border-color: #4ecdc4;
+    }
+
+    .check-box svg {
+      width: 14px;
+      height: 14px;
+      stroke: #0f0f1a;
+      stroke-width: 3;
+      fill: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .check-item.checked .check-box svg {
+      opacity: 1;
+    }
+
+    .check-content h4 {
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .check-content p {
+      font-size: 14px;
+      color: #6a7490;
+    }
+
+    .check-progress {
+      text-align: center;
+      margin-top: 24px;
+      padding: 20px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #2a2a3e;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4ecdc4, #44b8ab);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      color: #8892b0;
+    }
+
+    .progress-text span {
+      color: #4ecdc4;
+      font-weight: 700;
+    }
+
+    /* Worst Section */
+    .worst-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .worst-card {
+      background: linear-gradient(145deg, #1e0a0a, #2a1515);
+      border: 1px solid #3a2020;
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .worst-card .worst-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .worst-card h3 {
+      font-size: 18px;
+      color: #ff6b6b;
+      margin-bottom: 8px;
+    }
+
+    .worst-card p {
+      font-size: 14px;
+      color: #a08080;
+      line-height: 1.6;
+    }
+
+    .worst-card .fix {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: rgba(78, 205, 196, 0.08);
+      border-radius: 8px;
+      font-size: 13px;
+      color: #4ecdc4;
+      line-height: 1.5;
+    }
+
+    .worst-card .fix::before {
+      content: '해결 ';
+      font-weight: 700;
+    }
+
+    /* Community */
+    .community-section {
+      background: #12121e;
+      padding: 80px 20px;
+    }
+
+    .tip-form {
+      max-width: 600px;
+      margin: 0 auto 40px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .tip-form input {
+      flex: 1;
+      padding: 14px 18px;
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .tip-form input:focus {
+      border-color: #f7c948;
+    }
+
+    .tip-form input::placeholder {
+      color: #4a4a6a;
+    }
+
+    .tip-form button {
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #f7c948, #f7b731);
+      border: none;
+      border-radius: 10px;
+      color: #0f0f1a;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s;
+      white-space: nowrap;
+    }
+
+    .tip-form button:hover {
+      transform: scale(1.03);
+    }
+
+    .community-tips {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .community-tip {
+      background: #1a1a2e;
+      border: 1px solid #2a2a3e;
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .community-tip .text {
+      font-size: 15px;
+      color: #d0d0e0;
+    }
+
+    .community-tip .like-btn {
+      background: none;
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      padding: 6px 12px;
+      color: #8892b0;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .community-tip .like-btn:hover,
+    .community-tip .like-btn.liked {
+      border-color: #ff6b35;
+      color: #ff6b35;
+    }
+
+    /* Timer */
+    .timer-section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .timer-display {
+      font-size: clamp(48px, 10vw, 96px);
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 16px;
+    }
+
+    .timer-display.working {
+      color: #ff6b6b;
+    }
+
+    .timer-display.done {
+      color: #4ecdc4;
+    }
+
+    .timer-label {
+      font-size: 18px;
+      color: #8892b0;
+      margin-bottom: 24px;
+    }
+
+    .timer-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .timer-btn {
+      padding: 12px 28px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .timer-btn.primary {
+      background: #ff6b35;
+      color: #fff;
+    }
+
+    .timer-btn.secondary {
+      background: #2a2a3e;
+      color: #8892b0;
+    }
+
+    .timer-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 20px;
+      text-align: center;
+      color: #4a4a6a;
+      font-size: 14px;
+      border-top: 1px solid #1a1a2e;
+    }
+
+    footer a {
+      color: #4ecdc4;
+      text-decoration: none;
+    }
+
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 600px) {
+      .tips-grid, .worst-grid {
+        grid-template-columns: 1fr;
+      }
+      .tip-form {
+        flex-direction: column;
+      }
+      .section {
+        padding: 60px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-emoji">&#x1F3C3;&#x200D;&#x2642;&#xFE0F;</div>
+    <h1>야근 탈출 가이드</h1>
+    <p>일을 적게 하는 게 아니라, 똑똑하게 하는 겁니다.<br>칼퇴의 기술을 공유합니다.</p>
+  </div>
+  <div class="scroll-indicator">
+    <span>아래로 스크롤</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-item fade-in">
+    <div class="stat-number" data-target="52">0</div>
+    <div class="stat-label">한국 연간 평균 근로시간 OECD 순위</div>
+  </div>
+  <div class="stat-item fade-in">
+    <div class="stat-number" data-target="1901" data-suffix="h">0h</div>
+    <div class="stat-label">한국 연간 평균 근로시간</div>
+  </div>
+  <div class="stat-item fade-in">
+    <div class="stat-number" data-target="68" data-suffix="%">0%</div>
+    <div class="stat-label">야근이 생산성을 떨어뜨린다 응답</div>
+  </div>
+  <div class="stat-item fade-in">
+    <div class="stat-number" data-target="3" data-suffix="x">0x</div>
+    <div class="stat-label">집중 근무 시 효율 증가</div>
+  </div>
+</div>
+
+<!-- Core Tips -->
+<section class="section">
+  <div class="section-header fade-in">
+    <div class="tag" style="background:rgba(255,107,53,0.15);color:#ff6b35;">CORE TIPS</div>
+    <h2>칼퇴를 위한 핵심 전략</h2>
+    <p>카드를 클릭하면 실천 방법을 볼 수 있어요</p>
+  </div>
+  <div class="tips-grid" id="tips-grid"></div>
+</section>
+
+<!-- Quote -->
+<section class="quote-section fade-in">
+  <div class="quote-text">"완벽함이란 더 이상 더할 것이 없을 때가 아니라,<br>더 이상 뺄 것이 없을 때 달성된다."</div>
+  <div class="quote-author">- 앙투안 드 생텍쥐페리</div>
+</section>
+
+<!-- Pomodoro Timer -->
+<section class="section timer-section fade-in">
+  <div class="section-header">
+    <div class="tag" style="background:rgba(255,107,53,0.15);color:#ff6b35;">TOOL</div>
+    <h2>뽀모도로 타이머</h2>
+    <p>25분 집중 + 5분 휴식으로 생산성을 극대화하세요</p>
+  </div>
+  <div class="timer-display working" id="timer">25:00</div>
+  <div class="timer-label" id="timer-label">집중 시간</div>
+  <div class="timer-buttons">
+    <button class="timer-btn primary" id="timer-start" onclick="toggleTimer()">시작</button>
+    <button class="timer-btn secondary" onclick="resetTimer()">초기화</button>
+  </div>
+</section>
+
+<!-- Anti-patterns -->
+<section class="section">
+  <div class="section-header fade-in">
+    <div class="tag" style="background:rgba(255,107,107,0.15);color:#ff6b6b;">WARNING</div>
+    <h2>야근을 부르는 나쁜 습관</h2>
+    <p>이것만 안 해도 야근이 줄어듭니다</p>
+  </div>
+  <div class="worst-grid" id="worst-grid"></div>
+</section>
+
+<!-- Checklist -->
+<section class="section">
+  <div class="section-header fade-in">
+    <div class="tag" style="background:rgba(78,205,196,0.15);color:#4ecdc4;">DAILY CHECK</div>
+    <h2>오늘의 칼퇴 체크리스트</h2>
+    <p>매일 아침 체크하고 시작하세요</p>
+  </div>
+  <div class="checklist" id="checklist"></div>
+  <div class="check-progress">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-text"><span id="progress-count">0</span> / <span id="progress-total">0</span> 완료</div>
+  </div>
+</section>
+
+<!-- Community -->
+<section class="community-section">
+  <div class="section" style="padding-top:0;padding-bottom:0;">
+    <div class="section-header fade-in">
+      <div class="tag" style="background:rgba(247,201,72,0.15);color:#f7c948;">COMMUNITY</div>
+      <h2>나만의 칼퇴 팁 공유</h2>
+      <p>당신만의 노하우를 공유해주세요</p>
+    </div>
+    <div class="tip-form" id="tip-form">
+      <input type="text" id="tip-input" placeholder="나만의 칼퇴 팁을 입력하세요..." maxlength="100">
+      <button onclick="addCommunityTip()">공유하기</button>
+    </div>
+    <div class="community-tips" id="community-tips"></div>
+  </div>
+</section>
+
+<footer>
+  <p>칼퇴는 권리입니다. 오늘도 정시 퇴근하세요.</p>
+</footer>
+
+<script>
+// Tips data
+const tips = [
+  {
+    icon: '&#x1F3AF;',
+    title: 'MIT(Most Important Task) 먼저',
+    desc: '출근 후 30분 안에 오늘의 가장 중요한 일 1~3개를 정하고, 오전에 끝내세요.',
+    detail: '뇌의 전두엽은 오전에 가장 활발합니다. 에너지가 높을 때 어려운 일을 처리하면 오후에는 가벼운 업무만 남아 칼퇴가 가능해집니다. 이메일/슬랙 확인은 MIT 이후에!',
+    color: '#ff6b35'
+  },
+  {
+    icon: '&#x1F6AB;',
+    title: '회의를 반으로 줄여라',
+    desc: '불필요한 회의를 거절하고, 필수 회의는 25분으로 제한하세요.',
+    detail: '"이 회의에 제가 꼭 필요한가요?" 라고 물어보세요. 안건과 결론이 없는 회의는 이메일로 대체할 수 있습니다. 참석해야 한다면 25분 타이머를 걸어두세요.',
+    color: '#f7c948'
+  },
+  {
+    icon: '&#x1F510;',
+    title: '딥워크 시간 확보',
+    desc: '매일 2~3시간은 알림을 끄고 집중 모드에 들어가세요.',
+    detail: '슬랙, 이메일, 전화 알림을 모두 끄세요. 캘린더에 "집중 시간"을 잡아두면 다른 사람이 회의를 잡지 않습니다. 2시간 딥워크 = 8시간 멀티태스킹과 같습니다.',
+    color: '#4ecdc4'
+  },
+  {
+    icon: '&#x23F0;',
+    title: '데드라인 역산법',
+    desc: '퇴근 시간부터 역으로 계산해서 업무 시간을 배분하세요.',
+    detail: '6시 퇴근이라면 5:30부터는 정리 시간. 실제 업무 시간은 생각보다 짧습니다. 파킨슨의 법칙: 일은 주어진 시간만큼 늘어납니다. 시간을 줄이면 일도 줄어듭니다.',
+    color: '#ff6b35'
+  },
+  {
+    icon: '&#x1F4AC;',
+    title: '요청에 "언제까지?"를 물어라',
+    desc: '모든 업무 요청에 기한을 확인하면 우선순위가 명확해집니다.',
+    detail: '"급한 건데요"라는 말에 속지 마세요. "내일 오전까지면 될까요?"라고 물으면 대부분 "그래도 됩니다"라고 답합니다. 진짜 급한 일은 10%도 안 됩니다.',
+    color: '#f7c948'
+  },
+  {
+    icon: '&#x1F4E6;',
+    title: '배치 처리의 기술',
+    desc: '비슷한 종류의 일은 모아서 한 번에 처리하세요.',
+    detail: '이메일은 하루 3번(출근/점심후/퇴근전)만 확인. 전화도 시간을 정해서 몰아서. 컨텍스트 스위칭 비용을 줄이면 실제 작업 시간이 2배 늘어납니다.',
+    color: '#4ecdc4'
+  },
+  {
+    icon: '&#x270B;',
+    title: '"아니오"라고 말하는 용기',
+    desc: '모든 요청을 수락하면 내 일을 할 시간이 없습니다.',
+    detail: '"지금은 A 업무에 집중 중인데, 이건 목요일 이후에 가능합니다"처럼 대안을 제시하며 거절하세요. 80%의 결과는 20%의 일에서 나옵니다.',
+    color: '#ff6b35'
+  },
+  {
+    icon: '&#x1F4CB;',
+    title: '퇴근 전 내일 계획 세우기',
+    desc: '퇴근 전 5분, 내일의 TODO를 3개만 적어두세요.',
+    detail: '자이가르닉 효과: 미완성 작업은 머릿속에 남아 퇴근 후에도 스트레스를 줍니다. 적어두면 뇌가 "기록했으니 잊어도 돼"라고 인식해 진짜 퇴근이 가능합니다.',
+    color: '#f7c948'
+  },
+  {
+    icon: '&#x1F916;',
+    title: '자동화할 수 있는 건 자동화',
+    desc: '반복 작업은 도구나 스크립트로 자동화하세요.',
+    detail: '매주 같은 보고서를 만든다면 템플릿을 만드세요. 반복 이메일은 자동 응답으로. 30분 걸리는 반복 작업을 자동화하면 연간 26시간을 아낍니다.',
+    color: '#4ecdc4'
+  }
+];
+
+// Anti-patterns
+const worstHabits = [
+  {
+    icon: '&#x1F4F1;',
+    title: '틈틈이 슬랙/카톡 확인',
+    desc: '알림을 확인할 때마다 집중력이 리셋됩니다. 깊은 집중 상태로 돌아가는 데 평균 23분이 걸려요.',
+    fix: '알림을 꺼두고 정해진 시간에만 확인하세요.'
+  },
+  {
+    icon: '&#x1F91D;',
+    title: '모든 회의에 참석',
+    desc: '"일단 들어가 보자"는 시간 낭비의 시작입니다. 안건 없는 회의는 잡담 모임과 같아요.',
+    fix: '안건과 내 역할이 명확한 회의만 참석하세요.'
+  },
+  {
+    icon: '&#x1F605;',
+    title: '완벽주의 함정',
+    desc: '80점짜리를 100점으로 만드는 데 80%의 시간이 듭니다. 대부분의 일은 80점이면 충분합니다.',
+    fix: '"이 정도면 충분한가?"를 자주 스스로에게 물어보세요.'
+  },
+  {
+    icon: '&#x1F534;',
+    title: '멀티태스킹의 착각',
+    desc: '동시에 여러 일을 하면 효율적일 것 같지만, 실제로는 각 작업의 품질과 속도가 모두 떨어집니다.',
+    fix: '한 번에 하나의 일에만 집중하세요.'
+  }
+];
+
+// Checklist items
+const checklistItems = [
+  { title: '오늘의 MIT 3개 정했나요?', desc: '가장 중요한 일부터 정하고 시작' },
+  { title: '캘린더에 딥워크 시간 잡았나요?', desc: '최소 2시간은 방해 없는 시간 확보' },
+  { title: '불필요한 회의 거절했나요?', desc: '내 역할이 없는 회의는 과감히 거절' },
+  { title: '알림 끄기 설정했나요?', desc: '집중 시간에는 슬랙, 이메일 알림 OFF' },
+  { title: '오늘 퇴근 시간 정했나요?', desc: '명확한 퇴근 시간이 역산의 시작' },
+  { title: '요청받은 일의 기한 확인했나요?', desc: '"급해요"에 속지 않기' },
+  { title: '퇴근 전 내일 할 일 적었나요?', desc: '3개만 적으면 내일 아침이 가벼워짐' }
+];
+
+// Render tips
+const tipsGrid = document.getElementById('tips-grid');
+tips.forEach((tip, i) => {
+  const card = document.createElement('div');
+  card.className = 'tip-card fade-in';
+  card.style.setProperty('--card-color', tip.color);
+  card.innerHTML = `
+    <div class="tip-icon">${tip.icon}</div>
+    <div class="tip-number">TIP ${String(i + 1).padStart(2, '0')}</div>
+    <h3>${tip.title}</h3>
+    <p>${tip.desc}</p>
+    <div class="tip-detail">${tip.detail}</div>
+    <button class="tip-toggle" onclick="event.stopPropagation(); this.parentElement.classList.toggle('expanded'); this.textContent = this.parentElement.classList.contains('expanded') ? '접기' : '자세히 보기';">자세히 보기</button>
+  `;
+  tipsGrid.appendChild(card);
+});
+
+// Render anti-patterns
+const worstGrid = document.getElementById('worst-grid');
+worstHabits.forEach(h => {
+  const card = document.createElement('div');
+  card.className = 'worst-card fade-in';
+  card.innerHTML = `
+    <div class="worst-icon">${h.icon}</div>
+    <h3>${h.title}</h3>
+    <p>${h.desc}</p>
+    <div class="fix">${h.fix}</div>
+  `;
+  worstGrid.appendChild(card);
+});
+
+// Render checklist
+const checklistEl = document.getElementById('checklist');
+const savedChecks = JSON.parse(localStorage.getItem('caltwi-checks') || '{}');
+const today = new Date().toDateString();
+if (savedChecks._date !== today) {
+  localStorage.setItem('caltwi-checks', JSON.stringify({ _date: today }));
+}
+const todayChecks = savedChecks._date === today ? savedChecks : { _date: today };
+
+checklistItems.forEach((item, i) => {
+  const el = document.createElement('div');
+  el.className = 'check-item' + (todayChecks[i] ? ' checked' : '');
+  el.innerHTML = `
+    <div class="check-box">
+      <svg viewBox="0 0 16 16"><polyline points="3,8 7,12 13,4"/></svg>
+    </div>
+    <div class="check-content">
+      <h4>${item.title}</h4>
+      <p>${item.desc}</p>
+    </div>
+  `;
+  el.addEventListener('click', () => {
+    el.classList.toggle('checked');
+    const checks = JSON.parse(localStorage.getItem('caltwi-checks') || '{}');
+    checks[i] = el.classList.contains('checked');
+    checks._date = today;
+    localStorage.setItem('caltwi-checks', JSON.stringify(checks));
+    updateProgress();
+  });
+  checklistEl.appendChild(el);
+});
+
+document.getElementById('progress-total').textContent = checklistItems.length;
+updateProgress();
+
+function updateProgress() {
+  const checked = document.querySelectorAll('.check-item.checked').length;
+  document.getElementById('progress-count').textContent = checked;
+  document.getElementById('progress-fill').style.width = (checked / checklistItems.length * 100) + '%';
+}
+
+// Community tips (localStorage)
+const defaultCommunityTips = [
+  { text: '점심 먹고 산책 10분이 오후 집중력을 살린다', likes: 12 },
+  { text: '퇴근 30분 전에는 새 업무 시작하지 않기', likes: 25 },
+  { text: '"잠깐만요" 하고 찾아오는 사람에게는 "언제 괜찮을까요?" 되물어보기', likes: 18 },
+  { text: '업무 시작 전 2분 동안 할 일 순서를 종이에 적기', likes: 9 },
+  { text: '모니터에 퇴근 시간 포스트잇 붙여두기', likes: 31 }
+];
+
+function loadCommunityTips() {
+  let stored = JSON.parse(localStorage.getItem('caltwi-community') || 'null');
+  if (!stored) {
+    stored = defaultCommunityTips;
+    localStorage.setItem('caltwi-community', JSON.stringify(stored));
+  }
+  return stored;
+}
+
+function renderCommunityTips() {
+  const tips = loadCommunityTips();
+  const container = document.getElementById('community-tips');
+  container.innerHTML = '';
+  tips.sort((a, b) => b.likes - a.likes).forEach((tip, i) => {
+    const el = document.createElement('div');
+    el.className = 'community-tip fade-in';
+    el.innerHTML = `
+      <span class="text">${escapeHtml(tip.text)}</span>
+      <button class="like-btn ${tip.liked ? 'liked' : ''}" onclick="likeTip(${i})">&#x2764; ${tip.likes}</button>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function addCommunityTip() {
+  const input = document.getElementById('tip-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const tips = loadCommunityTips();
+  tips.unshift({ text, likes: 0 });
+  localStorage.setItem('caltwi-community', JSON.stringify(tips));
+  input.value = '';
+  renderCommunityTips();
+}
+
+document.getElementById('tip-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addCommunityTip();
+});
+
+function likeTip(index) {
+  const tips = loadCommunityTips();
+  const sorted = [...tips].sort((a, b) => b.likes - a.likes);
+  const tip = sorted[index];
+  const origIndex = tips.indexOf(tip);
+  if (!tip.liked) {
+    tips[origIndex].likes++;
+    tips[origIndex].liked = true;
+  } else {
+    tips[origIndex].likes--;
+    tips[origIndex].liked = false;
+  }
+  localStorage.setItem('caltwi-community', JSON.stringify(tips));
+  renderCommunityTips();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+renderCommunityTips();
+
+// Pomodoro Timer
+let timerInterval = null;
+let timerSeconds = 25 * 60;
+let isWork = true;
+let isRunning = false;
+
+function toggleTimer() {
+  if (isRunning) {
+    clearInterval(timerInterval);
+    isRunning = false;
+    document.getElementById('timer-start').textContent = '계속';
+  } else {
+    isRunning = true;
+    document.getElementById('timer-start').textContent = '일시정지';
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        isRunning = false;
+        if (isWork) {
+          isWork = false;
+          timerSeconds = 5 * 60;
+          document.getElementById('timer-label').textContent = '휴식 시간';
+          document.getElementById('timer').className = 'timer-display done';
+          document.getElementById('timer-start').textContent = '시작';
+        } else {
+          isWork = true;
+          timerSeconds = 25 * 60;
+          document.getElementById('timer-label').textContent = '집중 시간';
+          document.getElementById('timer').className = 'timer-display working';
+          document.getElementById('timer-start').textContent = '시작';
+        }
+        try { new Audio('data:audio/wav;base64,UklGRl9vT19teleVBmb3JtYXQAABAAAAABAAEARKwAAIhYAQACABAAZGF0YQ').play(); } catch(e) {}
+      }
+      updateTimerDisplay();
+    }, 1000);
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  isRunning = false;
+  isWork = true;
+  timerSeconds = 25 * 60;
+  document.getElementById('timer-label').textContent = '집중 시간';
+  document.getElementById('timer').className = 'timer-display working';
+  document.getElementById('timer-start').textContent = '시작';
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  document.getElementById('timer').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Stat counter animation
+function animateCounters() {
+  document.querySelectorAll('.stat-number').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const duration = 2000;
+    const start = performance.now();
+    function update(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(target * eased) + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounters();
+      statsObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+
+statsObserver.observe(document.querySelector('.stats-bar'));
+</script>
+
+</body>
+</html>
