@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 로또 마스터 - 이번 주 당첨번호는?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #0a0a2e;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* 배경 별 효과 */
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0.2; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+  }
+
+  /* 헤더 */
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .header .crystal-ball {
+    font-size: 80px;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(138, 43, 226, 0.6));
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  .header h1 {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 36px;
+    background: linear-gradient(135deg, #f5af19, #f12711, #e040fb, #00e5ff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s ease infinite;
+    margin-top: 10px;
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .header .subtitle {
+    color: #b0b0d0;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  /* 모드 선택 */
+  .mode-section {
+    margin-bottom: 24px;
+  }
+  .mode-section h2 {
+    font-size: 16px;
+    color: #a0a0d0;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .mode-btn {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 16px 12px;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+    font-size: 14px;
+  }
+  .mode-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+  .mode-btn.active {
+    border-color: #e040fb;
+    background: rgba(224, 64, 251, 0.15);
+    box-shadow: 0 0 20px rgba(224, 64, 251, 0.3);
+  }
+  .mode-btn .mode-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .mode-btn .mode-name {
+    font-weight: 700;
+    display: block;
+  }
+  .mode-btn .mode-desc {
+    font-size: 11px;
+    color: #999;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* 입력 영역 (꿈 해몽 모드용) */
+  .dream-input {
+    display: none;
+    margin-bottom: 20px;
+  }
+  .dream-input.show { display: block; }
+  .dream-input label {
+    display: block;
+    font-size: 14px;
+    color: #b0b0d0;
+    margin-bottom: 8px;
+  }
+  .dream-input input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .dream-input input:focus {
+    border-color: #e040fb;
+  }
+  .dream-input input::placeholder {
+    color: #666;
+  }
+
+  /* 뽑기 버튼 */
+  .generate-btn {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #667eea, #764ba2, #e040fb);
+    background-size: 200% 200%;
+    color: #fff;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.3s;
+    animation: gradientShift 3s ease infinite;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  .generate-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(118, 75, 162, 0.5);
+  }
+  .generate-btn:active {
+    transform: scale(0.98);
+  }
+  .generate-btn.spinning {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .generate-btn .btn-sparkle {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .generate-btn:hover .btn-sparkle { opacity: 1; }
+
+  /* 결과 영역 */
+  .result-area {
+    display: none;
+    margin-bottom: 30px;
+  }
+  .result-area.show { display: block; }
+
+  .fortune-message {
+    text-align: center;
+    padding: 16px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #d0d0f0;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .fortune-message .fortune-emoji {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* 로또 공 */
+  .balls-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .lotto-ball {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 24px;
+    color: #fff;
+    position: relative;
+    opacity: 0;
+    transform: scale(0) rotate(720deg);
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 -3px 8px rgba(0,0,0,0.2), inset 0 3px 8px rgba(255,255,255,0.3);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .lotto-ball.revealed {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  .lotto-ball.bounce {
+    animation: ballBounce 0.5s ease;
+  }
+  @keyframes ballBounce {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.3); }
+    50% { transform: scale(0.9); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  .lotto-ball.range-1 { background: linear-gradient(135deg, #fbc531, #e1b12c); }
+  .lotto-ball.range-2 { background: linear-gradient(135deg, #00a8ff, #0097e6); }
+  .lotto-ball.range-3 { background: linear-gradient(135deg, #e84118, #c23616); }
+  .lotto-ball.range-3 { background: linear-gradient(135deg, #e84118, #c23616); }
+  .lotto-ball.range-4 { background: linear-gradient(135deg, #9c88ff, #8c7ae6); }
+  .lotto-ball.range-5 { background: linear-gradient(135deg, #44bd32, #4cd137); }
+  .plus-sign {
+    font-size: 28px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .plus-sign.revealed { opacity: 1; }
+  .lotto-ball.bonus {
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 4px 15px rgba(0,0,0,0.3), inset 0 -3px 8px rgba(0,0,0,0.2), inset 0 3px 8px rgba(255,255,255,0.3);
+  }
+
+  /* 분석 코멘트 */
+  .analysis {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .analysis-title {
+    font-size: 13px;
+    color: #e040fb;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .analysis-content {
+    font-size: 14px;
+    color: #b0b0d0;
+    line-height: 1.7;
+  }
+  .lucky-items {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .lucky-item {
+    background: rgba(255,255,255,0.08);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #d0d0f0;
+  }
+
+  /* 히스토리 */
+  .history-section {
+    margin-top: 30px;
+  }
+  .history-section h2 {
+    font-size: 16px;
+    color: #a0a0d0;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .history-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .history-balls {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .history-ball {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.2);
+  }
+  .history-mode {
+    font-size: 11px;
+    color: #888;
+    white-space: nowrap;
+  }
+  .history-plus {
+    color: #666;
+    font-size: 14px;
+  }
+
+  /* 꿈틀 */
+  .shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  }
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+  }
+
+  /* 폭죽 효과 */
+  .confetti-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 100;
+  }
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* 타이핑 효과 */
+  .typing { overflow: hidden; white-space: nowrap; border-right: 2px solid #e040fb; animation: blink 0.8s step-end infinite; }
+  @keyframes blink { 50% { border-color: transparent; } }
+
+  /* 횟수 선택 */
+  .count-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .count-section label { font-size: 14px; color: #b0b0d0; }
+  .count-selector {
+    display: flex;
+    gap: 6px;
+  }
+  .count-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .count-btn.active {
+    border-color: #e040fb;
+    background: rgba(224,64,251,0.2);
+  }
+  .count-btn:hover { border-color: rgba(255,255,255,0.4); }
+
+  /* 다중 세트 구분선 */
+  .set-divider {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin: 16px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .set-divider::before, .set-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* 공유 버튼 */
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    background: transparent;
+    color: #b0b0d0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+  .share-btn:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  /* disclaimer */
+  .disclaimer {
+    text-align: center;
+    font-size: 11px;
+    color: #555;
+    margin-top: 40px;
+    line-height: 1.6;
+  }
+
+  /* 슬롯머신 카운터 */
+  .slot-counter {
+    display: none;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .slot-counter.show { display: block; }
+  .slot-digits {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+  .slot-digit {
+    width: 40px;
+    height: 56px;
+    background: rgba(0,0,0,0.4);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 28px;
+    color: #ffd700;
+    overflow: hidden;
+  }
+  .slot-digit span {
+    display: block;
+    animation: slotSpin 0.1s linear infinite;
+  }
+  .slot-digit.stopped span { animation: none; }
+  @keyframes slotSpin {
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(100%); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 별 배경 -->
+<div class="stars" id="stars"></div>
+
+<!-- 폭죽 -->
+<div class="confetti-container" id="confetti"></div>
+
+<div class="container">
+  <!-- 헤더 -->
+  <div class="header">
+    <span class="crystal-ball">🔮</span>
+    <h1>AI 로또 마스터</h1>
+    <p class="subtitle">우주의 기운을 모아 이번 주 행운의 번호를 점쳐드립니다</p>
+  </div>
+
+  <!-- 모드 선택 -->
+  <div class="mode-section">
+    <h2>점술 방식을 선택하세요</h2>
+    <div class="mode-grid">
+      <button class="mode-btn active" data-mode="mystic" onclick="selectMode('mystic')">
+        <span class="mode-icon">🌙</span>
+        <span class="mode-name">우주 기운</span>
+        <span class="mode-desc">별자리와 행성 배열로 추출</span>
+      </button>
+      <button class="mode-btn" data-mode="dream" onclick="selectMode('dream')">
+        <span class="mode-icon">💭</span>
+        <span class="mode-name">꿈 해몽</span>
+        <span class="mode-desc">어젯밤 꿈을 번호로 변환</span>
+      </button>
+      <button class="mode-btn" data-mode="fengshui" onclick="selectMode('fengshui')">
+        <span class="mode-icon">🐉</span>
+        <span class="mode-name">풍수지리</span>
+        <span class="mode-desc">동양 오행의 기운으로 선택</span>
+      </button>
+      <button class="mode-btn" data-mode="ai" onclick="selectMode('ai')">
+        <span class="mode-icon">🤖</span>
+        <span class="mode-name">AI 딥러닝</span>
+        <span class="mode-desc">9847억개 패턴 분석 (거짓말)</span>
+      </button>
+      <button class="mode-btn" data-mode="cat" onclick="selectMode('cat')">
+        <span class="mode-icon">🐱</span>
+        <span class="mode-name">고양이 발</span>
+        <span class="mode-desc">냥이가 밟은 번호 추출</span>
+      </button>
+      <button class="mode-btn" data-mode="chaos" onclick="selectMode('chaos')">
+        <span class="mode-icon">🎰</span>
+        <span class="mode-name">카오스 모드</span>
+        <span class="mode-desc">논리 따위 없다</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 꿈 입력 -->
+  <div class="dream-input" id="dreamInput">
+    <label>어젯밤 꿈을 알려주세요 (예: 돼지, 용, 물, 산 등)</label>
+    <input type="text" id="dreamText" placeholder="꿈 키워드를 입력하세요..." maxlength="50">
+  </div>
+
+  <!-- 횟수 선택 -->
+  <div class="count-section">
+    <label>생성 세트 수</label>
+    <div class="count-selector">
+      <button class="count-btn active" onclick="selectCount(1)">1</button>
+      <button class="count-btn" onclick="selectCount(3)">3</button>
+      <button class="count-btn" onclick="selectCount(5)">5</button>
+    </div>
+  </div>
+
+  <!-- 뽑기 버튼 -->
+  <button class="generate-btn" id="generateBtn" onclick="generate()">
+    <span class="btn-sparkle"></span>
+    ✨ 운명의 번호 뽑기 ✨
+  </button>
+
+  <!-- 결과 -->
+  <div class="result-area" id="resultArea">
+    <div class="fortune-message" id="fortuneMessage"></div>
+    <div id="setsContainer"></div>
+    <div class="analysis" id="analysis" style="display:none">
+      <div class="analysis-title" id="analysisTitle"></div>
+      <div class="analysis-content" id="analysisContent"></div>
+      <div class="lucky-items" id="luckyItems"></div>
+    </div>
+    <div style="text-align:center">
+      <button class="share-btn" onclick="shareResult()">📋 번호 복사하기</button>
+    </div>
+  </div>
+
+  <!-- 히스토리 -->
+  <div class="history-section" id="historySection" style="display:none">
+    <h2>📜 지난 점괘</h2>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+  <p class="disclaimer">
+    ⚠️ 본 서비스는 100% 재미용입니다<br>
+    실제 당첨 확률 향상과는 아무런 관계가 없습니다<br>
+    로또는 적당히, 인생은 즐겁게 🍀
+  </p>
+</div>
+
+<script>
+let currentMode = 'mystic';
+let setCount = 1;
+let history = JSON.parse(localStorage.getItem('lottoHistory') || '[]');
+let isGenerating = false;
+
+// 별 배경 생성
+(function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 3 + 1;
+    star.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      top: ${Math.random() * 100}%; left: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 3 + 2}s;
+      animation-delay: ${Math.random() * 3}s;
+    `;
+    container.appendChild(star);
+  }
+})();
+
+function selectMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+  document.getElementById('dreamInput').classList.toggle('show', mode === 'dream');
+}
+
+function selectCount(n) {
+  setCount = n;
+  document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function getRandomNumbers() {
+  const nums = new Set();
+  while (nums.size < 6) nums.add(Math.floor(Math.random() * 45) + 1);
+  const sorted = [...nums].sort((a, b) => a - b);
+  let bonus;
+  do { bonus = Math.floor(Math.random() * 45) + 1; } while (nums.has(bonus));
+  return { numbers: sorted, bonus };
+}
+
+function getBallRange(n) {
+  if (n <= 10) return 'range-1';
+  if (n <= 20) return 'range-2';
+  if (n <= 30) return 'range-3';
+  if (n <= 40) return 'range-4';
+  return 'range-5';
+}
+
+// 사운드 (Web Audio)
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playPop() {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.frequency.value = 800 + Math.random() * 400;
+  osc.type = 'sine';
+  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  osc.start(audioCtx.currentTime);
+  osc.stop(audioCtx.currentTime + 0.15);
+}
+function playFanfare() {
+  const notes = [523, 659, 784, 1047];
+  notes.forEach((freq, i) => {
+    setTimeout(() => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'triangle';
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + 0.4);
+    }, i * 120);
+  });
+}
+
+// 폭죽
+function launchConfetti() {
+  const container = document.getElementById('confetti');
+  container.innerHTML = '';
+  const colors = ['#e040fb', '#ffd700', '#00e5ff', '#ff6b6b', '#44bd32', '#fbc531', '#e84118', '#9c88ff'];
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const isCircle = Math.random() > 0.5;
+    c.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: -10px;
+      width: ${Math.random() * 10 + 5}px;
+      height: ${isCircle ? c.style.width : Math.random() * 10 + 5}px;
+      background: ${color};
+      border-radius: ${isCircle ? '50%' : '2px'};
+      animation: confettiFall ${Math.random() * 2 + 2}s ease-in ${Math.random() * 0.5}s forwards;
+    `;
+    container.appendChild(c);
+  }
+  setTimeout(() => container.innerHTML = '', 4000);
+}
+
+// 운세 메시지
+const fortunes = {
+  mystic: [
+    { emoji: '🌌', msg: '오리온자리가 당신을 향해 윙크하고 있습니다. 이번 주 우주의 기운이 당신 편입니다!' },
+    { emoji: '🪐', msg: '토성의 고리가 행운의 주파수를 보내고 있습니다. 지금이 바로 그 타이밍!' },
+    { emoji: '⭐', msg: '북극성이 가리키는 방향에 행운이 있습니다. 수상한 정도로 좋은 기운이네요.' },
+    { emoji: '🌠', msg: '유성이 당신의 이름을 부르며 떨어졌습니다. 소원을 비세요!' },
+    { emoji: '🔭', msg: '심우주에서 온 전파 신호를 분석한 결과... 이번 주 당신은 특별합니다.' },
+  ],
+  dream: [
+    { emoji: '😴', msg: '꿈의 세계에서 수비학적 변환을 수행했습니다. 무의식이 보낸 메시지입니다!' },
+    { emoji: '🌈', msg: '꿈속의 상징들이 강력한 번호 조합을 형성하고 있습니다!' },
+    { emoji: '🦋', msg: '꿈 해몽 AI가 당신의 무의식 패턴을 정밀 분석했습니다.' },
+  ],
+  fengshui: [
+    { emoji: '☯️', msg: '오행의 기운이 완벽한 조화를 이루고 있습니다. 금(金)의 기운이 특히 강합니다!' },
+    { emoji: '🏔️', msg: '산세와 수맥이 교차하는 지점에서 강력한 에너지를 감지했습니다!' },
+    { emoji: '🐢', msg: '현무의 기운이 북쪽에서 내려오고 있습니다. 안정적인 번호 조합입니다.' },
+    { emoji: '🐅', msg: '백호의 기운이 서쪽에서 불어옵니다. 공격적이면서도 정확한 조합!' },
+  ],
+  ai: [
+    { emoji: '🧠', msg: 'GPT-7.5 (거짓말) 기반 딥러닝 모델이 9847억개 패턴을 분석 완료했습니다. 신뢰도: 0.0001%' },
+    { emoji: '💻', msg: '양자컴퓨터 시뮬레이션 결과입니다. (실제로는 Math.random()) 매우 과학적인 결과!' },
+    { emoji: '📊', msg: '빅데이터 분석 엔진 가동... 사실 그냥 랜덤이지만 있어 보이죠?' },
+    { emoji: '🔬', msg: 'AI가 우주의 엔트로피를 계산하여 도출한 번호입니다. (계산은 안 했지만요)' },
+  ],
+  cat: [
+    { emoji: '🐱', msg: '냥냥이가 키보드 위를 걸어다니며 선택한 번호입니다. 믿으셔도 됩니다. 아마도.' },
+    { emoji: '😺', msg: '고양이의 제6감을 활용한 과학적(?) 추출 결과입니다. 냐옹~' },
+    { emoji: '🐈', msg: '길냥이 3마리의 합의하에 도출된 번호입니다. 회의가 길었습니다.' },
+    { emoji: '😸', msg: '고양이가 생선 냄새를 맡으며 직감적으로 고른 조합! 츄르 보너스 기운 포함.' },
+  ],
+  chaos: [
+    { emoji: '🌀', msg: '혼돈의 카오스에서 태어난 번호입니다. 논리? 그런 건 필요 없다!' },
+    { emoji: '🎪', msg: '우주의 랜덤 시드가 당신을 선택했습니다. 이유 따위 없습니다!' },
+    { emoji: '💥', msg: '빅뱅 에너지를 직접 채널링하여 추출! 질서는 과대평가되어 있습니다.' },
+    { emoji: '🃏', msg: '조커 카드가 뒤집혔습니다. 예측 불가능함이야말로 최고의 전략!' },
+  ]
+};
+
+const analyses = {
+  mystic: [
+    { title: '🔮 우주 에너지 분석', items: ['행운색: 보라', '행운 방향: 북동쪽', '행운 시간: 오후 7시'] },
+    { title: '✨ 별자리 궁합 보고서', items: ['행운 요일: 토요일', '파워넘버: 7', '행운 음식: 치킨'] },
+  ],
+  dream: [
+    { title: '💭 꿈 분석 리포트', items: ['꿈 에너지: 상승', '무의식 신호: 강함', '예지몽 확률: 높음'] },
+  ],
+  fengshui: [
+    { title: '☯️ 풍수 에너지 분석', items: ['기 흐름: 원활', '행운 방위: 동남쪽', '파워스톤: 자수정'] },
+    { title: '🐉 사신수 배치도', items: ['좌청룡: 안정', '우백호: 활발', '행운 식물: 대나무'] },
+  ],
+  ai: [
+    { title: '📊 AI 분석 보고서 (100% 뻥)', items: ['모델 정확도: 0.0001%', '학습 데이터: 0건', '자신감: 120%'] },
+    { title: '🧪 가짜 통계 분석', items: ['패턴 감지: 없음', '상관관계: 우연', '결론: 그냥 랜덤'] },
+  ],
+  cat: [
+    { title: '🐾 고양이 행동 분석', items: ['꼬리 각도: 45°', '골골송 주파수: 행운', '츄르 보너스: 적용'] },
+  ],
+  chaos: [
+    { title: '🌀 카오스 이론 적용 결과', items: ['나비효과: 감지됨', '엔트로피: 최대', '예측: 불가능 (원래 그럼)'] },
+  ]
+};
+
+const dreamKeywords = {
+  '돼지': [3, 8, 13, 33], '용': [1, 7, 28, 44], '물': [4, 14, 24, 34],
+  '산': [6, 16, 26, 36], '불': [9, 19, 29, 39], '돈': [8, 18, 28, 38],
+  '뱀': [2, 12, 22, 32], '호랑이': [5, 15, 25, 35], '새': [11, 21, 31, 41],
+  '꽃': [7, 17, 27, 37], '바다': [10, 20, 30, 40], '하늘': [3, 13, 23, 43],
+  '죽음': [4, 14, 44, 45], '결혼': [2, 22, 33, 42], '시험': [1, 11, 21, 41],
+  '비': [6, 16, 36, 40], '눈': [5, 15, 25, 45], '별': [7, 17, 37, 44],
+  '고양이': [9, 19, 29, 39], '강아지': [3, 13, 23, 33], '아기': [1, 11, 21, 31],
+  '차': [8, 18, 28, 38], '집': [4, 24, 34, 44], '학교': [10, 20, 30, 40],
+};
+
+function getDreamNumbers(dreamText) {
+  const result = new Set();
+  for (const [keyword, nums] of Object.entries(dreamKeywords)) {
+    if (dreamText.includes(keyword)) {
+      const pick = nums[Math.floor(Math.random() * nums.length)];
+      result.add(pick);
+    }
+  }
+  // 부족한 만큼 랜덤 채우기
+  while (result.size < 6) {
+    result.add(Math.floor(Math.random() * 45) + 1);
+  }
+  const arr = [...result].slice(0, 6).sort((a, b) => a - b);
+  let bonus;
+  do { bonus = Math.floor(Math.random() * 45) + 1; } while (arr.includes(bonus));
+  return { numbers: arr, bonus };
+}
+
+async function generate() {
+  if (isGenerating) return;
+  isGenerating = true;
+
+  const btn = document.getElementById('generateBtn');
+  btn.classList.add('spinning');
+  btn.textContent = '🔮 우주와 교신 중...';
+
+  if (currentMode === 'ai') btn.textContent = '🤖 딥러닝 연산 중... (거짓말)';
+  if (currentMode === 'cat') btn.textContent = '🐱 고양이 소환 중... 냐옹';
+  if (currentMode === 'chaos') btn.textContent = '🌀 카오스 생성 중...';
+  if (currentMode === 'fengshui') btn.textContent = '🐉 기 순환 감지 중...';
+  if (currentMode === 'dream') btn.textContent = '💭 꿈 해독 중...';
+
+  const resultArea = document.getElementById('resultArea');
+  resultArea.classList.add('show');
+
+  // 운세 메시지
+  const fortunePool = fortunes[currentMode];
+  const fortune = fortunePool[Math.floor(Math.random() * fortunePool.length)];
+  document.getElementById('fortuneMessage').innerHTML = `
+    <span class="fortune-emoji">${fortune.emoji}</span>
+    ${fortune.msg}
+  `;
+
+  const setsContainer = document.getElementById('setsContainer');
+  setsContainer.innerHTML = '';
+
+  const allSets = [];
+
+  for (let s = 0; s < setCount; s++) {
+    if (s > 0) {
+      const divider = document.createElement('div');
+      divider.className = 'set-divider';
+      divider.textContent = `${s + 1}번째 조합`;
+      setsContainer.appendChild(divider);
+    }
+
+    const ballsDiv = document.createElement('div');
+    ballsDiv.className = 'balls-container';
+    setsContainer.appendChild(ballsDiv);
+
+    let result;
+    if (currentMode === 'dream') {
+      const dreamText = document.getElementById('dreamText').value || '행운';
+      result = getDreamNumbers(dreamText);
+    } else {
+      result = getRandomNumbers();
+    }
+
+    allSets.push(result);
+
+    // 공 6개 + 보너스
+    for (let i = 0; i < 6; i++) {
+      const ball = document.createElement('div');
+      ball.className = `lotto-ball ${getBallRange(result.numbers[i])}`;
+      ball.textContent = result.numbers[i];
+      ballsDiv.appendChild(ball);
+    }
+
+    const plus = document.createElement('div');
+    plus.className = 'plus-sign';
+    plus.textContent = '+';
+    ballsDiv.appendChild(plus);
+
+    const bonusBall = document.createElement('div');
+    bonusBall.className = `lotto-ball bonus ${getBallRange(result.bonus)}`;
+    bonusBall.textContent = result.bonus;
+    ballsDiv.appendChild(bonusBall);
+
+    // 애니메이션
+    const balls = ballsDiv.querySelectorAll('.lotto-ball');
+    const plusSign = ballsDiv.querySelector('.plus-sign');
+
+    for (let i = 0; i < balls.length; i++) {
+      await new Promise(r => setTimeout(r, s === 0 ? 300 : 150));
+      if (i === 6) {
+        plusSign.classList.add('revealed');
+        await new Promise(r => setTimeout(r, 200));
+      }
+      balls[i].classList.add('revealed');
+      playPop();
+      balls[i].classList.add('bounce');
+      setTimeout(() => balls[i].classList.remove('bounce'), 500);
+    }
+  }
+
+  // 분석
+  const analysisPool = analyses[currentMode];
+  const analysis = analysisPool[Math.floor(Math.random() * analysisPool.length)];
+  const analysisDiv = document.getElementById('analysis');
+  analysisDiv.style.display = 'block';
+  document.getElementById('analysisTitle').textContent = analysis.title;
+
+  const content = getAnalysisContent(currentMode, allSets[0].numbers);
+  document.getElementById('analysisContent').textContent = content;
+
+  const itemsDiv = document.getElementById('luckyItems');
+  itemsDiv.innerHTML = analysis.items.map(item => `<span class="lucky-item">${item}</span>`).join('');
+
+  // 완료!
+  playFanfare();
+  launchConfetti();
+
+  btn.classList.remove('spinning');
+  btn.innerHTML = '<span class="btn-sparkle"></span>✨ 다시 뽑기 ✨';
+  isGenerating = false;
+
+  // 히스토리 저장
+  allSets.forEach(set => {
+    history.unshift({ numbers: set.numbers, bonus: set.bonus, mode: currentMode, time: Date.now() });
+  });
+  if (history.length > 20) history = history.slice(0, 20);
+  localStorage.setItem('lottoHistory', JSON.stringify(history));
+  renderHistory();
+
+  // 결과로 스크롤
+  resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function getAnalysisContent(mode, numbers) {
+  const sum = numbers.reduce((a, b) => a + b, 0);
+  const odd = numbers.filter(n => n % 2 === 1).length;
+  const even = 6 - odd;
+
+  const texts = {
+    mystic: `총합 ${sum}, 홀짝비율 ${odd}:${even}. 목성과 금성의 각도가 ${sum > 130 ? '높은' : '안정적인'} 에너지를 보여줍니다. ${odd > even ? '양(陽)의 기운이 우세' : '음(陰)의 기운이 조화로운'} 배치입니다.`,
+    dream: `총합 ${sum}, 홀짝비율 ${odd}:${even}. 꿈에서 추출된 심볼이 ${numbers.filter(n => n > 22).length}개의 고번호를 생성했습니다. 무의식의 메시지가 강력합니다.`,
+    fengshui: `총합 ${sum}, 홀짝비율 ${odd}:${even}. 오행 분포: 금${numbers.filter(n=>n<=9).length} 수${numbers.filter(n=>n>=10&&n<=18).length} 목${numbers.filter(n=>n>=19&&n<=27).length} 화${numbers.filter(n=>n>=28&&n<=36).length} 토${numbers.filter(n=>n>=37).length}. 기의 순환이 원활합니다.`,
+    ai: `총합 ${sum}, 홀짝비율 ${odd}:${even}. 딥러닝 레이어 847개를 통과한 결과입니다. 사실 Math.random()인건 비밀입니다. 손실함수: NaN, 정확도: undefined%.`,
+    cat: `총합 ${sum}, 홀짝비율 ${odd}:${even}. 고양이가 ${odd > even ? '홀수를 더 많이 밟았습니다. 오른발잡이 냥이' : '짝수를 선호했습니다. 왼발잡이 냥이'}인 것으로 추정됩니다. 츄르 3개 소모.`,
+    chaos: `총합 ${sum}, 홀짝비율 ${odd}:${even}. 이 조합의 의미? 없습니다. 그게 카오스의 아름다움입니다. 나비 한 마리가 날갯짓을 했고, 여기 번호가 나왔습니다.`
+  };
+  return texts[mode];
+}
+
+function renderHistory() {
+  const section = document.getElementById('historySection');
+  const list = document.getElementById('historyList');
+  if (history.length === 0) { section.style.display = 'none'; return; }
+
+  section.style.display = 'block';
+  const modeNames = { mystic: '🌙', dream: '💭', fengshui: '🐉', ai: '🤖', cat: '🐱', chaos: '🎰' };
+  const modeLabels = { mystic: '우주기운', dream: '꿈해몽', fengshui: '풍수지리', ai: 'AI분석', cat: '냥이', chaos: '카오스' };
+
+  list.innerHTML = history.slice(0, 10).map(h => `
+    <div class="history-item">
+      <div class="history-balls">
+        ${h.numbers.map(n => `<div class="history-ball ${getBallRange(n)}">${n}</div>`).join('')}
+        <span class="history-plus">+</span>
+        <div class="history-ball ${getBallRange(h.bonus)}" style="border:2px solid #ffd700">${h.bonus}</div>
+      </div>
+      <span class="history-mode">${modeNames[h.mode]} ${modeLabels[h.mode]}</span>
+    </div>
+  `).join('');
+}
+
+function shareResult() {
+  if (history.length === 0) return;
+
+  const latest = history.slice(0, setCount);
+  const modeLabels = { mystic: '우주기운', dream: '꿈해몽', fengshui: '풍수지리', ai: 'AI딥러닝', cat: '고양이발', chaos: '카오스' };
+
+  let text = `🔮 AI 로또 마스터 추천번호\n모드: ${modeLabels[currentMode]}\n\n`;
+  latest.reverse().forEach((h, i) => {
+    text += `${setCount > 1 ? `[${i+1}] ` : ''}${h.numbers.join(', ')} + 보너스: ${h.bonus}\n`;
+  });
+  text += `\n🍀 행운을 빕니다!`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.share-btn');
+    btn.textContent = '✅ 복사 완료!';
+    setTimeout(() => btn.textContent = '📋 번호 복사하기', 2000);
+  });
+}
+
+// 초기 히스토리 렌더
+renderHistory();
+</script>
+</body>
+</html>
