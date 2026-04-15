@@ -10,18 +10,19 @@
     @import url('https://fonts.googleapis.com/css2?family=SUIT:wght@400;500;600;700;800&display=swap');
 
     :root {
-      --bg: #f6f7f3;
-      --panel: #ffffff;
-      --ink: #1d2a2f;
-      --sub: #506067;
-      --line: #dce4df;
-      --brand: #0f766e;
-      --brand-soft: #d8f3ef;
-      --accent: #f59e0b;
+      --bg: #f3f6ff;
+      --panel: rgba(255, 255, 255, 0.86);
+      --ink: #1a1f3a;
+      --sub: #565f80;
+      --line: #d9deff;
+      --brand: #3164ff;
+      --brand-2: #12b3a2;
+      --brand-3: #ff7d59;
+      --accent: #ffb020;
       --danger: #b45309;
-      --radius-lg: 18px;
-      --radius-md: 12px;
-      --shadow: 0 14px 34px rgba(29, 42, 47, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow: 0 18px 42px rgba(44, 67, 160, 0.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,8 +31,9 @@
       font-family: 'SUIT', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at 8% 10%, #e8f6f2 0%, transparent 40%),
-        radial-gradient(circle at 90% 0%, #fff4de 0%, transparent 28%),
+        radial-gradient(circle at 10% -5%, #d8e7ff 0%, transparent 30%),
+        radial-gradient(circle at 90% 0%, #ffe8de 0%, transparent 28%),
+        radial-gradient(circle at 80% 80%, #ddfff9 0%, transparent 34%),
         var(--bg);
       line-height: 1.65;
       overflow-x: hidden;
@@ -44,23 +46,35 @@
     }
 
     .hero {
-      background: linear-gradient(150deg, #134e4a 0%, #0f766e 52%, #0f766e 100%);
+      background: linear-gradient(135deg, #3658ff 0%, #6a5cff 44%, #11b8a6 100%);
       color: #f5fffd;
       border-radius: 26px;
       padding: clamp(28px, 5vw, 54px);
-      box-shadow: 0 20px 50px rgba(15, 118, 110, 0.28);
+      box-shadow: 0 24px 56px rgba(53, 77, 221, 0.34);
       position: relative;
       overflow: hidden;
       animation: rise 0.7s ease both;
     }
 
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(transparent 97%, rgba(255, 255, 255, 0.15) 97%),
+        linear-gradient(90deg, transparent 97%, rgba(255, 255, 255, 0.15) 97%);
+      background-size: 28px 28px;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
     .hero::after {
       content: '';
       position: absolute;
-      width: 260px;
-      height: 260px;
+      width: 300px;
+      height: 300px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0));
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0));
       right: -50px;
       top: -50px;
       pointer-events: none;
@@ -74,7 +88,7 @@
       letter-spacing: 0.04em;
       padding: 6px 12px;
       margin-bottom: 12px;
-      background: rgba(0, 0, 0, 0.12);
+      background: rgba(6, 15, 80, 0.25);
     }
 
     h1 {
@@ -87,8 +101,25 @@
 
     .hero p {
       font-size: clamp(15px, 2.8vw, 19px);
-      color: #ddfbf4;
+      color: #f0f7ff;
       max-width: 44ch;
+    }
+
+    .hero-stickers {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hero-stickers span {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      color: #f8f9ff;
+      backdrop-filter: blur(4px);
     }
 
     .meta {
@@ -114,8 +145,21 @@
       border-radius: var(--radius-lg);
       padding: clamp(18px, 3.8vw, 30px);
       box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
       animation: rise 0.7s ease both;
       animation-delay: 0.08s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    section::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand), #7e76ff, var(--brand-2), var(--brand-3));
+      opacity: 0.75;
     }
 
     h2 {
@@ -150,7 +194,8 @@
 
     .card:hover {
       transform: translateY(-2px);
-      border-color: #aec8be;
+      border-color: #aebeff;
+      box-shadow: 0 10px 24px rgba(76, 98, 214, 0.12);
     }
 
     .card h3 {
@@ -164,16 +209,16 @@
     }
 
     .loop {
-      border: 1px dashed #8fb5ac;
+      border: 1px dashed #9cb4ff;
       border-radius: var(--radius-md);
-      background: linear-gradient(180deg, #f1fcfa 0%, #f7fbfa 100%);
+      background: linear-gradient(180deg, #f1f5ff 0%, #f8faff 100%);
       padding: 16px;
       margin-top: 8px;
     }
 
     .loop ol {
       margin-left: 18px;
-      color: #244248;
+      color: #334080;
       font-weight: 600;
       font-size: 14px;
       display: grid;
@@ -198,7 +243,7 @@
     .kpi strong {
       display: block;
       font-size: 22px;
-      color: var(--brand);
+      color: #3552db;
       line-height: 1.1;
       margin-bottom: 6px;
     }
@@ -215,21 +260,21 @@
     }
 
     .step {
-      border-left: 4px solid var(--brand);
+      border-left: 4px solid #5b63ff;
       border-radius: 0 12px 12px 0;
-      background: #f6fffc;
+      background: #f3f7ff;
       padding: 10px 12px;
     }
 
     .step b {
-      color: #1f4340;
+      color: #28358a;
       display: block;
       font-size: 15px;
       margin-bottom: 2px;
     }
 
     .step p {
-      color: #4d6665;
+      color: #58689c;
       font-size: 14px;
     }
 
@@ -266,30 +311,30 @@
     }
 
     .feature-item {
-      border: 1px solid #d7e5df;
+      border: 1px solid #dde3ff;
       border-radius: 14px;
-      background: linear-gradient(180deg, #fbfffe 0%, #f4fbf8 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #f5f8ff 100%);
       padding: 14px;
     }
 
     .feature-item h3 {
       font-size: 17px;
       margin-bottom: 8px;
-      color: #184a46;
+      color: #28358a;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .feature-item h3 i {
-      color: var(--brand);
+      color: #3f5dff;
       font-size: 18px;
       line-height: 1;
     }
 
     .feature-item p {
       font-size: 14px;
-      color: #466066;
+      color: #566392;
       margin-bottom: 10px;
     }
 
@@ -297,7 +342,7 @@
       margin-left: 18px;
       display: grid;
       gap: 6px;
-      color: #2d4d50;
+      color: #32488a;
       font-size: 14px;
     }
 
@@ -309,16 +354,16 @@
     }
 
     .visual-card {
-      border: 1px solid #d6e4df;
+      border: 1px solid #dbe2ff;
       border-radius: 14px;
       overflow: hidden;
-      background: #f9fbfa;
+      background: #f9faff;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .visual-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 24px rgba(29, 42, 47, 0.12);
+      box-shadow: 0 14px 28px rgba(72, 90, 204, 0.18);
     }
 
     .visual-card img {
@@ -337,15 +382,77 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      color: #174844;
+      color: #2f3f90;
       font-size: 14px;
       margin-bottom: 4px;
     }
 
     .visual-card .cap p {
-      color: #4b6568;
+      color: #5a668f;
       font-size: 13px;
       line-height: 1.5;
+    }
+
+    .mock-notification {
+      aspect-ratio: 16 / 10;
+      background: linear-gradient(140deg, #eef2ff 0%, #dbfff5 100%);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mock-phone {
+      width: 150px;
+      border-radius: 18px;
+      border: 2px solid #c8cff8;
+      background: #ffffff;
+      box-shadow: 0 12px 22px rgba(44, 58, 165, 0.2);
+      overflow: hidden;
+    }
+
+    .mock-phone-head {
+      background: linear-gradient(90deg, #3e5dff, #12b3a2);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mock-phone-list {
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+      background: #f7f8ff;
+    }
+
+    .mock-row {
+      background: #fff;
+      border: 1px solid #e1e5ff;
+      border-radius: 10px;
+      padding: 7px 8px;
+      font-size: 10px;
+      color: #4f5787;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mock-badge {
+      min-width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #ff5b74;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5px;
     }
 
     footer {
@@ -362,6 +469,7 @@
       .kpi { grid-template-columns: 1fr; }
       .card { min-height: 0; }
       .meta span { font-size: 11px; }
+      .hero-stickers span { font-size: 11px; }
     }
 
     @keyframes rise {
@@ -376,6 +484,11 @@
       <div class="badge">KOREAN LEARNING APP PLAN</div>
       <h1>캐릭터 중심 소셜 루프 기획 정리</h1>
       <p>기술 구현 상세를 제외하고, 사용자 경험과 서비스 흐름 중심으로 정리한 페이지입니다. 모바일에서도 한눈에 읽히도록 핵심만 간결하게 구성했습니다.</p>
+      <div class="hero-stickers">
+        <span>#학습이_관계가되는_순간</span>
+        <span>#말풍선_번역_친구_레벨업</span>
+        <span>#리텐션_강화</span>
+      </div>
       <div class="meta">
         <span>대상: 영어/일본어권 학습자</span>
         <span>목표: 재방문 동기 강화</span>
@@ -465,7 +578,19 @@
           </div>
         </article>
         <article class="visual-card">
-          <img src="https://images.pexels.com/photos/5077403/pexels-photo-5077403.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="모바일에서 알림 배지를 확인하는 사용자" loading="lazy">
+          <div class="mock-notification" role="img" aria-label="요청 알림 배지와 친구 목록을 보여주는 모바일 화면 예시">
+            <div class="mock-phone">
+              <div class="mock-phone-head">
+                <span>친구</span>
+                <span class="mock-badge">3</span>
+              </div>
+              <div class="mock-phone-list">
+                <div class="mock-row"><span>받은 요청</span><span class="mock-badge">2</span></div>
+                <div class="mock-row"><span>새 친구 수락</span><i class="bi bi-check-circle-fill" style="color:#12b3a2"></i></div>
+                <div class="mock-row"><span>친구 코드 복사</span><i class="bi bi-clipboard-check" style="color:#3e5dff"></i></div>
+              </div>
+            </div>
+          </div>
           <div class="cap">
             <b><i class="bi bi-bell"></i> 요청/알림 인지</b>
             <p>배지와 토스트 형태로 받은 요청을 보여줘 사용자가 친구 활동을 놓치지 않게 합니다.</p>
