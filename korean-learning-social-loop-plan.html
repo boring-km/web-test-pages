@@ -258,6 +258,39 @@
       background: #fbfdfc;
     }
 
+    .feature-stack {
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .feature-item {
+      border: 1px solid #d7e5df;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #fbfffe 0%, #f4fbf8 100%);
+      padding: 14px;
+    }
+
+    .feature-item h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+      color: #184a46;
+    }
+
+    .feature-item p {
+      font-size: 14px;
+      color: #466066;
+      margin-bottom: 10px;
+    }
+
+    .feature-item ul {
+      margin-left: 18px;
+      display: grid;
+      gap: 6px;
+      color: #2d4d50;
+      font-size: 14px;
+    }
+
     footer {
       margin-top: 18px;
       text-align: center;
@@ -338,6 +371,62 @@
         <article class="card">
           <h3>친구 탭 중심 허브</h3>
           <p>요청 확인, 친구 추가, 목록 탐색, 프로필 열람까지 한 화면 흐름으로 구성해 소셜 진입 장벽을 낮춥니다.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>상세 기능 설명</h2>
+      <p class="lead">아래는 실제 사용자가 체감하게 될 동작 기준으로 정리한 상세 시나리오입니다. 기술 구현 방식은 제외하고, 화면에서 보이는 경험만 담았습니다.</p>
+      <div class="feature-stack">
+        <article class="feature-item">
+          <h3>1) 캐릭터 대사 + 번역 인터랙션</h3>
+          <p>홈 화면 진입 순간 캐릭터가 말을 걸어 "앱이 살아있다"는 느낌을 주고, 탭 행동으로 다음 학습 자극을 이어갑니다.</p>
+          <ul>
+            <li>진입 시 대사 1개가 자동 노출되고, 캐릭터 탭 시 새 대사로 교체됩니다.</li>
+            <li>"탭해서 번역" 안내를 제공해 초보 학습자도 부담 없이 뜻을 확인할 수 있습니다.</li>
+            <li>번역은 말풍선 아래 펼쳐져 원문과 의미를 함께 비교하도록 유도합니다.</li>
+          </ul>
+        </article>
+
+        <article class="feature-item">
+          <h3>2) 자기소개 한 줄 프로필</h3>
+          <p>학습자마다 성향과 분위기를 표현할 수 있도록 짧고 간단한 자기소개를 중심 요소로 둡니다.</p>
+          <ul>
+            <li>짧은 길이 제한으로 작성 부담은 낮추고, 읽기 속도는 높입니다.</li>
+            <li>홈과 친구 프로필 모두 동일하게 보여 일관된 자기 표현을 유지합니다.</li>
+            <li>편집 진입이 쉬워, 사용자 상태 변화에 맞춰 자주 업데이트하도록 유도합니다.</li>
+          </ul>
+        </article>
+
+        <article class="feature-item">
+          <h3>3) 친구 추가와 요청 확인 흐름</h3>
+          <p>친구 연결은 빠르고 단순해야 하므로 코드 입력/공유 링크 중심으로 설계하며, 즉시 친구가 되지 않고 요청-수락 단계를 둡니다.</p>
+          <ul>
+            <li>내 친구 코드를 항상 쉽게 확인하고 복사할 수 있어야 합니다.</li>
+            <li>받은 요청은 배지와 안내 표시로 놓치지 않게 보여줍니다.</li>
+            <li>요청 수락 후 친구 목록에 반영되어 "연결 완료"를 명확히 체감합니다.</li>
+          </ul>
+        </article>
+
+        <article class="feature-item">
+          <h3>4) 친구 프로필 열람 경험</h3>
+          <p>친구 프로필은 복잡한 소셜 피드 대신, 캐릭터/소개/레벨 중심의 가벼운 비교 경험을 제공합니다.</p>
+          <ul>
+            <li>캐릭터 비주얼, 닉네임, 칭호, 소개 문구를 한 화면에서 직관적으로 확인합니다.</li>
+            <li>MZ력 레벨과 진행 상태를 보여 성장 정도를 서로 비교할 수 있습니다.</li>
+            <li>관계 정리가 필요할 때는 삭제 동선을 명확히 제공해 불편을 줄입니다.</li>
+          </ul>
+        </article>
+
+        <article class="feature-item">
+          <h3>5) MZ력 보상 체계</h3>
+          <p>퀴즈/출석/친구 활동처럼 이미 존재하는 행동에 보상 레이어를 덧씌워, 학습 루틴이 성장 루틴으로 인식되게 만듭니다.</p>
+          <ul>
+            <li>행동 직후 경험치 획득 피드백으로 "무엇을 잘했는지"를 즉시 전달합니다.</li>
+            <li>경험치와 레벨을 함께 보여 단기 성취와 장기 목표를 동시에 제공합니다.</li>
+            <li>레벨별 칭호 변화로 성장의 의미를 숫자 이상으로 느끼게 합니다.</li>
+          </ul>
         </article>
       </div>
     </section>
