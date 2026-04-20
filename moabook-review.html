@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF7F0">
+<title>모아북 디자인 리뷰 · 2026.04.20</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #FAF7F0;
+  --paper-alt: #F3EEE1;
+  --paper-deep: #EDE7D6;
+  --ink: #1A1918;
+  --ink-soft: #4A473F;
+  --ink-mid: #72695A;
+  --ink-faint: #A8A292;
+  --divider: #E4DDC9;
+  --divider-soft: #EFEADC;
+  --accent: #1E3A5F;
+  --accent-hover: #14263F;
+  --amber: #C2410C;
+  --critical: #A61D24;
+  --critical-bg: #F4E4E3;
+  --warning: #A85E0C;
+  --warning-bg: #F7EBD4;
+  --low: #5F4E1A;
+  --low-bg: #EFE9CF;
+  --success: #15653D;
+  --success-bg: #DCEBDF;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --shadow-sm: 0 1px 2px rgba(26,25,24,.06);
+  --shadow-md: 0 2px 8px rgba(26,25,24,.08), 0 1px 2px rgba(26,25,24,.04);
+  --shadow-lg: 0 12px 32px rgba(26,25,24,.12), 0 2px 4px rgba(26,25,24,.04);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'ss02', 'tnum';
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Paper grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .35;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.35  0 0 0 0 0.2  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+}
+
+/* ===== Typography ===== */
+.serif { font-family: 'Newsreader', serif; font-feature-settings: 'lnum'; }
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+h1, h2, h3, h4 {
+  font-family: 'Pretendard Variable', Pretendard, sans-serif;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* ===== Header ===== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(250, 247, 240, .92);
+  backdrop-filter: saturate(160%) blur(12px);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  border-bottom: 1px solid var(--divider);
+}
+.site-header-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.site-brand-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--accent);
+}
+.site-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-mid);
+  letter-spacing: 0.02em;
+}
+
+/* ===== Container ===== */
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+section {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--divider);
+}
+@media (min-width: 768px) {
+  section { padding: 80px 0; }
+}
+
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+.section-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px; height: 1px;
+  background: var(--amber);
+}
+.section-num {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--amber);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.section-title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+}
+@media (min-width: 768px) {
+  .section-title { font-size: 40px; }
+}
+.section-lede {
+  font-size: 17px;
+  color: var(--ink-soft);
+  max-width: 680px;
+  margin-bottom: 32px;
+}
+@media (min-width: 768px) {
+  .section-lede { font-size: 19px; margin-bottom: 48px; }
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding: 48px 0 64px;
+  border-bottom: 1px solid var(--divider);
+  position: relative;
+}
+@media (min-width: 768px) {
+  .hero { padding: 96px 0 80px; }
+}
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.hero-eyebrow-line {
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: var(--amber);
+  opacity: 0.4;
+}
+.hero h1 {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+@media (min-width: 640px) {
+  .hero h1 { font-size: 56px; }
+}
+@media (min-width: 1024px) {
+  .hero h1 { font-size: 72px; }
+}
+.hero h1 em {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--amber);
+  letter-spacing: -0.02em;
+}
+.hero-sub {
+  font-size: 18px;
+  color: var(--ink-soft);
+  max-width: 600px;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+@media (min-width: 768px) {
+  .hero-sub { font-size: 21px; margin-bottom: 56px; }
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 720px;
+  padding-top: 32px;
+  border-top: 1px solid var(--divider);
+}
+@media (min-width: 640px) {
+  .hero-stats { gap: 32px; padding-top: 40px; }
+}
+.stat-item .stat-num {
+  font-family: 'Newsreader', serif;
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  display: block;
+}
+@media (min-width: 640px) {
+  .stat-item .stat-num { font-size: 64px; }
+}
+.stat-item .stat-label {
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+@media (min-width: 640px) {
+  .stat-item .stat-label { font-size: 12px; }
+}
+
+/* ===== Badges ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+}
+.badge-critical { color: var(--critical); background: var(--critical-bg); border-color: rgba(166,29,36,.15); }
+.badge-critical .badge-dot { background: var(--critical); }
+.badge-warning { color: var(--warning); background: var(--warning-bg); border-color: rgba(168,94,12,.18); }
+.badge-warning .badge-dot { background: var(--warning); }
+.badge-low { color: var(--low); background: var(--low-bg); border-color: rgba(95,78,26,.18); }
+.badge-low .badge-dot { background: var(--low); }
+.badge-neutral { color: var(--ink-mid); background: var(--paper-alt); border-color: var(--divider); }
+.badge-accent { color: var(--accent); background: #E3EAF3; border-color: rgba(30,58,95,.2); }
+.badge-success { color: var(--success); background: var(--success-bg); border-color: rgba(21,101,61,.18); }
+
+/* ===== Issue cards (summary) ===== */
+.top-issues {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  counter-reset: issue;
+}
+@media (min-width: 700px) {
+  .top-issues { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+.issue-card {
+  background: var(--paper);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-md);
+  padding: 20px 20px 22px;
+  position: relative;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  counter-increment: issue;
+}
+.issue-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink-faint);
+  box-shadow: var(--shadow-md);
+}
+.issue-card::before {
+  content: counter(issue, decimal-leading-zero);
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 28px;
+  color: var(--ink-faint);
+  line-height: 1;
+}
+.issue-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+  max-width: calc(100% - 52px);
+}
+.issue-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  line-height: 1.35;
+  max-width: calc(100% - 28px);
+}
+.issue-card-desc {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.issue-card-desc code {
+  background: var(--paper-alt);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--ink);
+}
+
+/* ===== Scorecard ===== */
+.scorecard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+@media (min-width: 700px) {
+  .scorecard { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+.score-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 20px;
+  background: var(--paper);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-md);
+}
+.score-axis {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.score-axis .axis-name {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.score-axis .axis-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-mid);
+  text-transform: uppercase;
+}
+.score-bar {
+  width: 80px;
+  height: 4px;
+  background: var(--divider);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.score-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, var(--amber), var(--accent));
+  border-radius: 2px;
+  width: var(--fill, 50%);
+}
+.score-grade {
+  font-family: 'Newsreader', serif;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  min-width: 42px;
+  text-align: right;
+}
+
+/* ===== Accordion (crosscutting) ===== */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.acc-item {
+  background: var(--paper);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.acc-item[open] { border-color: var(--ink-faint); }
+.acc-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: center;
+  user-select: none;
+}
+.acc-summary::-webkit-details-marker { display: none; }
+.acc-summary-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--amber);
+  line-height: 1;
+}
+.acc-summary-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+.acc-chev {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--divider);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  color: var(--ink-mid);
+  transition: transform .25s, background .2s, color .2s;
+}
+.acc-item[open] .acc-chev {
+  transform: rotate(180deg);
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.acc-body {
+  padding: 4px 20px 24px;
+  border-top: 1px dashed var(--divider);
+  margin-top: -1px;
+  padding-top: 20px;
+}
+.acc-body h4 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-top: 18px;
+  margin-bottom: 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.acc-body h4:first-child { margin-top: 0; }
+.acc-body p { font-size: 15px; color: var(--ink-soft); line-height: 1.65; margin-bottom: 12px; }
+.acc-body ul { margin: 0 0 12px 1.2em; font-size: 15px; color: var(--ink-soft); }
+.acc-body ul li { margin-bottom: 6px; }
+.acc-body code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  background: var(--paper-alt);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--ink);
+}
+.acc-body pre {
+  background: var(--paper-deep);
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: var(--ink);
+  overflow-x: auto;
+  margin: 10px 0 16px;
+  line-height: 1.6;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 6px 0 12px;
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}
+.data-table thead th {
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  font-weight: 600;
+  padding: 8px 12px 8px 0;
+  border-bottom: 1px solid var(--divider);
+}
+.data-table tbody td {
+  padding: 10px 12px 10px 0;
+  border-bottom: 1px dashed var(--divider);
+  vertical-align: top;
+  color: var(--ink-soft);
+}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table code {
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* ===== Filter chips ===== */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  background: var(--paper);
+  border: 1px solid var(--divider);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--ink-faint); color: var(--ink); }
+.chip.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.chip-count {
+  margin-left: 4px;
+  opacity: .6;
+  font-size: 11px;
+}
+
+/* ===== Screen issue cards ===== */
+.screen-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 768px) {
+  .screen-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+}
+.screen-card {
+  background: var(--paper);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.screen-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--ink-faint);
+  box-shadow: var(--shadow-md);
+}
+.screen-card-img {
+  background: var(--paper-deep);
+  aspect-ratio: 9/12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.screen-card-img img {
+  max-width: 68%;
+  max-height: 90%;
+  object-fit: contain;
+  box-shadow: 0 14px 32px rgba(26,25,24,.18), 0 2px 6px rgba(26,25,24,.08);
+  border-radius: 8px;
+}
+.screen-card-img-placeholder {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.screen-card-body {
+  padding: 18px 20px 22px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.screen-card-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.screen-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+.screen-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.screen-card-content h5 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+.screen-card-content h5:first-child { margin-top: 0; }
+.screen-card-content p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.screen-card-content code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--paper-alt);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: var(--ink);
+}
+.screen-card-content ol, .screen-card-content ul {
+  margin: 4px 0 0 1.2em;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.screen-card-content ol li, .screen-card-content ul li { margin-bottom: 4px; }
+
+/* ===== Gallery ===== */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 640px) { .gallery { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+@media (min-width: 900px) { .gallery { grid-template-columns: repeat(4, 1fr); gap: 14px; } }
+.gal-item {
+  aspect-ratio: 9/18;
+  background: var(--paper-deep);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.gal-item:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+.gal-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.gal-caption {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  right: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--paper);
+  background: rgba(26,25,24,.75);
+  padding: 4px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  backdrop-filter: blur(4px);
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,25,24,.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+  cursor: zoom-out;
+}
+.lightbox.active { display: flex; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  border-radius: 8px;
+}
+.lightbox-caption {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: rgba(0,0,0,.5);
+  padding: 8px 14px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+/* ===== Actions tabs ===== */
+.tabs-nav {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--divider);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 12px 0;
+  margin-right: 28px;
+  background: transparent;
+  border: none;
+  font-family: 'Pretendard Variable', Pretendard, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink-mid);
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .2s;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active {
+  color: var(--ink);
+  border-color: var(--amber);
+}
+.tab-btn .tab-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-left: 4px;
+  font-weight: 500;
+}
+.tab-btn.active .tab-count { color: var(--amber); }
+
+.action-list {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+.action-list.active { display: flex; }
+.action-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-md);
+  transition: border-color .2s, box-shadow .2s;
+}
+.action-row:hover { border-color: var(--ink-faint); box-shadow: var(--shadow-sm); }
+.action-num {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--amber);
+  padding-top: 2px;
+}
+.action-text {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.action-text code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  background: var(--paper-alt);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: var(--ink);
+}
+.action-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  padding-top: 2px;
+}
+.action-owner {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-mid);
+  text-transform: uppercase;
+}
+@media (max-width: 520px) {
+  .action-row { grid-template-columns: 24px 1fr; }
+  .action-meta {
+    grid-column: 2 / 3;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    margin-top: 6px;
+    justify-content: flex-start;
+  }
+  .action-num { font-size: 19px; }
+  .action-text { font-size: 14px; }
+}
+
+/* ===== Callout ===== */
+.callout {
+  padding: 20px 22px;
+  border-radius: var(--radius-md);
+  background: var(--paper-alt);
+  border-left: 3px solid var(--amber);
+  margin: 24px 0 40px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.callout strong { font-weight: 700; }
+.callout-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ===== Footer ===== */
+footer {
+  padding: 48px 0 32px;
+  border-top: 1px solid var(--divider);
+  background: var(--paper-alt);
+}
+footer .container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+.foot-links a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: rgba(30,58,95,.3);
+  text-underline-offset: 3px;
+  transition: text-decoration-color .2s;
+}
+.foot-links a:hover { text-decoration-color: var(--accent); }
+.foot-note {
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+  max-width: 640px;
+}
+.foot-sig {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+/* Mobile section nav (floating) */
+.mob-nav {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: none;
+}
+.mob-nav-toggle {
+  padding: 10px 18px 10px 14px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.25);
+}
+.mob-nav-toggle::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+}
+.mob-nav-list {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 240px;
+  background: var(--paper);
+  border: 1px solid var(--divider);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.16);
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+}
+.mob-nav.open .mob-nav-list { display: flex; }
+.mob-nav-list a {
+  padding: 10px 14px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.mob-nav-list a:hover, .mob-nav-list a:focus-visible { background: var(--paper-alt); }
+.mob-nav-list a .mob-nav-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+@media (max-width: 1023px) { .mob-nav { display: block; } }
+
+/* Desktop side nav */
+.side-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+.side-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-mid);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color .2s;
+}
+.side-nav a::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: var(--ink-faint);
+  transition: width .2s, background .2s;
+}
+.side-nav a:hover { color: var(--ink); }
+.side-nav a.active { color: var(--ink); }
+.side-nav a.active::before { background: var(--amber); width: 22px; }
+@media (min-width: 1280px) { .side-nav { display: flex; } }
+
+/* ===== Animations ===== */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  animation: fade-up .7s cubic-bezier(.22,.61,.36,1) forwards;
+}
+.reveal-1 { animation-delay: .05s; }
+.reveal-2 { animation-delay: .15s; }
+.reveal-3 { animation-delay: .25s; }
+.reveal-4 { animation-delay: .35s; }
+.reveal-5 { animation-delay: .45s; }
+
+/* Utility */
+.muted { color: var(--ink-mid); }
+.kbd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--paper-alt);
+  border: 1px solid var(--divider);
+  color: var(--ink);
+}
+
+/* Screen image overlays — issues column */
+.dualcol {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+@media (min-width: 1024px) {
+  .dualcol { grid-template-columns: 0.9fr 1.1fr; gap: 32px; }
+}
+
+/* ===== Print ===== */
+@media print {
+  .mob-nav, .side-nav, .site-header { display: none !important; }
+  body::before { display: none; }
+  section { break-inside: avoid; page-break-inside: avoid; }
+  .issue-card, .screen-card, .acc-item { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="site-brand">
+      <span class="site-brand-dot"></span>
+      <span>moabook / design review</span>
+    </a>
+    <span class="site-meta">v1.0.17 · 2026.04.20</span>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="container">
+  <section class="hero" style="border-bottom:none; padding-bottom:40px;">
+    <div class="hero-eyebrow reveal reveal-1">
+      <span class="hero-eyebrow-line"></span>
+      <span>Design Review Report</span>
+    </div>
+    <h1 class="reveal reveal-2">
+      모아북의 <em>레트로 정체성</em>을<br>
+      지탱하는 규칙이 부서져 있다.
+    </h1>
+    <p class="hero-sub reveal reveal-3">
+      위젯 작업 전 진행한 전체 UX/UI 건강도 점검. 13개 화면·7건의 크로스커팅 이슈·12건의 화면별 개선 카드·19건의 우선순위 액션을
+      기획자와 개발자가 함께 읽기 위한 문서입니다.
+    </p>
+
+    <div class="hero-stats reveal reveal-4">
+      <div class="stat-item">
+        <span class="stat-num serif">13</span>
+        <span class="stat-label">Screens reviewed</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num serif">19</span>
+        <span class="stat-label">Priority actions</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num serif">6</span>
+        <span class="stat-label">Axes scored</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ EXEC SUMMARY ============ -->
+<div class="container">
+  <section id="summary">
+    <div class="section-eyebrow"><span class="section-num">01.</span>Executive Summary</div>
+    <h2 class="section-title">핵심 발견 8가지</h2>
+    <p class="section-lede">
+      가장 큰 문제는 "내 서점 vs 히스토리"의 정보 구조 신호가 부서져 있고,
+      레트로 컨셉을 지탱해야 할 타이포·컬러·네이밍 규칙이 화면마다 다르게 적용된다는 점. 사용자가
+      "독서 시작" 이후 책이 사라졌다고 느끼는 현상은 개별 버그가 아니라 이 문제의 표면 증상입니다.
+    </p>
+
+    <div class="callout">
+      <span class="callout-label">Top Takeaway</span>
+      <strong>Quick Win 10건만 먼저 반영해도 체감이 크게 바뀝니다.</strong>
+      영향도 🔴 4건은 네이밍·날짜 포맷·번호 체계 같은 코드 1~2줄 수정 수준.
+      위젯 개발은 CC-1(네이밍) · HOME-2(안정 식별자) 해결 후 착수를 권장합니다.
+    </div>
+
+    <div class="top-issues">
+      <article class="issue-card">
+        <div class="issue-card-tags">
+          <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+          <span class="badge badge-warning">Concept Med</span>
+          <span class="badge badge-success">Quick Win</span>
+        </div>
+        <h3 class="issue-card-title">서점↔히스토리 전환 모델 붕괴</h3>
+        <p class="issue-card-desc">독서 시작 → 책이 서점에서 사라지고 "히스토리"로 편입. "히스토리"=다 읽음 연상 때문에 완독으로 오인.</p>
+      </article>
+      <article class="issue-card">
+        <div class="issue-card-tags">
+          <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+          <span class="badge badge-critical">Concept High</span>
+          <span class="badge badge-success">Quick Win</span>
+        </div>
+        <h3 class="issue-card-title">상태 네이밍 4종 혼재</h3>
+        <p class="issue-card-desc"><code>읽고 싶은 책 / 읽는 중 / 완독</code> vs <code>읽다만 / 읽는 중 / 완독</code> vs 날짜 기반 암시. 한 상태 3개 이름.</p>
+      </article>
+      <article class="issue-card">
+        <div class="issue-card-tags">
+          <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+          <span class="badge badge-warning">Concept Med</span>
+          <span class="badge badge-success">Quick Win</span>
+        </div>
+        <h3 class="issue-card-title">날짜 포맷 3종 공존</h3>
+        <p class="issue-card-desc"><code>260330</code>(히스토리) · <code>2026 - 03 - 30</code>(상세) · <code>2026.03.30</code>(홈) 같은 책의 시작일이 화면마다 다르게 보임.</p>
+      </article>
+      <article class="issue-card">
+        <div class="issue-card-tags">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="badge badge-critical">Concept High</span>
+          <span class="badge badge-success">Quick Win</span>
+        </div>
+        <h3 class="issue-card-title">Dialog 버튼 언어 혼재</h3>
+        <p class="issue-card-desc">삭제는 <code>NO/YES</code>, 탈퇴·수정은 <code>취소/저장</code>. 같은 앱에서 매번 읽는 방법을 전환.</p>
+      </article>
+      <article class="issue-card">
+        <div class="issue-card-tags">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="badge badge-low">Concept Low</span>
+          <span class="badge badge-neutral">Medium</span>
+        </div>
+        <h3 class="issue-card-title">히스토리 그리드 유령 셀</h3>
+        <p class="issue-card-desc">4권인데 12칸 기본 표시. 빈 셀과 실 셀 혼재로 "이거 로딩 중인가?" 혼란.</p>
+      </article>
+      <article class="issue-card">
+        <div class="issue-card-tags">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="badge badge-critical">Concept High</span>
+          <span class="badge badge-success">Quick Win</span>
+        </div>
+        <h3 class="issue-card-title">Home <code style="font-size:14px;">NO.5</code> 위치 기반 번호</h3>
+        <p class="issue-card-desc">정렬 바꿀 때마다 같은 책의 번호가 바뀜. 안정 식별자가 아닌데 ID처럼 보임.</p>
+      </article>
+      <article class="issue-card">
+        <div class="issue-card-tags">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="badge badge-critical">Concept High</span>
+          <span class="badge badge-success">Quick Win</span>
+        </div>
+        <h3 class="issue-card-title">영문 UPPER 헤더·버튼 남용</h3>
+        <p class="issue-card-desc"><code>START/FINISH/BOOK NAME</code> · <code>[+] ADD BOOK</code> · <code>SAVE/START/FINISH</code> 전 연령대 타겟과 충돌.</p>
+      </article>
+      <article class="issue-card">
+        <div class="issue-card-tags">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="badge badge-warning">Concept Med</span>
+          <span class="badge badge-neutral">Medium</span>
+        </div>
+        <h3 class="issue-card-title">책 검색·탐색 발견성</h3>
+        <p class="issue-card-desc">바코드 스캔은 검색창 안 작은 아이콘, 수동 입력은 에러 후에만 노출. 주요 기능이 숨어 있음.</p>
+      </article>
+    </div>
+  </section>
+</div>
+
+<!-- ============ SCORECARD ============ -->
+<div class="container">
+  <section id="scorecard">
+    <div class="section-eyebrow"><span class="section-num">02.</span>Scorecard</div>
+    <h2 class="section-title">6개 축 등급</h2>
+    <p class="section-lede">각 축별 리뷰 결과. IA 고정 전제에서 평가된 점수이며, Crosscutting 개선이 전체 점수 상승의 가장 큰 레버입니다.</p>
+
+    <div class="scorecard">
+      <div class="score-row">
+        <div class="score-axis">
+          <span class="axis-name">UX / IA</span>
+          <span class="axis-sub">critique</span>
+        </div>
+        <div class="score-bar" style="--fill:58%;"></div>
+        <span class="score-grade">C+</span>
+      </div>
+      <div class="score-row">
+        <div class="score-axis">
+          <span class="axis-name">Typography</span>
+          <span class="axis-sub">typeset</span>
+        </div>
+        <div class="score-bar" style="--fill:72%;"></div>
+        <span class="score-grade">B−</span>
+      </div>
+      <div class="score-row">
+        <div class="score-axis">
+          <span class="axis-name">Layout</span>
+          <span class="axis-sub">layout</span>
+        </div>
+        <div class="score-bar" style="--fill:80%;"></div>
+        <span class="score-grade">B</span>
+      </div>
+      <div class="score-row">
+        <div class="score-axis">
+          <span class="axis-name">Color</span>
+          <span class="axis-sub">colorize</span>
+        </div>
+        <div class="score-bar" style="--fill:72%;"></div>
+        <span class="score-grade">B−</span>
+      </div>
+      <div class="score-row">
+        <div class="score-axis">
+          <span class="axis-name">Polish</span>
+          <span class="axis-sub">polish</span>
+        </div>
+        <div class="score-bar" style="--fill:58%;"></div>
+        <span class="score-grade">C+</span>
+      </div>
+      <div class="score-row">
+        <div class="score-axis">
+          <span class="axis-name">Audit</span>
+          <span class="axis-sub">accessibility</span>
+        </div>
+        <div class="score-bar" style="--fill:50%;"></div>
+        <span class="score-grade">C</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ CROSSCUTTING ============ -->
+<div class="container">
+  <section id="crosscutting">
+    <div class="section-eyebrow"><span class="section-num">03.</span>Crosscutting Issues</div>
+    <h2 class="section-title">여러 화면에 반복되는 패턴</h2>
+    <p class="section-lede">화면별보다 먼저 다뤄야 합니다. 이 7건을 해결해야 컨셉 정합성이 전반적으로 올라갑니다.</p>
+
+    <div class="accordion">
+
+      <details class="acc-item" open>
+        <summary class="acc-summary">
+          <span class="acc-summary-num">CC-1</span>
+          <span class="acc-summary-title">상태 네이밍 4중 혼재 <span class="badge badge-critical" style="margin-left:6px;"><span class="badge-dot"></span>High</span></span>
+          <span class="acc-chev">▾</span>
+        </summary>
+        <div class="acc-body">
+          <h4>문제</h4>
+          <p>같은 책의 "읽고 있는 상태"가 화면마다 다르게 표현됩니다. <code>"읽다만"</code>(TODO)은 "읽다가 만" 처럼 읽히지만 실제로는 <em>아직 시작 안 함</em>. 의미 역전.</p>
+
+          <table class="data-table">
+            <thead><tr><th>위치</th><th>표현</th><th>소스</th></tr></thead>
+            <tbody>
+              <tr><td>BookInfo 태그</td><td>읽고 싶은 책 / 읽는 중 / 완독</td><td><code>BookInfoScreen.kt:230</code></td></tr>
+              <tr><td>MyBookSearch 태그</td><td>읽다만 / 읽는 중 / 완독</td><td><code>MyBookSearchScreen.kt:167</code></td></tr>
+              <tr><td>History 빈 상태</td><td>"읽고 있는 책을 추가해주세요."</td><td><code>HistoryScreen.kt:286</code></td></tr>
+              <tr><td>History 리스트</td><td>(라벨 없음, 날짜만)</td><td>—</td></tr>
+            </tbody>
+          </table>
+
+          <h4>개선안 (IA 유지)</h4>
+<pre>TODO        → "읽고 싶은 책"   🟦 감정: 기대
+INPROGRESS  → "읽는 중"         🟡 감정: 현재
+DONE        → "완독"            🟩 감정: 성취</pre>
+          <p>전 화면에서 이 3개만 사용. <code>"읽다만"</code> 제거.</p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-summary">
+          <span class="acc-summary-num">CC-2</span>
+          <span class="acc-summary-title">날짜 포맷 3종 공존 <span class="badge badge-critical" style="margin-left:6px;"><span class="badge-dot"></span>High</span></span>
+          <span class="acc-chev">▾</span>
+        </summary>
+        <div class="acc-body">
+          <table class="data-table">
+            <thead><tr><th>화면</th><th>포맷</th><th>예시</th></tr></thead>
+            <tbody>
+              <tr><td>Home 저장일</td><td>YYYY.MM.DD</td><td><code>2026.03.30</code></td></tr>
+              <tr><td>History 리스트</td><td>YYMMDD (6자리, 연 2자리)</td><td><code>260330</code></td></tr>
+              <tr><td>BookInfo 독서 이력</td><td>YYYY - MM - DD (공백+하이픈)</td><td><code>2026 - 03 - 30</code></td></tr>
+              <tr><td>BookInfo 출간일</td><td>동</td><td><code>2021 - 05 - 04</code></td></tr>
+            </tbody>
+          </table>
+          <h4>개선안</h4>
+          <p>한 가지로 통일. 데이터 밀도 높은 히스토리 리스트는 <code>YY.MM.DD</code>(<code>26.03.30</code>), 상세·홈도 동일. <code>-</code>에 공백 넣는 스타일은 전면 제거.</p>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-summary">
+          <span class="acc-summary-num">CC-3</span>
+          <span class="acc-summary-title">Dialog 버튼 언어·순서 혼재 <span class="badge badge-warning" style="margin-left:6px;"><span class="badge-dot"></span>Med</span></span>
+          <span class="acc-chev">▾</span>
+        </summary>
+        <div class="acc-body">
+          <table class="data-table">
+            <thead><tr><th>다이얼로그</th><th>부정</th><th>긍정</th></tr></thead>
+            <tbody>
+              <tr><td>책 삭제 (Home / BookInfo)</td><td>NO</td><td>YES</td></tr>
+              <tr><td>회원 탈퇴</td><td>NO</td><td>YES</td></tr>
+              <tr><td>닉네임 편집</td><td>취소</td><td>저장</td></tr>
+              <tr><td>책 편집 시트</td><td>취소</td><td>저장(추정)</td></tr>
+            </tbody>
+          </table>
+          <h4>개선안</h4>
+          <ul>
+            <li>전 화면 <code>NO/YES</code> 또는 <code>취소/확인·저장</code> 중 택일</li>
+            <li>파괴적 액션(삭제·탈퇴)은 긍정 버튼을 <strong>빨간 경고색</strong>으로 분리</li>
+            <li>문자 <code>X</code>(닫기 버튼)은 픽셀 아이콘으로 교체 (<code>MainScreen.kt:116</code>)</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-summary">
+          <span class="acc-summary-num">CC-4</span>
+          <span class="acc-summary-title">영문 UPPER 헤더·버튼 남용 <span class="badge badge-warning" style="margin-left:6px;"><span class="badge-dot"></span>Concept</span></span>
+          <span class="acc-chev">▾</span>
+        </summary>
+        <div class="acc-body">
+          <p>계획서상 타겟은 <strong>전 연령대</strong>. 중장년층은 영문+letterSpacing 대문자에 인지 부하 급증. 80~90년대 한국 컴퓨터 경험은 한글 도스 프롬프트·하이텔·천리안 — 한글+픽셀도 동일 컨셉입니다.</p>
+          <h4>개선안</h4>
+          <ul>
+            <li><code>START → 시작</code>, <code>FINISH → 끝</code>, <code>BOOK NAME → 책 이름</code></li>
+            <li><code>[+] ADD BOOK → [+] 책 추가</code> (하단 탭과 용어 통일)</li>
+            <li>픽셀 폰트의 독특함은 <strong>한글에서도 살아나므로</strong> 한글 대체가 컨셉을 약화시키지 않음</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-summary">
+          <span class="acc-summary-num">CC-5</span>
+          <span class="acc-summary-title">읽기 전용 박스 ↔ 입력 필드 어포던스 혼선 <span class="badge badge-warning" style="margin-left:6px;"><span class="badge-dot"></span>Med</span></span>
+          <span class="acc-chev">▾</span>
+        </summary>
+        <div class="acc-body">
+          <p><code>AddBookScreen</code>(바코드·검색 결과)과 <code>ManualBookInputScreen</code>(수동 입력)이 같은 <strong>PixelShadowBox + 흰 배경</strong> 스타일을 공유. 전자는 <code>Text</code>만, 후자는 <code>BasicTextField</code>. 시각적으로 구분 불가.</p>
+          <h4>개선안</h4>
+          <ul>
+            <li><strong>편집 가능</strong>: 그림자 박스 + 우측 연필 아이콘, 포커스 시 테두리 강조</li>
+            <li><strong>읽기 전용</strong>: 그림자 박스 없이 <code>BackgroundGray</code>, 라벨만 강조</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-summary">
+          <span class="acc-summary-num">CC-6</span>
+          <span class="acc-summary-title">타이포 혼용 규칙 부재 <span class="badge badge-warning" style="margin-left:6px;"><span class="badge-dot"></span>Med</span></span>
+          <span class="acc-chev">▾</span>
+        </summary>
+        <div class="acc-body">
+          <p>현재 규칙 추정: <strong>고정 라벨·타이틀 = 픽셀, 사용자 데이터·본문 = 고딕</strong>. 합리적이지만 BookInfo의 <code>SAVE/START/FINISH</code>는 라벨인데 영문 대문자, 약관만 유일하게 <code>WantedSansBodySmall</code> 등 예외가 많음. <code>DungGeunMoBody.copy(letterSpacing = 3.2.sp)</code> 같은 즉석 변형이 화면마다 흩어져 있음.</p>
+          <h4>개선안</h4>
+          <ul>
+            <li>테마 내 스타일 토큰에 "언제 쓰는가" 한 줄 주석</li>
+            <li>DungGeunMo 7단계 → <strong>5단계로 축소</strong>: HomeTitle / Header / Subtitle / Body / Tag</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="acc-item">
+        <summary class="acc-summary">
+          <span class="acc-summary-num">CC-7</span>
+          <span class="acc-summary-title">접근성 공통 이슈 <span class="badge badge-warning" style="margin-left:6px;"><span class="badge-dot"></span>Med</span></span>
+          <span class="acc-chev">▾</span>
+        </summary>
+        <div class="acc-body">
+          <ul>
+            <li><strong>터치 영역</strong>: 설정 버튼 30dp, 드롭다운 화살표 14dp. WCAG 권고 48×48dp 미달</li>
+            <li><strong><code>contentDescription = null</code></strong>: <code>HomeScreen.kt:144/206</code>, <code>SearchBookScreen.kt:228</code> 등. 픽셀 아이콘들 스크린리더 미지원</li>
+            <li><strong>색 대비</strong>: <code>TextPrimary.copy(alpha = 0.5f)</code> 등 낮은 알파 텍스트 WCAG AA 4.5:1 검증 필요</li>
+            <li><strong>문자 <code>X</code></strong> 닫기 버튼 (<code>MainScreen.kt:116</code>): <code>contentDescription</code> 없음</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </section>
+</div>
+
+<!-- ============ SCREEN ISSUES ============ -->
+<div class="container">
+  <section id="screens">
+    <div class="section-eyebrow"><span class="section-num">04.</span>Screen Issues</div>
+    <h2 class="section-title">화면별 개선 카드</h2>
+    <p class="section-lede">영향도 순. Before 캡처 + 문제 + 개선안. 공수는 태그로 분리.</p>
+
+    <div class="filter-bar" role="tablist" aria-label="영향도 필터">
+      <button class="chip active" data-filter="all">전체 <span class="chip-count">12</span></button>
+      <button class="chip" data-filter="critical">🔴 High <span class="chip-count">5</span></button>
+      <button class="chip" data-filter="warning">🟡 Med <span class="chip-count">4</span></button>
+      <button class="chip" data-filter="low">🟠 Low <span class="chip-count">3</span></button>
+    </div>
+
+    <div class="screen-grid" id="screen-grid">
+
+      <article class="screen-card" data-impact="critical">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/61_after_start.png" alt="독서 시작 후 홈 화면" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">HOME-1 · HomeScreen → HistoryScreen</span>
+          <h3 class="screen-card-title">서점↔히스토리 전환 모델 붕괴</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p>사용자가 "독서 시작"을 누르면 책이 서점에서 <strong>사라지고</strong> "히스토리"에 편입. 사용자 직접 보고: "책이 꼭 사라진 것만 같음. 히스토리가 다 읽은 게 아니라 읽는 중인데도 완독처럼 보임."</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>탭 네이밍 <code>히스토리 → 읽는 중</code></li>
+              <li>첫 1회 토스트: "'읽는 중' 탭에서 볼 수 있어요"</li>
+              <li>카드가 탭 방향으로 슈웅 이동하는 1회 전환 애니</li>
+              <li>탭 아이콘에 읽는 중 개수 배지</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="critical">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/10_home_top.png" alt="홈 화면 최상단 NO.5 카드" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">HOME-2 · HomeScreen 카드</span>
+          <h3 class="screen-card-title"><code style="font-size:15px;">NO.5</code> 위치 기반 번호 — 정렬 바꾸면 같은 책 번호 변함</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+            <span class="badge badge-critical">Concept High</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>근거</h5>
+            <p><code>HomeScreen.kt:168</code> — <code>index = if (sortDescending) storeBooks.size - index else index + 1</code></p>
+            <h5>개선안</h5>
+            <ul>
+              <li>"몇 번째 저장"이 의도라면 서버 <code>saveOrder</code>로 고정</li>
+              <li>단순 순번이면 제거 (날짜로 충분)</li>
+              <li>레트로 꾸미기라면 <code>#001</code>처럼 mybookId 기반 고정 ID</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="critical">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/10_home_top.png" alt="홈 우상단 [+] ADD BOOK 버튼" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">HOME-3 · HomeScreen 헤더</span>
+          <h3 class="screen-card-title">[+] ADD BOOK 발견성 낮고 컨셉 혼재</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p>유일한 책 추가 경로가 우측 작은 박스. 스크롤하면 사라짐. 영문 대문자 + 대괄호 <code>[+]</code>는 전 연령대에 친숙하지 않고, 하단 탭 <code>책 추가</code>와 라벨이 달라 동일 기능인지 모호.</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>라벨 <code>[+] 책 추가</code>로 변경 (하단 탭과 통일)</li>
+              <li>책 적을 때 큰 FAB 형태 버튼 중앙 1회 노출</li>
+              <li>스크롤 시 하단 탭의 시각 강조</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="critical">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/41_history_grid.png" alt="히스토리 그리드 뷰 유령 셀" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">HISTORY-1 · HistoryScreen (GRID)</span>
+          <h3 class="screen-card-title">그리드 뷰 유령 셀 (4권인데 12칸)</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+            <span class="badge badge-low">Concept Low</span>
+            <span class="badge badge-neutral">Medium</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>근거</h5>
+            <p><code>HistoryScreen.kt:189</code> — <code>emptyCount = if (bookCount &lt; 12) 12 - bookCount</code></p>
+            <h5>개선안</h5>
+            <ol>
+              <li>빈 칸에 희미한 플레이스홀더 "+ 책을 채워주세요" 1개만</li>
+              <li>첫 행만 3칸 고정, 이후 <code>ceil(count/3)*3</code></li>
+              <li>맨 아래 "더 읽어볼 책을 찾아볼까요?" CTA</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="critical">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/40_history.png" alt="히스토리 리스트 영문 헤더" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">HISTORY-2 · HistoryScreen (LIST)</span>
+          <h3 class="screen-card-title">컬럼 헤더 영문 대문자 + letterSpacing 3.2sp</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p><code>START/FINISH/BOOK NAME</code> + letterSpacing 3.2sp → "터미널 프롬프트" 감성인데 데이터 테이블 헤더로 사용되어 가독성 하락. 데이터는 한글 책 제목인데 헤더만 영문 → 비대칭.</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>헤더 한글화: <code>시작 / 완독 / 책 이름</code></li>
+              <li>letterSpacing 제거 또는 절반(1.5sp)</li>
+              <li>컬럼 비율 1:1:3 또는 날짜 2열 통합(<code>25.01.15 → 25.02.10</code>)</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="warning">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/20_book_detail.png" alt="책 상세 SAVE/START/FINISH" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">BOOK-1 · BookInfoScreen 이력 섹션</span>
+          <h3 class="screen-card-title">SAVE / START / FINISH 라벨 + 날짜 이상</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+            <span class="badge badge-critical">Concept High</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p>라벨 셋 다 영문 대문자+letterSpacing 3.2sp. 날짜 <code>2026 - 03 - 30</code>(공백+하이픈)은 타 화면과 다름. <code>FINISH = 읽는 중</code> 조합이 "완독: 읽는 중"으로 어색.</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>라벨: <code>저장 / 시작 / 완독</code></li>
+              <li>날짜: <code>26.03.30</code> 통일</li>
+              <li>"읽는 중"일 땐 라벨을 <code>상태 / 읽는 중</code>으로 재사용</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="warning">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/72_barcode_result_scroll.png" alt="알라딘에서 더보기 버튼" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">BOOK-2 · BookInfo / AddBook 하단</span>
+          <h3 class="screen-card-title">"알라딘에서 더보기" 외부 브랜드 노출</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p>외부 API 출처를 버튼 라벨에 그대로 노출 → 알라딘 제휴 앱처럼 보일 위험.</p>
+            <h5>개선안</h5>
+            <ul>
+              <li>라벨을 <code>책 정보 더보기</code>로 브랜드 중립화</li>
+              <li>유지 시: 알라딘 로고 + "도서 정보 제공: 알라딘" 미니 크레딧</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="warning">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/30_add_book.png" alt="검색창 속 카메라 아이콘" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">SEARCH-1 · SearchBookScreen</span>
+          <h3 class="screen-card-title">바코드 스캔 진입점 발견성</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-neutral">Medium</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p>차별화 기능인데 카메라 아이콘 하나에 라벨 없음. <code>contentDescription = "barcode"</code>로 스크린리더도 약함.</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>검색창 하단 별도 버튼 <code>📷 바코드로 책 찾기</code></li>
+              <li>아이콘 유지 시 크기 24→32dp, 여백 확대</li>
+              <li><code>contentDescription</code> 한글화</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="warning">
+        <div class="screen-card-img">
+          <div class="screen-card-img-placeholder">SearchBookScreen.kt<br>:200-207</div>
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">SEARCH-2 · SearchBookScreen</span>
+          <h3 class="screen-card-title">수동 입력 경로는 에러 후에만 노출</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p>검색 결과 없을 때만 <code>"책 직접 입력하기"</code> 노출. 검색 성공 상태에서는 사라져 "내가 찾는 책 없음 → 수동 입력" 흐름이 끊김.</p>
+            <h5>개선안</h5>
+            <ul>
+              <li>검색창 하단 상시 링크 <code>직접 입력하기 ></code></li>
+              <li>결과 리스트 최하단에도 유지</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="warning">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/51_settings_notice.png" alt="공지사항 탭해도 반응 없음" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">SETTING-1 · SettingScreen</span>
+          <h3 class="screen-card-title">공지사항이 disabled인데 enabled처럼 보임</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+            <span class="badge badge-low">Concept Low</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>근거</h5>
+            <p><code>SettingScreen.kt:315</code> — <code>SettingMenuItem("공지사항") { /* disabled */ }</code>. 빈 콜백인데 스타일은 다른 메뉴와 동일.</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>메뉴에서 완전히 제거 (기능 미구현)</li>
+              <li>유지 시 회색 + "(준비 중)" + 탭 시 "곧 공개됩니다" 스낵바</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="low">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/50_settings.png" alt="설정 화면 로그아웃과 회원탈퇴 위계" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">SETTING-2 · SettingScreen</span>
+          <h3 class="screen-card-title">회원탈퇴 버튼 시각 위계 역전</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-low"><span class="badge-dot"></span>Low</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-neutral">Medium</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>관찰</h5>
+            <p>파괴적 액션(탈퇴)이 회색 작은 텍스트 — 의도된 실수 방지. 단 탭 영역이 텍스트 높이뿐이라 접근성은 떨어지고 <em>오히려 노약자 실수 가능</em>. 로그아웃이 파란 풀폭이라 위계가 뒤집힘.</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>탈퇴는 최하단 유지하되 탭 영역 48dp 보강</li>
+              <li>로그아웃 버튼 색 강도 낮추기 (주 액션 아님)</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="low">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/02_login.png" alt="로그인 화면" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">LOGIN-1 · LoginScreen</span>
+          <h3 class="screen-card-title">로고+타이틀 중복, 카카오 순서</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-low"><span class="badge-dot"></span>Low</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-success">Quick Win</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p>픽셀 로고 + 텍스트 "모아북" 둘 다 노출 → 브랜드 반복. 소셜 순서 구글→네이버→카카오는 한국 사용자 기본 선호도 역순. 약관 한 줄 <code>Row</code> 강제 — 좁은 폰에서 줄바꿈 위험.</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>로고만 크게 (텍스트 제거)</li>
+              <li>소셜 순서: 카카오 → 네이버 → 구글</li>
+              <li><code>FlowRow</code>로 약관 줄바꿈 안전화</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <article class="screen-card" data-impact="low">
+        <div class="screen-card-img">
+          <img src="moabook-review-images/70_barcode_scan.png" alt="바코드 스캔 가이드" loading="lazy">
+        </div>
+        <div class="screen-card-body">
+          <span class="screen-card-id">BARCODE-1 · BarcodeScreen</span>
+          <h3 class="screen-card-title">스캔 박스 불균형 + 권한 거부 UI 부재</h3>
+          <div class="screen-card-tags">
+            <span class="badge badge-low"><span class="badge-dot"></span>Low</span>
+            <span class="badge badge-warning">Concept Med</span>
+            <span class="badge badge-neutral">Medium</span>
+          </div>
+          <div class="screen-card-content">
+            <h5>문제</h5>
+            <p>스캔 영역 비율 기준 상단 30~60% — 상단이 넉넉하고 하단 답답. 권한 거부 시 빈 화면 (<code>BarcodeScreen.kt:162</code>).</p>
+            <h5>개선안</h5>
+            <ol>
+              <li>스캔 박스 세로 중앙 정렬</li>
+              <li>권한 거부 UI: "설정에서 허용하기" → <code>ACTION_APPLICATION_DETAILS_SETTINGS</code></li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+</div>
+
+<!-- ============ GALLERY ============ -->
+<div class="container">
+  <section id="captures">
+    <div class="section-eyebrow"><span class="section-num">05.</span>Capture Gallery</div>
+    <h2 class="section-title">캡처 인벤토리</h2>
+    <p class="section-lede">리뷰에 사용된 20개 화면 캡처. 탭하면 크게 볼 수 있습니다.</p>
+
+    <div class="gallery" id="gallery"></div>
+  </section>
+</div>
+
+<!-- ============ ACTIONS ============ -->
+<div class="container">
+  <section id="actions">
+    <div class="section-eyebrow"><span class="section-num">06.</span>Priority Actions</div>
+    <h2 class="section-title">우선순위 액션 리스트</h2>
+    <p class="section-lede">공수별로 분리. <strong>Quick Win 10건부터</strong> 착수 권장 — 위젯 작업 기반 정비.</p>
+
+    <nav class="tabs-nav">
+      <button class="tab-btn active" data-tab="quick">Quick Win <span class="tab-count">10</span></button>
+      <button class="tab-btn" data-tab="medium">Medium <span class="tab-count">7</span></button>
+      <button class="tab-btn" data-tab="deep">Deep Work <span class="tab-count">2</span></button>
+    </nav>
+
+    <div class="action-list active" data-tab="quick">
+      <div class="action-row">
+        <span class="action-num">01</span>
+        <span class="action-text">상태 네이밍 3종 통일 (<code>읽고 싶은 책 / 읽는 중 / 완독</code>) — 전 화면</span>
+        <div class="action-meta">
+          <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+          <span class="action-owner">기획 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">02</span>
+        <span class="action-text">날짜 포맷 <code>YY.MM.DD</code> 1종 통일</span>
+        <div class="action-meta">
+          <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+          <span class="action-owner">개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">03</span>
+        <span class="action-text">다이얼로그 버튼 언어 통일 (<code>취소/확인</code> 권장) + X 문자 교체</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">기획 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">04</span>
+        <span class="action-text">HistoryScreen 컬럼 헤더 한글화 + letterSpacing 축소</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">05</span>
+        <span class="action-text">HomeScreen <code>[+] ADD BOOK</code> → <code>[+] 책 추가</code></span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">06</span>
+        <span class="action-text">BookInfoScreen <code>SAVE/START/FINISH</code> → <code>저장/시작/완독</code></span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">07</span>
+        <span class="action-text">SettingScreen 공지사항 숨김 또는 "(준비 중)" 표시</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">기획 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">08</span>
+        <span class="action-text">로그인: 소셜 순서 카카오→네이버→구글, 약관 <code>FlowRow</code></span>
+        <div class="action-meta">
+          <span class="badge badge-low"><span class="badge-dot"></span>Low</span>
+          <span class="action-owner">개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">09</span>
+        <span class="action-text">SearchBookScreen "직접 입력하기" 상시 링크</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">10</span>
+        <span class="action-text">HomeScreen <code>NO.N</code> 위치 기반 제거 또는 고정 ID</span>
+        <div class="action-meta">
+          <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+          <span class="action-owner">기획 + 개발</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-list" data-tab="medium">
+      <div class="action-row">
+        <span class="action-num">11</span>
+        <span class="action-text">탭 네이밍 <code>히스토리 → 읽는 중</code> + 독서 시작 토스트 + 탭 배지</span>
+        <div class="action-meta">
+          <span class="badge badge-critical"><span class="badge-dot"></span>High</span>
+          <span class="action-owner">기획 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">12</span>
+        <span class="action-text">HistoryScreen 그리드 유령 셀 로직 개선</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">기획 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">13</span>
+        <span class="action-text">AddBookScreen 읽기 전용 vs 입력 어포던스 분리</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">디자인 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">14</span>
+        <span class="action-text">바코드 진입점: 라벨 추가 + 크기 확대</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">디자인 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">15</span>
+        <span class="action-text">카메라 권한 거부 처리 UI</span>
+        <div class="action-meta">
+          <span class="badge badge-low"><span class="badge-dot"></span>Low</span>
+          <span class="action-owner">개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">16</span>
+        <span class="action-text">상태 색 팔레트 도입 (tint 3색 + 경고색)</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">디자인 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">17</span>
+        <span class="action-text">타이포 + 간격 디자인 토큰 문서화</span>
+        <div class="action-meta">
+          <span class="badge badge-warning"><span class="badge-dot"></span>Med</span>
+          <span class="action-owner">디자인</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-list" data-tab="deep">
+      <div class="action-row">
+        <span class="action-num">18</span>
+        <span class="action-text">접근성 전반 점검: 터치 영역 · <code>contentDescription</code> · 대비 검증</span>
+        <div class="action-meta">
+          <span class="badge badge-low"><span class="badge-dot"></span>Low</span>
+          <span class="action-owner">디자인 + 개발</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <span class="action-num">19</span>
+        <span class="action-text">독서 시작 모션 (레트로 CRT 라인 스캔)</span>
+        <div class="action-meta">
+          <span class="badge badge-low"><span class="badge-dot"></span>Low</span>
+          <span class="action-owner">디자인 + 개발</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="foot-sig">
+      — 이 리포트는 기획자·개발자 공용 실행 문서입니다. Quick Win 10건부터 착수 권장.
+    </div>
+    <div class="foot-links">
+      <a href="#summary">↑ Summary로</a>
+      <a href="index.html">← Web Test Pages</a>
+    </div>
+    <p class="foot-note">
+      리뷰 컨텍스트 — 타겟: 전 연령대 독서 애호가 · 컨셉: 80~90년대 컴퓨터 / 픽셀·도트 ·
+      변경 불가: 앱 로고·DungGeunMo 폰트·탭 구조 · 변경 가능: 컬러·간격·인터랙션·네이밍·일러스트 ·
+      범위 제외: 다크모드·태블릿·빈 상태·위젯·친구 기능.
+    </p>
+    <p class="foot-note muted" style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.04em;">
+      moabook v1.0.17 / review 2026.04.20 / document generated with 🖤
+    </p>
+  </div>
+</footer>
+
+<!-- Floating mobile nav -->
+<div class="mob-nav" id="mobNav">
+  <div class="mob-nav-list">
+    <a href="#summary"><span>Summary</span><span class="mob-nav-num">01</span></a>
+    <a href="#scorecard"><span>Scorecard</span><span class="mob-nav-num">02</span></a>
+    <a href="#crosscutting"><span>Crosscutting</span><span class="mob-nav-num">03</span></a>
+    <a href="#screens"><span>Screens</span><span class="mob-nav-num">04</span></a>
+    <a href="#captures"><span>Gallery</span><span class="mob-nav-num">05</span></a>
+    <a href="#actions"><span>Actions</span><span class="mob-nav-num">06</span></a>
+  </div>
+  <button class="mob-nav-toggle" id="mobNavToggle">Contents</button>
+</div>
+
+<!-- Desktop side nav -->
+<aside class="side-nav">
+  <a href="#summary" data-target="summary">01 / Summary</a>
+  <a href="#scorecard" data-target="scorecard">02 / Scorecard</a>
+  <a href="#crosscutting" data-target="crosscutting">03 / Crosscutting</a>
+  <a href="#screens" data-target="screens">04 / Screens</a>
+  <a href="#captures" data-target="captures">05 / Gallery</a>
+  <a href="#actions" data-target="actions">06 / Actions</a>
+</aside>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<script>
+// ======= Gallery population =======
+const captures = [
+  { f: '02_login.png', label: '02 · Login' },
+  { f: '10_home_top.png', label: '10 · Home Top' },
+  { f: '11_home_scroll1.png', label: '11 · Home Scroll 1' },
+  { f: '12_home_scroll2.png', label: '12 · Home Scroll 2' },
+  { f: '13_home_scroll3.png', label: '13 · Home Scroll 3' },
+  { f: '14_home_sort_dropdown.png', label: '14 · Home Sort' },
+  { f: '20_book_detail.png', label: '20 · Book Detail' },
+  { f: '21_book_detail_scroll.png', label: '21 · Book Detail Scroll' },
+  { f: '30_add_book.png', label: '30 · Add Book (Empty)' },
+  { f: '40_history.png', label: '40 · History List' },
+  { f: '41_history_grid.png', label: '41 · History Grid' },
+  { f: '50_settings.png', label: '50 · Settings' },
+  { f: '51_settings_notice.png', label: '51 · Notice disabled' },
+  { f: '52_settings_withdraw_dialog.png', label: '52 · Withdraw Dialog' },
+  { f: '53_settings_nickname_edit.png', label: '53 · Nickname Edit' },
+  { f: '60_before_start.png', label: '60 · Before Start' },
+  { f: '61_after_start.png', label: '61 · After Start' },
+  { f: '70_barcode_scan.png', label: '70 · Barcode Scan' },
+  { f: '71_barcode_result.png', label: '71 · Barcode Result' },
+  { f: '72_barcode_result_scroll.png', label: '72 · Result Scroll' }
+];
+
+const gallery = document.getElementById('gallery');
+captures.forEach(c => {
+  const el = document.createElement('div');
+  el.className = 'gal-item';
+  el.dataset.src = 'moabook-review-images/' + c.f;
+  el.dataset.caption = c.label;
+  el.innerHTML = `<img src="moabook-review-images/${c.f}" alt="${c.label}" loading="lazy"><span class="gal-caption">${c.label}</span>`;
+  gallery.appendChild(el);
+});
+
+// ======= Lightbox =======
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lightbox-img');
+const lbCap = document.getElementById('lightbox-caption');
+document.querySelectorAll('.gal-item').forEach(item => {
+  item.addEventListener('click', () => {
+    lbImg.src = item.dataset.src;
+    lbCap.textContent = item.dataset.caption;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+});
+lb.addEventListener('click', () => {
+  lb.classList.remove('active');
+  document.body.style.overflow = '';
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && lb.classList.contains('active')) {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
+// ======= Filter =======
+const chips = document.querySelectorAll('.chip');
+const cards = document.querySelectorAll('#screen-grid .screen-card');
+chips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    chips.forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const f = chip.dataset.filter;
+    cards.forEach(card => {
+      card.style.display = (f === 'all' || card.dataset.impact === f) ? '' : 'none';
+    });
+  });
+});
+
+// ======= Tabs =======
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabLists = document.querySelectorAll('.action-list');
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabBtns.forEach(b => b.classList.remove('active'));
+    tabLists.forEach(l => l.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector(`.action-list[data-tab="${btn.dataset.tab}"]`).classList.add('active');
+  });
+});
+
+// ======= Mobile nav =======
+const mobNav = document.getElementById('mobNav');
+const mobToggle = document.getElementById('mobNavToggle');
+mobToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  mobNav.classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+  if (!mobNav.contains(e.target)) mobNav.classList.remove('open');
+});
+mobNav.querySelectorAll('.mob-nav-list a').forEach(a => {
+  a.addEventListener('click', () => mobNav.classList.remove('open'));
+});
+
+// ======= Scroll-spy (desktop side nav) =======
+const sideLinks = document.querySelectorAll('.side-nav a');
+const sections = Array.from(sideLinks).map(a => document.getElementById(a.dataset.target)).filter(Boolean);
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const id = en.target.id;
+        sideLinks.forEach(a => a.classList.toggle('active', a.dataset.target === id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => io.observe(s));
+}
+
+// Reveal on view (sections)
+if ('IntersectionObserver' in window) {
+  const reveal = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.style.opacity = '1';
+        en.target.style.transform = 'translateY(0)';
+        reveal.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('.issue-card, .screen-card, .score-row, .acc-item, .action-row').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    reveal.observe(el);
+  });
+}
+</script>
+</body>
+</html>
