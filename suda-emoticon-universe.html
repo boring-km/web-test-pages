@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="light">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SUDA — 이모티콘 세계관 디자인 제안</title>
-  <meta name="description" content="외국인을 위한 한국 MZ 문화 쇼케이스 앱 SUDA의 브랜드 디자인 시스템. 카카오 이모티콘 톤의 스티커 기반 시각 언어와 마스코트 '말랑(Mallang)' 소개.">
+  <meta name="description" content="외국인을 위한 한국 MZ 문화 쇼케이스 앱 SUDA의 브랜드 디자인 시스템. 카카오 이모티콘 톤의 스티커 기반 시각 언어와 외계에서 온 마스코트 '별이(Byeol-i)' 소개.">
 
   <!-- Fonts: Pretendard (body) + Black Han Sans (display) + Jua (mascot speech) + Gaegu (hand) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,9 +14,9 @@
 
   <style>
     /* ─────────────────────────────────────────────────────────────
-       SUDA DESIGN TOKENS — light / dark
+       SUDA DESIGN TOKENS — light mode only
        ───────────────────────────────────────────────────────────── */
-    :root, [data-theme="light"] {
+    :root {
       --bg: #FAF7F0;
       --surface: #FFFDF8;
       --surface-raised: #F5F0E4;
@@ -27,9 +27,9 @@
       --text-secondary: #5A5552;
       --text-hint: #8A837C;
 
-      --pink-fill: #EC2E96;
-      --pink-ink: #B3186E;
-      --pink-surface: #FFE7F3;
+      --pink-fill: #E91E7A;
+      --pink-ink: #961353;
+      --pink-surface: #FFDEE9;
 
       --gold-fill: #FFB800;
       --gold-ink: #8C6200;
@@ -50,40 +50,6 @@
       --noise-opacity: 0.035;
     }
 
-    [data-theme="dark"] {
-      --bg: #181614;
-      --surface: #24211E;
-      --surface-raised: #2E2A26;
-      --surface-sunken: #14120F;
-      --outline: #FAF7F0;
-      --outline-soft: #8A837C;
-      --text-primary: #FAF7F0;
-      --text-secondary: #B8B0A6;
-      --text-hint: #6B655D;
-
-      --pink-fill: #EC2E96;
-      --pink-ink: #FF7AB8;
-      --pink-surface: #3D0F27;
-
-      --gold-fill: #FFB800;
-      --gold-ink: #FFD23E;
-      --gold-surface: #3D2E00;
-
-      --green-fill: #2A9D8F;
-      --green-ink: #5EE0CF;
-      --green-surface: #0F2E2A;
-
-      --orange-fill: #F77F00;
-      --orange-ink: #FFB366;
-      --orange-surface: #3D2500;
-
-      --red-fill: #D62828;
-      --red-ink: #FF6B6B;
-      --red-surface: #2A0A10;
-
-      --noise-opacity: 0.05;
-    }
-
     /* ─── Reset / base ─── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -96,8 +62,6 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       min-height: 100vh;
-      transition: background 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                  color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
       overflow-x: hidden;
     }
 
@@ -112,7 +76,22 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       mix-blend-mode: multiply;
     }
-    [data-theme="dark"] body::before { mix-blend-mode: screen; }
+
+    /* Star dust background — subtle */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        radial-gradient(circle at 10% 20%, var(--pink-surface) 1px, transparent 2px),
+        radial-gradient(circle at 80% 45%, var(--gold-surface) 2px, transparent 3px),
+        radial-gradient(circle at 30% 80%, var(--pink-surface) 1px, transparent 2px),
+        radial-gradient(circle at 90% 90%, var(--gold-surface) 1px, transparent 2px);
+      background-size: 600px 600px, 800px 800px, 500px 500px, 700px 700px;
+      opacity: 0.5;
+    }
 
     /* ─── Typography ─── */
     .font-display {
@@ -137,9 +116,7 @@
       box-shadow: 4px 4px 0 0 var(--outline);
       position: relative;
       transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-                  box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-                  background 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                  border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+                  box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .sticker.tilt-l { transform: rotate(-1.2deg); }
     .sticker.tilt-r { transform: rotate(1.3deg); }
@@ -158,6 +135,8 @@
       max-width: 1240px;
       margin: 0 auto;
       padding: 0 clamp(16px, 4vw, 48px);
+      position: relative;
+      z-index: 1;
     }
     .section {
       padding: clamp(64px, 10vw, 120px) 0;
@@ -204,7 +183,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 10px 14px 10px 18px;
+      padding: 10px 18px;
       background: var(--surface);
       border: 2.5px solid var(--outline);
       border-radius: 999px;
@@ -242,38 +221,6 @@
     }
     .topbar-links a:hover { color: var(--pink-ink); background: var(--pink-surface); }
     @media (max-width: 760px) { .topbar-links { display: none; } }
-
-    /* ─── Theme toggle ─── */
-    .theme-toggle {
-      width: 72px;
-      height: 36px;
-      background: var(--surface-sunken);
-      border: 2px solid var(--outline);
-      border-radius: 999px;
-      padding: 3px;
-      position: relative;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .theme-toggle-knob {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 2px solid var(--outline);
-      background: var(--gold-fill);
-      transition: transform 0.35s cubic-bezier(0.68, -0.6, 0.32, 1.6), background 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-    }
-    [data-theme="dark"] .theme-toggle-knob {
-      transform: translateX(36px);
-      background: var(--surface);
-    }
 
     /* ═══════════════════════════════════════════════════════════════
        HERO
@@ -421,9 +368,9 @@
       white-space: nowrap;
       animation: float-gentle 5s ease-in-out infinite;
     }
-    .floating-sticker.s1 { top: 8%; left: -4%; transform: rotate(-7deg); background: var(--pink-surface); color: var(--pink-ink); animation-delay: 0.3s; }
-    .floating-sticker.s2 { top: 40%; right: -8%; transform: rotate(6deg); background: var(--green-surface); color: var(--green-ink); animation-delay: 0.8s; }
-    .floating-sticker.s3 { bottom: 12%; left: 2%; transform: rotate(4deg); background: var(--orange-surface); color: var(--orange-ink); animation-delay: 1.2s; }
+    .floating-sticker.s1 { top: 4%; left: -4%; transform: rotate(-7deg); background: var(--pink-surface); color: var(--pink-ink); animation-delay: 0.3s; }
+    .floating-sticker.s2 { top: 42%; right: -8%; transform: rotate(6deg); background: var(--green-surface); color: var(--green-ink); animation-delay: 0.8s; }
+    .floating-sticker.s3 { bottom: 10%; left: 2%; transform: rotate(4deg); background: var(--orange-surface); color: var(--orange-ink); animation-delay: 1.2s; }
     @keyframes float-gentle {
       0%, 100% { translate: 0 0; }
       50% { translate: 0 -10px; }
@@ -492,7 +439,7 @@
     .principle p { color: var(--text-secondary); font-size: 15px; }
 
     /* ═══════════════════════════════════════════════════════════════
-       MASCOT — Mallang intro & expressions
+       MASCOT — Byeol-i intro & expressions
        ═══════════════════════════════════════════════════════════════ */
     .mallang-layout {
       display: grid;
@@ -521,11 +468,22 @@
       color: var(--text-secondary);
       margin-top: 8px;
     }
+    .mallang-story {
+      margin-top: 20px;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 2px solid var(--outline);
+      border-radius: 14px;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text-primary);
+    }
     .mallang-meta {
       display: grid;
       grid-template-columns: auto 1fr;
       gap: 14px 20px;
-      margin-top: 28px;
+      margin-top: 24px;
       font-size: 15px;
     }
     .mallang-meta dt {
@@ -554,7 +512,7 @@
     .candidate-name {
       font-family: 'Jua', sans-serif;
       font-size: 22px;
-      min-width: 90px;
+      min-width: 110px;
     }
     .candidate-note {
       font-size: 14px;
@@ -588,7 +546,7 @@
       transition: transform 0.18s;
     }
     .expr:hover { transform: translate(-1px, -1px) rotate(-2deg); }
-    .expr svg { width: 58%; }
+    .expr svg { width: 68%; }
     .expr-label {
       font-family: 'Jua', sans-serif;
       font-size: 14px;
@@ -867,13 +825,6 @@
     .badge-row .badge:nth-child(3) { transform: rotate(-1deg); }
     .badge-row .badge:nth-child(4) { transform: rotate(3deg); }
 
-    /* toggle-sticker (실제 테마 토글 mini demo) */
-    .mini-toggle {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
     /* ═══════════════════════════════════════════════════════════════
        FEATURE PACKS — 7 features
        ═══════════════════════════════════════════════════════════════ */
@@ -991,15 +942,15 @@
       align-items: center;
       margin-bottom: 14px;
     }
-    .home-greet-mini-mallang {
-      width: 44px; height: 44px;
+    .home-greet-mini {
+      width: 52px; height: 52px;
       flex-shrink: 0;
     }
     .home-greet-text {
       font-family: 'Jua', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       color: var(--pink-ink);
-      line-height: 1.3;
+      line-height: 1.35;
     }
     .home-term {
       padding: 14px;
@@ -1256,15 +1207,12 @@
     <nav class="topbar-links" aria-label="Sections">
       <a href="#why">왜</a>
       <a href="#principles">원칙</a>
-      <a href="#mallang">말랑</a>
+      <a href="#byeol">별이</a>
       <a href="#colors">컬러</a>
       <a href="#typo">타이포</a>
       <a href="#mockups">목업</a>
       <a href="#phases">계획</a>
     </nav>
-    <button class="theme-toggle" id="themeToggle" aria-label="테마 전환" title="라이트/다크 전환">
-      <span class="theme-toggle-knob" aria-hidden="true">☀</span>
-    </button>
   </div>
 </div>
 
@@ -1277,15 +1225,15 @@
       <div class="reveal in">
         <div class="hero-eyebrow">SUDA 디자인 제안 · 2026-04-21</div>
         <h1 class="hero-title font-display">
-          외국인에게<br>
-          진짜 한국을<br>
-          <span class="accent">수다</span>로.
+          별에서 온<br>
+          손님과 함께<br>
+          <span class="accent">한국 MZ</span>.
         </h1>
         <p class="hero-lead">
           학습앱처럼 생겼던 SUDA를 <strong>카카오 이모티콘 세계관</strong>으로
           다시 짓는 제안. 두꺼운 흑선, 크림 페이퍼 배경, 쨍한 핑크 포인트,
-          스티커 그림자 — 그리고 새 마스코트 <strong>말랑(Mallang)</strong>.
-          라이트·다크 전환도 포함.
+          스티커 그림자 — 그리고 외계 행성에서 한국 MZ 문화가 궁금해 찾아온
+          방문자 <strong>별이(Byeol-i)</strong>.
         </p>
         <div class="hero-ctas">
           <a href="#why" class="btn-primary">왜 이 방향인가 →</a>
@@ -1293,28 +1241,34 @@
         </div>
       </div>
       <div class="mascot-stage reveal in">
-        <!-- Mallang main SVG -->
-        <svg class="mascot-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-label="말랑 마스코트">
-          <g fill="none" stroke="var(--outline)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
-            <!-- speech bubble body -->
+        <!-- Byeol-i main SVG (안테나 2개 + 골드 별 팁) -->
+        <svg class="mascot-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-label="별이 마스코트">
+          <g fill="none" stroke="#1C1A17" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+            <!-- Antennas with gold star tips -->
+            <path d="M 118 58 Q 112 40 104 22"/>
+            <path d="M 182 58 Q 188 40 196 22"/>
+            <circle cx="102" cy="20" r="9" fill="#FFB800"/>
+            <circle cx="198" cy="20" r="9" fill="#FFB800"/>
+
+            <!-- speech bubble body (우주선) -->
             <path d="M 50 70 Q 50 55 65 55 L 235 55 Q 250 55 250 70 L 250 190 Q 250 205 235 205 L 125 205 L 95 245 L 105 205 L 65 205 Q 50 205 50 190 Z"
-                  fill="var(--pink-fill)"/>
-            <!-- inner white character shape -->
+                  fill="#E91E7A"/>
+            <!-- inner white character -->
             <path d="M 108 95 Q 108 85 120 85 L 180 85 Q 192 85 192 95 L 192 165 Q 192 185 165 190 L 135 190 Q 108 185 108 165 Z"
                   fill="#FFFDF8"/>
             <!-- eyes -->
-            <circle cx="135" cy="125" r="5" fill="var(--outline)" stroke="none"/>
-            <circle cx="165" cy="125" r="5" fill="var(--outline)" stroke="none"/>
+            <circle cx="135" cy="125" r="5" fill="#1C1A17" stroke="none"/>
+            <circle cx="165" cy="125" r="5" fill="#1C1A17" stroke="none"/>
             <!-- cheeks -->
-            <ellipse cx="124" cy="148" rx="8" ry="4" fill="var(--pink-fill)" stroke="none" opacity="0.75"/>
-            <ellipse cx="176" cy="148" rx="8" ry="4" fill="var(--pink-fill)" stroke="none" opacity="0.75"/>
+            <ellipse cx="124" cy="148" rx="8" ry="4" fill="#E91E7A" stroke="none" opacity="0.75"/>
+            <ellipse cx="176" cy="148" rx="8" ry="4" fill="#E91E7A" stroke="none" opacity="0.75"/>
             <!-- smile -->
             <path d="M 138 155 Q 150 168 162 155" stroke-width="4"/>
           </g>
         </svg>
 
-        <div class="floating-sticker s1">안녕!</div>
-        <div class="floating-sticker s2">오늘의 수다</div>
+        <div class="floating-sticker s1">한국 첨이에요!</div>
+        <div class="floating-sticker s2">이게 MZ 맞아요?</div>
         <div class="floating-sticker s3">+50 엽전</div>
       </div>
     </div>
@@ -1328,7 +1282,7 @@
   <div class="container">
     <header class="section-head reveal">
       <span class="eyebrow">WHY · 왜 이 방향인가</span>
-      <h2 class="section-title font-display">"학습앱"이 아닌 "수다 친구"로.</h2>
+      <h2 class="section-title font-display">"학습앱"이 아닌<br>"함께 배우는 친구"로.</h2>
       <p class="section-lead">
         기존 네온 핑크 × 순흑 팔레트는 "AI가 상상한 MZ"처럼 보였습니다.
         진짜 한국 MZ 문화의 시각 언어는 <strong>카카오 이모티콘 샵</strong>·
@@ -1358,11 +1312,11 @@
       </article>
       <article class="sticker hoverable tilt-r why-card reveal">
         <div class="why-num">03</div>
-        <h3>구현이 단순해짐</h3>
+        <h3>같은 출발선에서</h3>
         <p>
-          피처마다 색 팔레트를 스위칭하는 대신 <em>단일 시각 언어 + 컨텍스트
-          변주</em>. 기존 <code>AppColors</code> 588개 참조를 리팩터링할 때도
-          매핑 규칙이 더 깔끔하게 나옵니다.
+          별이는 원어민이 아닙니다. 외국인 사용자처럼 한국 MZ를 막 배우는
+          <em>손님</em>. "가르치는 마스코트"가 아니라 <em>같이 알아가는
+          친구</em>라는 관계 설정이 학습 앱의 empathy를 완전히 바꿉니다.
         </p>
       </article>
     </div>
@@ -1397,78 +1351,91 @@
       <article class="sticker hoverable tilt-r principle reveal">
         <span class="principle-label">P·03</span>
         <h3>두꺼운 흑선</h3>
-        <p>모든 주요 UI 오브젝트는 아웃라인을 갖는다. 라이트에선 잉크 흑, 다크에선 크림 백의 역전.</p>
+        <p>모든 주요 UI 오브젝트는 <code>outline</code>의 검정 아웃라인을 갖는다. 아이콘 DNA의 핵심.</p>
       </article>
       <article class="sticker hoverable principle reveal">
         <span class="principle-label">P·04</span>
         <h3>스티커 메타포</h3>
-        <p>카드·배지·버튼·아이콘은 "종이 위에 붙인 스티커". 블러 없는 단색 그림자 + 살짝 기울기.</p>
+        <p>카드·배지·버튼·아이콘은 "종이 위에 붙인 스티커". 블러 0 단색 그림자 + 살짝 기울기.</p>
       </article>
       <article class="sticker hoverable tilt-l principle reveal">
         <span class="principle-label">P·05</span>
-        <h3>핑크는 "말하는 순간"</h3>
-        <p>쨍한 핑크가 나오는 순간은 <em>수다 떠는 순간</em> (말풍선·정답 축하·레벨업). 그 외엔 크림/잉크.</p>
+        <h3>핑크는 "만나는 순간"</h3>
+        <p>쨍한 핑크가 나오는 순간은 <em>별이와 만나는 순간</em>(말풍선·정답 축하·레벨업). 그 외엔 크림/잉크.</p>
       </article>
       <article class="sticker hoverable principle reveal">
         <span class="principle-label">P·06</span>
         <h3>외국인 가독성 우선</h3>
-        <p>모든 UI 레이블은 영어/일본어로도 자연스럽게 작동. 장식 타이포가 가독성을 해치지 않는다.</p>
+        <p>모든 UI 레이블은 영어·일본어로도 자연스럽게 작동. 장식 타이포가 가독성을 해치지 않는다.</p>
       </article>
     </div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
-     MASCOT MALLANG
+     MASCOT — Byeol-i
      ═══════════════════════════════════════════════════════════ -->
-<section class="section" id="mallang">
+<section class="section" id="byeol">
   <div class="container">
     <header class="section-head reveal">
       <span class="eyebrow">MASCOT · 마스코트</span>
-      <h2 class="section-title font-display">말랑이와<br>한국어 수다 떨기.</h2>
+      <h2 class="section-title font-display">별에서 온 손님,<br>별이를 소개합니다.</h2>
       <p class="section-lead">
-        앱 아이콘의 흰 캐릭터를 앱 내부에서도 데리고 놉니다.
-        이름은 <strong>말랑(Mallang)</strong> 을 1순위로 추천 — 앱과 의미가
-        직접 연결되고, 외국인에게 배울 만한 한국어 의태어(말랑말랑)까지 담깁니다.
+        저 너머 외계 행성에서 <strong>한국 MZ 문화가 너무 궁금해서</strong>
+        대한민국으로 찾아온 방문자. 한국어도, MZ 용어도 학습자와 똑같이
+        처음 배우는 중. <em>"우리 같이 알아가요"</em> 가 별이의 기본 대사.
       </p>
     </header>
 
     <div class="mallang-layout">
       <div>
         <article class="sticker sticker-lg mallang-name-card reveal">
-          <div class="mallang-name font-display">말랑</div>
-          <div class="mallang-romaji">Mallang · 1순위 추천</div>
+          <div class="mallang-name font-display">별이</div>
+          <div class="mallang-romaji">Byeol-i · 1순위 추천</div>
+
+          <div class="mallang-story">
+            "안녕! 저는 저~기 별에서 왔어요.<br>
+            한국의 MZ 문화가 너무너무 궁금해서 찾아왔는데,
+            아직 아는 게 별로 없어요. 같이 알아가실래요?"
+          </div>
 
           <dl class="mallang-meta">
-            <dt>의미</dt>
-            <dd>말(speech) + 랑(친근 접미사) <br>+ <em>말랑말랑</em>(squishy-soft)</dd>
-            <dt>종</dt>
-            <dd>수다 생명체 · 말풍선 안에 사는 흰 친구</dd>
-            <dt>나이</dt>
-            <dd>영원히 한국 나이 15세. MZ의 막내.</dd>
+            <dt>출신</dt>
+            <dd>저 너머 외계 행성 (위치는 비밀)</dd>
+            <dt>이동 수단</dt>
+            <dd>작은 말풍선 우주선 (앱 아이콘 = 별이의 우주선)</dd>
+            <dt>외형 특징</dt>
+            <dd>머리 위 안테나 2개, 팁에 골드 별</dd>
+            <dt>한국어</dt>
+            <dd>서툴어요. 학습자와 동급 초심자.</dd>
+            <dt>관심사</dt>
+            <dd>한국 MZ 용어 · 떡볶이 · "엽전"이라는 신기한 지구 화폐</dd>
             <dt>말투</dt>
-            <dd>반말·존댓말 섞어 쓰고 이모지·의성어 자주</dd>
-            <dt>좋아하는 것</dt>
-            <dd>엽전 모으기 · 퀴즈 맞히기 · 떡볶이</dd>
+            <dd>반말·존댓말 섞고 외계식 감탄사 가끔 ("우왁!", "삐용~")</dd>
           </dl>
         </article>
 
         <div class="name-candidates sticker hoverable reveal" style="padding: 22px 26px; margin-top: 24px;">
-          <h3 class="font-display" style="font-size:20px; margin-bottom:10px;">후보 정리</h3>
+          <h3 class="font-display" style="font-size:20px; margin-bottom:10px;">이름 후보 정리</h3>
           <div class="candidate-row">
             <span class="candidate-rank">01</span>
-            <span class="candidate-name" style="color:var(--pink-ink);">말랑 · Mallang</span>
-            <span class="candidate-note">의미·발음·스토리성 균형 — 추천</span>
+            <span class="candidate-name" style="color:var(--pink-ink);">별이 · Byeol-i</span>
+            <span class="candidate-note">"별"(star) + MZ슬랭 "별나다" 이중 연결 — 추천</span>
           </div>
           <div class="candidate-row">
             <span class="candidate-rank">02</span>
-            <span class="candidate-name">수디 · Sudi</span>
-            <span class="candidate-note">SUDA의 애칭. 브랜드 정합성 최강</span>
+            <span class="candidate-name">쏘니 · Sso-ni</span>
+            <span class="candidate-note">경쾌, 외국인 발음 매우 쉬움</span>
           </div>
           <div class="candidate-row">
             <span class="candidate-rank">03</span>
-            <span class="candidate-name">풍이 · Pung-i</span>
-            <span class="candidate-note">말풍선 몸체 메타포 직결</span>
+            <span class="candidate-name">혜성 · Hye-seong</span>
+            <span class="candidate-note">혜성(comet) — 성숙한 한국 이름 톤</span>
+          </div>
+          <div class="candidate-row">
+            <span class="candidate-rank">04</span>
+            <span class="candidate-name">유포 · Yu-po</span>
+            <span class="candidate-note">UFO 한국식 발음 — 유쾌 말장난</span>
           </div>
         </div>
       </div>
@@ -1476,8 +1443,8 @@
       <div class="expr-section reveal">
         <h3 class="font-display">7가지 감정 표현</h3>
         <p style="color:var(--text-secondary); margin-bottom: 18px; font-size:14px;">
-          빈 상태·로딩·에러·성공 — 모든 상태를 말랑의 표정과 대사로 통일.
-          카피·일러스트 비용이 극적으로 감소.
+          빈 상태·로딩·에러·성공 — 모든 상태를 별이의 표정과 대사로 통일.
+          안테나와 별 팁은 모든 표정에서 유지되는 외계 정체성.
         </p>
         <div class="expr-grid" id="exprGrid">
           <!-- JS가 아래 표정 SVG를 주입 -->
@@ -1494,12 +1461,13 @@
   <div class="container">
     <header class="section-head reveal">
       <span class="eyebrow">COLORS · 컬러 시스템</span>
-      <h2 class="section-title font-display">6컬러 × 2모드 × Fill·Ink 분리.</h2>
+      <h2 class="section-title font-display">5컬러 × Fill·Ink 분리.<br>라이트 단일 모드.</h2>
       <p class="section-lead">
         모든 비-뉴트럴 색은 <code>-fill</code>(아이콘·배경·버튼)과
         <code>-ink</code>(텍스트) 두 쌍으로 정의됩니다. WCAG AA 본문(4.5:1)은
         <code>-ink</code>가 책임지고 <code>-fill</code>은 장식·큰 요소 전용.
-        라이트/다크 토글해보세요 — 같은 토큰이 맥락에 맞게 바뀝니다.
+        <strong>다크 모드는 제공하지 않습니다</strong> — 이모티콘·스티커
+        시각 언어는 크림 페이퍼 위에서 정체성이 가장 강하기 때문.
       </p>
     </header>
 
@@ -1509,36 +1477,36 @@
         <div class="pkrole">순흑/순백 금지. 크림 종이와 먹잉크.</div>
         <div class="swatch-row">
           <div class="swatch" style="background: var(--bg); color: var(--text-primary);">
-            <small>background</small><span class="hex" data-hex-light="#FAF7F0" data-hex-dark="#181614"></span>
+            <small>background</small><span class="hex">#FAF7F0</span>
           </div>
           <div class="swatch" style="background: var(--surface); color: var(--text-primary);">
-            <small>surface</small><span class="hex" data-hex-light="#FFFDF8" data-hex-dark="#24211E"></span>
+            <small>surface</small><span class="hex">#FFFDF8</span>
           </div>
         </div>
         <div class="swatch-row">
           <div class="swatch" style="background: var(--surface-raised); color: var(--text-primary);">
-            <small>raised</small><span class="hex" data-hex-light="#F5F0E4" data-hex-dark="#2E2A26"></span>
+            <small>raised</small><span class="hex">#F5F0E4</span>
           </div>
           <div class="swatch" style="background: var(--outline); color: var(--surface);">
-            <small>outline</small><span class="hex" data-hex-light="#1C1A17" data-hex-dark="#FAF7F0"></span>
+            <small>outline</small><span class="hex">#1C1A17</span>
           </div>
         </div>
       </article>
 
       <article class="sticker hoverable palette-card reveal">
         <h3 style="color: var(--pink-ink);">수다 핑크</h3>
-        <div class="pkrole">Primary · CTA · 말풍선</div>
+        <div class="pkrole">Primary · CTA · 별이 말풍선</div>
         <div class="swatch-row">
           <div class="swatch" style="background: var(--pink-fill); color: #FFFDF8;">
-            <small>fill</small><span class="hex">#EC2E96</span>
+            <small>fill</small><span class="hex">#E91E7A</span>
           </div>
           <div class="swatch" style="background: var(--pink-surface); color: var(--pink-ink);">
-            <small>surface</small><span class="hex" data-hex-light="#FFE7F3" data-hex-dark="#3D0F27"></span>
+            <small>surface</small><span class="hex">#FFDEE9</span>
           </div>
         </div>
         <div class="swatch-row">
           <div class="swatch" style="background: var(--bg); color: var(--pink-ink); border-color: var(--pink-ink);">
-            <small>ink (text)</small><span class="hex" data-hex-light="#B3186E" data-hex-dark="#FF7AB8"></span>
+            <small>ink (text)</small><span class="hex">#961353</span>
           </div>
         </div>
       </article>
@@ -1551,12 +1519,12 @@
             <small>fill</small><span class="hex">#FFB800</span>
           </div>
           <div class="swatch" style="background: var(--gold-surface); color: var(--gold-ink);">
-            <small>surface</small><span class="hex" data-hex-light="#FFF1C7" data-hex-dark="#3D2E00"></span>
+            <small>surface</small><span class="hex">#FFF1C7</span>
           </div>
         </div>
         <div class="swatch-row">
           <div class="swatch" style="background: var(--bg); color: var(--gold-ink); border-color: var(--gold-ink);">
-            <small>ink (text)</small><span class="hex" data-hex-light="#8C6200" data-hex-dark="#FFD23E"></span>
+            <small>ink (text)</small><span class="hex">#8C6200</span>
           </div>
         </div>
       </article>
@@ -1569,12 +1537,12 @@
             <small>fill</small><span class="hex">#2A9D8F</span>
           </div>
           <div class="swatch" style="background: var(--green-surface); color: var(--green-ink);">
-            <small>surface</small><span class="hex" data-hex-light="#D8F1EE" data-hex-dark="#0F2E2A"></span>
+            <small>surface</small><span class="hex">#D8F1EE</span>
           </div>
         </div>
         <div class="swatch-row">
           <div class="swatch" style="background: var(--bg); color: var(--green-ink); border-color: var(--green-ink);">
-            <small>ink (text)</small><span class="hex" data-hex-light="#1E6B62" data-hex-dark="#5EE0CF"></span>
+            <small>ink (text)</small><span class="hex">#1E6B62</span>
           </div>
         </div>
       </article>
@@ -1587,12 +1555,12 @@
             <small>fill</small><span class="hex">#F77F00</span>
           </div>
           <div class="swatch" style="background: var(--orange-surface); color: var(--orange-ink);">
-            <small>surface</small><span class="hex" data-hex-light="#FFE4C7" data-hex-dark="#3D2500"></span>
+            <small>surface</small><span class="hex">#FFE4C7</span>
           </div>
         </div>
         <div class="swatch-row">
           <div class="swatch" style="background: var(--bg); color: var(--orange-ink); border-color: var(--orange-ink);">
-            <small>ink (text)</small><span class="hex" data-hex-light="#9E4F00" data-hex-dark="#FFB366"></span>
+            <small>ink (text)</small><span class="hex">#9E4F00</span>
           </div>
         </div>
       </article>
@@ -1605,12 +1573,12 @@
             <small>fill</small><span class="hex">#D62828</span>
           </div>
           <div class="swatch" style="background: var(--red-surface); color: var(--red-ink);">
-            <small>surface</small><span class="hex" data-hex-light="#FBE5E5" data-hex-dark="#2A0A10"></span>
+            <small>surface</small><span class="hex">#FBE5E5</span>
           </div>
         </div>
         <div class="swatch-row">
           <div class="swatch" style="background: var(--bg); color: var(--red-ink); border-color: var(--red-ink);">
-            <small>ink (text)</small><span class="hex" data-hex-light="#8A1414" data-hex-dark="#FF6B6B"></span>
+            <small>ink (text)</small><span class="hex">#8A1414</span>
           </div>
         </div>
       </article>
@@ -1629,14 +1597,15 @@
           <tr><th>페어</th><th>대비</th><th>판정</th></tr>
         </thead>
         <tbody>
-          <tr><td>textPrimary on bg (라이트)</td><td>14.2:1</td><td><span class="pass good">AAA</span></td></tr>
-          <tr><td>pink-ink #B3186E on cream #FAF7F0</td><td>6.1:1</td><td><span class="pass good">AA 본문</span></td></tr>
+          <tr><td>textPrimary #1C1A17 on bg #FAF7F0</td><td>14.2:1</td><td><span class="pass good">AAA</span></td></tr>
+          <tr><td>textSecondary #5A5552 on bg</td><td>6.4:1</td><td><span class="pass good">AA</span></td></tr>
+          <tr><td>pink-ink #961353 on cream #FAF7F0</td><td>7.1:1</td><td><span class="pass good">AA 본문</span></td></tr>
+          <tr><td>pink-fill #E91E7A on cream</td><td>4.1:1</td><td><span class="pass ok">UI / 큰 글자</span></td></tr>
           <tr><td>gold-ink #8C6200 on cream</td><td>5.9:1</td><td><span class="pass good">AA 본문</span></td></tr>
-          <tr><td>green-ink #1E6B62 on cream</td><td>6.7:1</td><td><span class="pass good">AA 본문</span></td></tr>
-          <tr><td>pink-fill #EC2E96 on cream</td><td>3.7:1</td><td><span class="pass ok">UI/큰 글자</span></td></tr>
           <tr><td>gold-fill #FFB800 on cream</td><td>1.9:1</td><td><span class="pass fail">아이콘 전용</span></td></tr>
-          <tr><td>pink-ink-dark #FF7AB8 on ink #181614</td><td>7.2:1</td><td><span class="pass good">AA 본문</span></td></tr>
-          <tr><td>gold-ink-dark #FFD23E on ink</td><td>11.5:1</td><td><span class="pass good">AAA</span></td></tr>
+          <tr><td>green-ink #1E6B62 on cream</td><td>6.7:1</td><td><span class="pass good">AA 본문</span></td></tr>
+          <tr><td>orange-ink #9E4F00 on cream</td><td>5.6:1</td><td><span class="pass good">AA 본문</span></td></tr>
+          <tr><td>danger-ink #8A1414 on cream</td><td>9.5:1</td><td><span class="pass good">AAA</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -1652,8 +1621,9 @@
       <span class="eyebrow">TYPO · 타이포그래피</span>
       <h2 class="section-title font-display">3개의 목소리.</h2>
       <p class="section-lead">
-        기본 가독성은 <strong>Pretendard</strong> 가 지키고, <strong>간판 디스플레이</strong>와
-        <strong>마스코트 대사</strong>는 각자의 목소리를 갖습니다. 장식 폰트는 아주 제한적으로만 사용.
+        기본 가독성은 <strong>Pretendard</strong> 가 지키고,
+        <strong>간판 디스플레이</strong>와 <strong>별이 대사</strong>는
+        각자의 목소리를 갖습니다. 장식 폰트는 아주 제한적으로만 사용.
       </p>
     </header>
 
@@ -1682,10 +1652,10 @@
       <article class="sticker hoverable typo-card reveal">
         <div class="typo-meta">
           <div class="tname">Jua</div>
-          <div class="trole">Speech · 마스코트 대사</div>
-          <div class="tuse">말랑이의 모든 말풍선. 둥글고 친근한 톤.</div>
+          <div class="trole">Speech · 별이 대사</div>
+          <div class="tuse">별이의 모든 말풍선. 둥글고 친근한 톤.</div>
         </div>
-        <div class="typo-sample mid font-speech">와아~ 정답이에요!<br>엽전 50개 받아가세요!</div>
+        <div class="typo-sample mid font-speech">우왁! 저도 처음 알았어요!<br>엽전 50개 받아가세요~</div>
       </article>
 
       <article class="sticker hoverable typo-card reveal">
@@ -1779,17 +1749,17 @@
       <span class="eyebrow">COMPONENTS · 컴포넌트</span>
       <h2 class="section-title font-display">한 번 만들고<br>앱 전체에 쓴다.</h2>
       <p class="section-lead">
-        8개 신규 컴포넌트가 SUDA 시각 언어를 앱 전역에 실어 나릅니다.
+        7개 신규 컴포넌트가 SUDA 시각 언어를 앱 전역에 실어 나릅니다.
         <code>lib/core/widgets/stickers/</code> 아래에 함께 모읍니다.
       </p>
     </header>
 
     <div class="comp-grid">
       <article class="sticker hoverable comp-card reveal">
-        <h4>SudaSpeechBubble</h4>
-        <div class="c-desc">말랑 대사용 말풍선. 어느 화면에서나 사용 가능.</div>
+        <h4>ByeolSpeechBubble</h4>
+        <div class="c-desc">별이 대사용 말풍선. 어느 화면에서나 사용 가능.</div>
         <div class="comp-demo">
-          <div class="speech-bubble">오늘의 MZ 용어는 "갓생"!</div>
+          <div class="speech-bubble">오늘의 MZ 용어는 "갓생"이에요! 저도 처음 들어봐요~</div>
         </div>
       </article>
 
@@ -1816,22 +1786,9 @@
       </article>
 
       <article class="sticker hoverable comp-card reveal">
-        <h4>ThemeToggleSticker</h4>
-        <div class="c-desc">해·달 스티커 슬라이드. 상단 우측 토글 버튼으로 실제 작동 중 ↗</div>
-        <div class="comp-demo" style="flex-direction: column; gap: 14px;">
-          <div class="mini-toggle">
-            <div class="theme-toggle" style="position: relative; pointer-events:none;">
-              <span class="theme-toggle-knob" aria-hidden="true">☀</span>
-            </div>
-            <span class="font-hand" style="font-size:16px; color:var(--text-secondary);">낮 · 라이트</span>
-          </div>
-          <div class="mini-toggle">
-            <div class="theme-toggle" style="position: relative; pointer-events:none;">
-              <span class="theme-toggle-knob" aria-hidden="true" style="transform: translateX(36px); background: var(--surface-sunken);">☾</span>
-            </div>
-            <span class="font-hand" style="font-size:16px; color:var(--text-secondary);">밤 · 다크</span>
-          </div>
-        </div>
+        <h4>ByeolMascot</h4>
+        <div class="c-desc">별이 표정 전환 + 안테나 유지. 감정 enum 입력.</div>
+        <div class="comp-demo" id="mascotDemo"></div>
       </article>
     </div>
   </div>
@@ -1847,7 +1804,7 @@
       <h2 class="section-title font-display">피처 ≠ 다른 테마.<br>같은 언어, 다른 비중.</h2>
       <p class="section-lead">
         피처별로 테마를 스위칭하는 게 아니라, <em>어떤 색 역할이 우세한가</em>로
-        구분합니다. 전체 시각 언어는 하나 — 사용자는 앱 전체에서 "말랑의 세계"를 느낍니다.
+        구분합니다. 전체 시각 언어는 하나 — 사용자는 앱 전체에서 "별이의 세계"를 느낍니다.
       </p>
     </header>
 
@@ -1859,8 +1816,8 @@
           <span class="pack-swatch" style="background: var(--pink-fill);"></span>
           <span class="pack-swatch" style="background: var(--surface);"></span>
         </div>
-        <p class="pack-desc">뉴트럴 + 핑크 포인트(말랑 인사 영역).</p>
-        <p class="pack-mascot-freq">말랑 · 상시 등장</p>
+        <p class="pack-desc">뉴트럴 + 핑크 포인트(별이 인사 영역).</p>
+        <p class="pack-mascot-freq">별이 · 상시 등장</p>
       </article>
 
       <article class="sticker hoverable pack reveal">
@@ -1871,7 +1828,7 @@
           <span class="pack-swatch" style="background: var(--outline);"></span>
         </div>
         <p class="pack-desc">뉴트럴 + 블랙 아웃라인(편집 감각).</p>
-        <p class="pack-mascot-freq">말랑 · 낮음 (검색 집중 보호)</p>
+        <p class="pack-mascot-freq">별이 · 낮음 (검색 집중 보호)</p>
       </article>
 
       <article class="sticker hoverable tilt-r pack reveal">
@@ -1883,7 +1840,7 @@
           <span class="pack-swatch" style="background: var(--red-fill);"></span>
         </div>
         <p class="pack-desc">핑크 + 정답 그린 / 오답 레드.</p>
-        <p class="pack-mascot-freq">말랑 · 높음 (리액션)</p>
+        <p class="pack-mascot-freq">별이 · 높음 (리액션)</p>
       </article>
 
       <article class="sticker hoverable pack reveal">
@@ -1894,7 +1851,7 @@
           <span class="pack-swatch" style="background: var(--gold-fill);"></span>
         </div>
         <p class="pack-desc">오렌지 + 골드 — 따뜻함과 연속.</p>
-        <p class="pack-mascot-freq">말랑 · 출석 순간</p>
+        <p class="pack-mascot-freq">별이 · 출석 순간</p>
       </article>
 
       <article class="sticker hoverable tilt-l pack reveal">
@@ -1905,7 +1862,7 @@
           <span class="pack-swatch" style="background: var(--outline);"></span>
         </div>
         <p class="pack-desc">골드 + 블랙 아웃라인. 전통 화폐 톤.</p>
-        <p class="pack-mascot-freq">말랑 · 획득 순간</p>
+        <p class="pack-mascot-freq">별이 · 획득 순간</p>
       </article>
 
       <article class="sticker hoverable pack reveal">
@@ -1917,7 +1874,7 @@
           <span class="pack-swatch" style="background: var(--gold-surface);"></span>
         </div>
         <p class="pack-desc">핑크 천국 + 파스텔 다수.</p>
-        <p class="pack-mascot-freq">말랑 · 시착 반응 높음</p>
+        <p class="pack-mascot-freq">별이 · 시착 반응 높음</p>
       </article>
 
       <article class="sticker hoverable tilt-r pack reveal">
@@ -1927,8 +1884,8 @@
           <span class="pack-swatch" style="background: var(--surface);"></span>
           <span class="pack-swatch" style="background: var(--surface-raised);"></span>
         </div>
-        <p class="pack-desc">뉴트럴 중심. 테마 토글만 핑크 포인트.</p>
-        <p class="pack-mascot-freq">말랑 · 테마 전환 시</p>
+        <p class="pack-desc">뉴트럴 중심. 라이트 단일 — 테마 토글 없음.</p>
+        <p class="pack-mascot-freq">별이 · 낮음</p>
       </article>
     </div>
   </div>
@@ -1944,8 +1901,7 @@
       <h2 class="section-title font-display">이런 느낌으로.</h2>
       <p class="section-lead">
         3개 대표 화면을 새 시각 언어로 재해석했습니다. 실제 Flutter 컴포넌트
-        위에 위 토큰과 컴포넌트를 씌우면 이 느낌이 나옵니다. (위 테마 토글과
-        연동 — 다크 모드에서도 확인해보세요)
+        위에 토큰과 컴포넌트를 씌우면 이 느낌이 나옵니다.
       </p>
     </header>
 
@@ -1961,16 +1917,20 @@
             <div class="phone-title">안녕, 민!</div>
 
             <div class="home-greet">
-              <svg class="home-greet-mini-mallang" viewBox="0 0 200 200">
-                <g fill="none" stroke="var(--outline)" stroke-width="8" stroke-linejoin="round">
-                  <path d="M 30 40 Q 30 28 42 28 L 158 28 Q 170 28 170 40 L 170 130 Q 170 142 158 142 L 80 142 L 60 170 L 66 142 L 42 142 Q 30 142 30 130 Z" fill="var(--pink-fill)"/>
-                  <path d="M 72 60 Q 72 52 80 52 L 120 52 Q 128 52 128 60 L 128 110 Q 128 125 114 128 L 86 128 Q 72 125 72 110 Z" fill="#FFFDF8"/>
-                  <circle cx="88" cy="85" r="3.5" fill="var(--outline)" stroke="none"/>
-                  <circle cx="112" cy="85" r="3.5" fill="var(--outline)" stroke="none"/>
-                  <path d="M 92 104 Q 100 110 108 104" stroke-width="2.5"/>
+              <svg class="home-greet-mini" viewBox="0 0 300 300">
+                <g fill="none" stroke="#1C1A17" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+                  <path d="M 118 58 Q 112 40 104 22"/>
+                  <path d="M 182 58 Q 188 40 196 22"/>
+                  <circle cx="102" cy="20" r="11" fill="#FFB800"/>
+                  <circle cx="198" cy="20" r="11" fill="#FFB800"/>
+                  <path d="M 50 70 Q 50 55 65 55 L 235 55 Q 250 55 250 70 L 250 190 Q 250 205 235 205 L 125 205 L 95 245 L 105 205 L 65 205 Q 50 205 50 190 Z" fill="#E91E7A"/>
+                  <path d="M 108 95 Q 108 85 120 85 L 180 85 Q 192 85 192 95 L 192 165 Q 192 185 165 190 L 135 190 Q 108 185 108 165 Z" fill="#FFFDF8"/>
+                  <circle cx="135" cy="125" r="6" fill="#1C1A17" stroke="none"/>
+                  <circle cx="165" cy="125" r="6" fill="#1C1A17" stroke="none"/>
+                  <path d="M 138 155 Q 150 168 162 155" stroke-width="5"/>
                 </g>
               </svg>
-              <div class="home-greet-text">오늘의 한마디,<br>"갓생" 알아요?</div>
+              <div class="home-greet-text">안녕! 저 별에서 왔어요.<br>오늘 "갓생" 같이 알아볼래요?</div>
             </div>
 
             <div class="home-term">
@@ -1985,7 +1945,7 @@
             </div>
           </div>
         </div>
-        <div class="phone-caption">Home — 말랑 인사 카드 + 오늘의 용어</div>
+        <div class="phone-caption">Home — 별이 인사 + 오늘의 용어</div>
       </div>
 
       <!-- QUIZ -->
@@ -2011,12 +1971,12 @@
             </div>
 
             <div style="margin-top: 14px; padding: 12px; background: var(--green-surface); border: 2px solid var(--outline); border-radius: 12px; box-shadow: 3px 3px 0 0 var(--outline);">
-              <div class="font-speech" style="font-size: 13px; color: var(--green-ink);">와아~ 정답이에요!</div>
+              <div class="font-speech" style="font-size: 13px; color: var(--green-ink);">우왁~ 저도 처음 알았어요!</div>
               <div style="font-size: 11px; color: var(--text-secondary); margin-top: 3px;">매일 운동한 걸 SNS에 올릴 때 써요 💪</div>
             </div>
           </div>
         </div>
-        <div class="phone-caption">Quiz — 정답 피드백 + 말랑 대사</div>
+        <div class="phone-caption">Quiz — 정답 피드백 + 별이 대사</div>
       </div>
 
       <!-- DICTIONARY -->
@@ -2081,10 +2041,11 @@
   <div class="container">
     <header class="section-head reveal">
       <span class="eyebrow">PLAN · 구현 계획</span>
-      <h2 class="section-title font-display">7단계 · 약 6-8주.</h2>
+      <h2 class="section-title font-display">7단계 · 약 5-7주.</h2>
       <p class="section-lead">
         파일럿(Quiz) 한 화면으로 감부터 검증하고, 좋으면 풀스케일 확산.
-        `AppColors` 588개 참조 리팩터는 <code>ThemeExtension</code> 구조로 한 번에 처리합니다.
+        <code>AppColors</code> 588개 참조 리팩터는 <code>ThemeExtension</code>
+        구조로 한 번에 처리합니다. 다크 모드 제거로 Phase 1이 간소화됐습니다.
       </p>
     </header>
 
@@ -2092,12 +2053,12 @@
       <article class="sticker hoverable tilt-l phase reveal">
         <h4>사전 결정</h4>
         <div class="p-dur">1-2일</div>
-        <p>마스코트 이름 확정 · Accent 폰트 선택 · 6컬러 토큰 승인 · 스펙 공개.</p>
+        <p>마스코트 이름 확정 · 외계 컨셉 승인 · 5컬러 토큰 값 확정 · 스펙 공개.</p>
       </article>
       <article class="sticker hoverable phase reveal">
         <h4>토큰 & 테마 아키텍처</h4>
-        <div class="p-dur">3-5일</div>
-        <p><code>AppColors</code> → <code>ThemeExtension&lt;SudaColors&gt;</code> · <code>theme_provider.dart</code> 신설 · 설정 Appearance 섹션 · <code>AnimatedTheme</code> 래핑.</p>
+        <div class="p-dur">2-3일</div>
+        <p><code>AppColors</code> → <code>ThemeExtension&lt;SudaColors&gt;</code> (라이트 단일). <code>themeMode: light</code> 고정. 스티커 그림자·보더 유틸.</p>
       </article>
       <article class="sticker hoverable tilt-r phase reveal">
         <h4>토큰 마이그레이션</h4>
@@ -2105,9 +2066,9 @@
         <p>자동 스크립트 + 수동 검수 20% 버퍼 · <code>.withAlpha(...)</code> 패턴 → surface 토큰 전환 · 시각 회귀 테스트.</p>
       </article>
       <article class="sticker hoverable phase reveal">
-        <h4>마스코트 & 핵심 컴포넌트</h4>
+        <h4>별이 & 핵심 컴포넌트</h4>
         <div class="p-dur">5-7일</div>
-        <p>말랑 표정 7종 SVG · StickerCard/Badge/Button · SudaSpeechBubble · CoinBurst · LevelUpOverlay.</p>
+        <p>별이 표정 7종 SVG (안테나 + 골드 별 팁 필수) · 우주선 착륙 온보딩 애니메이션 · StickerCard/Badge/Button · ByeolSpeechBubble · CoinBurst.</p>
       </article>
       <article class="sticker hoverable tilt-l phase reveal">
         <h4>파일럿 — Quiz</h4>
@@ -2117,12 +2078,12 @@
       <article class="sticker hoverable phase reveal">
         <h4>전체 피처 확산</h4>
         <div class="p-dur">2-3주</div>
-        <p>Home · Dictionary · Wallet · Attendance · Character/Shop · Auth · Profile 순.</p>
+        <p>Home · Dictionary · Wallet · Attendance · Character/Shop · Auth(별이 첫 만남 연출) · Profile 순.</p>
       </article>
       <article class="sticker hoverable tilt-r phase reveal">
         <h4>타이포·질감·모션</h4>
         <div class="p-dur">1주</div>
-        <p>Accent 폰트 subset 로드 · 필름 그레인 성능 검토 · 7종 주요 모션 구현.</p>
+        <p>Black Han Sans / Jua / Gaegu subset 로드 · 필름 그레인 성능 검토 · 8종 주요 모션 구현.</p>
       </article>
     </div>
   </div>
@@ -2147,23 +2108,23 @@
         <span class="dec-check" aria-hidden="true"></span>
         <div>
           <div class="dec-title">마스코트 이름</div>
-          <div class="dec-hint">1순위 "말랑(Mallang)" · 2순위 "수디(Sudi)" · 3순위 "풍이(Pung-i)"</div>
+          <div class="dec-hint">1순위 "별이(Byeol-i)" · 2순위 "쏘니(Sso-ni)" · 3순위 "혜성(Hye-seong)" · 4순위 "유포(Yu-po)"</div>
         </div>
-        <span class="dec-pill">말랑 추천</span>
+        <span class="dec-pill">별이 추천</span>
       </article>
       <article class="sticker hoverable decision reveal">
         <span class="dec-check" aria-hidden="true"></span>
         <div>
-          <div class="dec-title">Accent 폰트 선택</div>
-          <div class="dec-hint">Galmuri11 (픽셀, 이모티콘 톤 정석) vs Ownglyph Meari (손글씨 세리프)</div>
+          <div class="dec-title">별이 세계관 깊이</div>
+          <div class="dec-hint">온보딩에 "외계 행성에서 왔어요" 설정을 몇 문장 · 짧은 애니메이션 · 단일 문장 중 선택</div>
         </div>
-        <span class="dec-pill">Galmuri 추천</span>
+        <span class="dec-pill">짧은 애니메이션 추천</span>
       </article>
       <article class="sticker hoverable decision reveal">
         <span class="dec-check" aria-hidden="true"></span>
         <div>
-          <div class="dec-title">6컬러 토큰 값 승인</div>
-          <div class="dec-hint">pink-fill, gold, green, orange, red × fill/ink/surface</div>
+          <div class="dec-title">5컬러 토큰 값 승인</div>
+          <div class="dec-hint">pink-fill #E91E7A 확정 · gold, green, orange, red × fill/ink/surface</div>
         </div>
         <span class="dec-pill">승인 대기</span>
       </article>
@@ -2190,40 +2151,11 @@
 </footer>
 
 <script>
-  /* ─── Theme toggle ─── */
-  const html = document.documentElement;
-  const toggle = document.getElementById('themeToggle');
-  const knob = toggle.querySelector('.theme-toggle-knob');
-
-  // Read saved preference
-  const saved = localStorage.getItem('suda-showcase-theme');
-  if (saved === 'dark') {
-    html.setAttribute('data-theme', 'dark');
-    knob.textContent = '☾';
-  }
-
-  toggle.addEventListener('click', () => {
-    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-    knob.textContent = next === 'dark' ? '☾' : '☀';
-    localStorage.setItem('suda-showcase-theme', next);
-    // Update hex labels in swatches
-    updateHexLabels();
-  });
-
-  function updateHexLabels() {
-    const mode = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    document.querySelectorAll('.hex[data-hex-' + mode + ']').forEach(el => {
-      el.textContent = el.dataset['hex' + (mode === 'dark' ? 'Dark' : 'Light')];
-    });
-  }
-  updateHexLabels();
-
-  /* ─── Mallang expressions — inject 7 face variants ─── */
+  /* ─── Byeol-i expressions — inject 7 face variants ─── */
   const expressions = [
     { name: '기본',    eyes: 'circle', mouth: 'smile' },
-    { name: '기쁨',    eyes: 'arch-up', mouth: 'open' },
-    { name: '놀람',    eyes: 'big', mouth: 'O' },
+    { name: '신기함',  eyes: 'big', mouth: 'O' },
+    { name: '놀람',    eyes: 'big', mouth: 'open' },
     { name: '고민',    eyes: 'line', mouth: 'wavy' },
     { name: '슬픔',    eyes: 'arch-down', mouth: 'frown' },
     { name: '자는 중', eyes: 'Z', mouth: 'tiny' },
@@ -2235,64 +2167,90 @@
     expressions.forEach(e => {
       const box = document.createElement('div');
       box.className = 'expr';
-      box.innerHTML = mallangSvg(e.eyes, e.mouth) + '<span class="expr-label">' + e.name + '</span>';
+      box.innerHTML = byeolSvg(e.eyes, e.mouth) + '<span class="expr-label">' + e.name + '</span>';
       exprGrid.appendChild(box);
     });
   }
 
-  function mallangSvg(eyes, mouth) {
-    const outline = 'var(--outline)';
-    const pink = 'var(--pink-fill)';
+  // ByeolMascot live demo — cycles through expressions
+  const demo = document.getElementById('mascotDemo');
+  if (demo) {
+    let i = 0;
+    const render = () => {
+      const e = expressions[i % expressions.length];
+      demo.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <div style="width:120px;">${byeolSvg(e.eyes, e.mouth)}</div>
+          <div class="font-speech" style="font-size:14px; color:var(--pink-ink);">${e.name}</div>
+        </div>`;
+      i++;
+    };
+    render();
+    setInterval(render, 1400);
+  }
+
+  function byeolSvg(eyes, mouth) {
+    const outline = '#1C1A17';
+    const pink = '#E91E7A';
+    const gold = '#FFB800';
     const cream = '#FFFDF8';
 
     let eyesSvg = '';
     if (eyes === 'circle') {
-      eyesSvg = `<circle cx="88" cy="85" r="4" fill="${outline}"/><circle cx="112" cy="85" r="4" fill="${outline}"/>`;
+      eyesSvg = `<circle cx="88" cy="95" r="4" fill="${outline}"/><circle cx="112" cy="95" r="4" fill="${outline}"/>`;
     } else if (eyes === 'arch-up') {
-      eyesSvg = `<path d="M 82 88 Q 88 80 94 88" stroke="${outline}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                 <path d="M 106 88 Q 112 80 118 88" stroke="${outline}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+      eyesSvg = `<path d="M 82 98 Q 88 90 94 98" stroke="${outline}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                 <path d="M 106 98 Q 112 90 118 98" stroke="${outline}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
     } else if (eyes === 'big') {
-      eyesSvg = `<circle cx="88" cy="85" r="7" fill="none" stroke="${outline}" stroke-width="3"/>
-                 <circle cx="112" cy="85" r="7" fill="none" stroke="${outline}" stroke-width="3"/>
-                 <circle cx="89" cy="83" r="2" fill="${outline}"/>
-                 <circle cx="113" cy="83" r="2" fill="${outline}"/>`;
+      eyesSvg = `<circle cx="88" cy="95" r="7" fill="none" stroke="${outline}" stroke-width="3"/>
+                 <circle cx="112" cy="95" r="7" fill="none" stroke="${outline}" stroke-width="3"/>
+                 <circle cx="89" cy="93" r="2" fill="${outline}"/>
+                 <circle cx="113" cy="93" r="2" fill="${outline}"/>`;
     } else if (eyes === 'line') {
-      eyesSvg = `<line x1="82" y1="85" x2="94" y2="85" stroke="${outline}" stroke-width="3.5" stroke-linecap="round"/>
-                 <line x1="106" y1="85" x2="118" y2="85" stroke="${outline}" stroke-width="3.5" stroke-linecap="round"/>`;
+      eyesSvg = `<line x1="82" y1="95" x2="94" y2="95" stroke="${outline}" stroke-width="3.5" stroke-linecap="round"/>
+                 <line x1="106" y1="95" x2="118" y2="95" stroke="${outline}" stroke-width="3.5" stroke-linecap="round"/>`;
     } else if (eyes === 'arch-down') {
-      eyesSvg = `<path d="M 82 82 Q 88 92 94 82" stroke="${outline}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                 <path d="M 106 82 Q 112 92 118 82" stroke="${outline}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+      eyesSvg = `<path d="M 82 92 Q 88 102 94 92" stroke="${outline}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                 <path d="M 106 92 Q 112 102 118 92" stroke="${outline}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
     } else if (eyes === 'Z') {
-      eyesSvg = `<text x="76" y="92" font-family="Black Han Sans, sans-serif" font-size="20" fill="${outline}">z</text>
-                 <text x="104" y="92" font-family="Black Han Sans, sans-serif" font-size="20" fill="${outline}">z</text>`;
+      eyesSvg = `<text x="76" y="102" font-family="Black Han Sans, sans-serif" font-size="20" fill="${outline}">z</text>
+                 <text x="104" y="102" font-family="Black Han Sans, sans-serif" font-size="20" fill="${outline}">z</text>`;
     } else if (eyes === 'star') {
-      eyesSvg = `<text x="82" y="92" font-size="16" fill="${outline}">★</text>
-                 <text x="106" y="92" font-size="16" fill="${outline}">★</text>`;
+      eyesSvg = `<text x="82" y="102" font-size="16" fill="${outline}">★</text>
+                 <text x="106" y="102" font-size="16" fill="${outline}">★</text>`;
     }
 
     let mouthSvg = '';
     if (mouth === 'smile') {
-      mouthSvg = `<path d="M 90 108 Q 100 118 110 108" stroke="${outline}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      mouthSvg = `<path d="M 90 118 Q 100 128 110 118" stroke="${outline}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     } else if (mouth === 'open') {
-      mouthSvg = `<ellipse cx="100" cy="112" rx="9" ry="6" fill="${outline}"/>`;
+      mouthSvg = `<ellipse cx="100" cy="122" rx="9" ry="6" fill="${outline}"/>`;
     } else if (mouth === 'O') {
-      mouthSvg = `<circle cx="100" cy="112" r="5" fill="${outline}"/>`;
+      mouthSvg = `<circle cx="100" cy="122" r="5" fill="${outline}"/>`;
     } else if (mouth === 'wavy') {
-      mouthSvg = `<path d="M 90 112 Q 95 108 100 112 T 110 112" stroke="${outline}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      mouthSvg = `<path d="M 90 122 Q 95 118 100 122 T 110 122" stroke="${outline}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     } else if (mouth === 'frown') {
-      mouthSvg = `<path d="M 90 115 Q 100 106 110 115" stroke="${outline}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      mouthSvg = `<path d="M 90 125 Q 100 116 110 125" stroke="${outline}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     } else if (mouth === 'tiny') {
-      mouthSvg = `<line x1="96" y1="112" x2="104" y2="112" stroke="${outline}" stroke-width="3" stroke-linecap="round"/>`;
+      mouthSvg = `<line x1="96" y1="122" x2="104" y2="122" stroke="${outline}" stroke-width="3" stroke-linecap="round"/>`;
     } else if (mouth === 'wide') {
-      mouthSvg = `<path d="M 86 108 Q 100 122 114 108 Q 100 114 86 108 Z" fill="${outline}"/>`;
+      mouthSvg = `<path d="M 86 118 Q 100 132 114 118 Q 100 124 86 118 Z" fill="${outline}"/>`;
     }
 
-    return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <g stroke="${outline}" stroke-width="6" stroke-linejoin="round" fill="none">
-        <path d="M 30 40 Q 30 28 42 28 L 158 28 Q 170 28 170 40 L 170 130 Q 170 142 158 142 L 80 142 L 60 170 L 66 142 L 42 142 Q 30 142 30 130 Z" fill="${pink}"/>
-        <path d="M 72 60 Q 72 52 80 52 L 120 52 Q 128 52 128 60 L 128 110 Q 128 125 114 128 L 86 128 Q 72 125 72 110 Z" fill="${cream}"/>
-        <ellipse cx="82" cy="100" rx="5" ry="2.5" fill="${pink}" stroke="none" opacity="0.7"/>
-        <ellipse cx="118" cy="100" rx="5" ry="2.5" fill="${pink}" stroke="none" opacity="0.7"/>
+    return `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+      <g stroke="${outline}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" fill="none">
+        <!-- Antennas + gold star tips (always present) -->
+        <path d="M 118 58 Q 112 40 104 22"/>
+        <path d="M 182 58 Q 188 40 196 22"/>
+        <circle cx="102" cy="20" r="9" fill="${gold}"/>
+        <circle cx="198" cy="20" r="9" fill="${gold}"/>
+
+        <!-- Bubble body -->
+        <path d="M 50 70 Q 50 55 65 55 L 235 55 Q 250 55 250 70 L 250 190 Q 250 205 235 205 L 125 205 L 95 245 L 105 205 L 65 205 Q 50 205 50 190 Z" fill="${pink}"/>
+        <path d="M 108 95 Q 108 85 120 85 L 180 85 Q 192 85 192 95 L 192 165 Q 192 185 165 190 L 135 190 Q 108 185 108 165 Z" fill="${cream}"/>
+        <!-- cheeks (scaled for inner face) -->
+        <ellipse cx="78" cy="118" rx="5" ry="2.5" fill="${pink}" stroke="none" opacity="0.7"/>
+        <ellipse cx="122" cy="118" rx="5" ry="2.5" fill="${pink}" stroke="none" opacity="0.7"/>
         ${eyesSvg}
         ${mouthSvg}
       </g>
