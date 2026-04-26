@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>shipml v2 — NOAA AIS로 항만을 다시 그리다</title>
+<meta name="description" content="국비지원 코딩 입문자도 읽을 수 있는, NOAA 공개 AIS 데이터로 만든 선박·항만·항로 머신러닝 프로젝트의 기술 보고서." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  /* ---------- tokens (OKLCH, paper chart palette) ---------- */
+  :root {
+    --paper:        oklch(0.945 0.025 78);    /* warm cream paper */
+    --paper-deep:   oklch(0.91 0.035 75);     /* darker fold */
+    --ink:          oklch(0.28 0.05 220);     /* deep teal ink */
+    --ink-soft:     oklch(0.42 0.04 220);
+    --rule:         oklch(0.78 0.04 70);      /* faint chart rule */
+    --grid:         oklch(0.85 0.03 70);
+    --accent:       oklch(0.52 0.18 30);      /* chart route red */
+    --accent-deep:  oklch(0.40 0.16 30);
+    --olive:        oklch(0.50 0.08 110);
+    --muted:        oklch(0.55 0.02 80);
+
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
+    --space-xl: 64px;
+    --space-2xl: 96px;
+
+    --measure: 68ch;
+
+    --display: "Big Shoulders Display", "Impact", sans-serif;
+    --serif:   "Spectral", "Georgia", serif;
+    --korean:  "Gowun Batang", "Apple SD Gothic Neo", "Malgun Gothic", serif;
+    --mono:    ui-monospace, "SFMono-Regular", "Menlo", monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      /* very subtle paper grain */
+      radial-gradient(ellipse 800px 400px at 10% 20%, color-mix(in oklch, var(--paper-deep) 50%, transparent), transparent 60%),
+      radial-gradient(ellipse 600px 500px at 90% 80%, color-mix(in oklch, var(--paper-deep) 40%, transparent), transparent 70%),
+      var(--paper);
+    color: var(--ink);
+    font-family: var(--korean);
+    font-size: 17px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--accent); color: var(--paper); }
+
+  a { color: var(--accent-deep); text-decoration: none; border-bottom: 1px solid currentColor; }
+  a:hover { color: var(--accent); }
+
+  /* ---------- layout ---------- */
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-lg) clamp(20px, 5vw, 56px) var(--space-2xl);
+  }
+
+  /* paper edge */
+  .page::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(to right, color-mix(in oklch, var(--ink) 5%, transparent) 0, transparent 14px),
+      linear-gradient(to left, color-mix(in oklch, var(--ink) 5%, transparent) 0, transparent 14px);
+    mix-blend-mode: multiply;
+    z-index: 0;
+  }
+
+  main, header, section { position: relative; z-index: 1; }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: var(--space-xl);
+  }
+  .masthead .stamp {
+    font-family: var(--display);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+    font-size: clamp(28px, 4vw, 44px);
+  }
+  .masthead .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-align: right;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+  }
+  .masthead .meta b { color: var(--accent-deep); }
+
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: var(--space-xl);
+    align-items: end;
+    margin-bottom: var(--space-2xl);
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    font-size: clamp(64px, 11vw, 168px);
+    margin: 0 0 var(--space-md);
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent-deep);
+    font-size: 0.62em;
+    letter-spacing: -0.01em;
+  }
+  .hero .lead {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 38ch;
+    margin: 0 0 var(--space-lg);
+  }
+  .hero .marks {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: var(--space-md) var(--space-lg);
+    align-items: end;
+    border-top: 1px solid var(--ink);
+    padding-top: var(--space-md);
+    font-family: var(--mono);
+  }
+  .hero .marks .num {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(40px, 5vw, 64px);
+    line-height: 1;
+    color: var(--ink);
+  }
+  .hero .marks .lbl {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ---------- section ---------- */
+  section { margin: var(--space-2xl) 0; }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    margin-bottom: var(--space-sm);
+  }
+  h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1;
+    letter-spacing: -0.005em;
+    margin: 0 0 var(--space-md);
+    color: var(--ink);
+  }
+  h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(20px, 2.2vw, 26px);
+    margin: var(--space-lg) 0 var(--space-sm);
+    color: var(--ink);
+    letter-spacing: 0.005em;
+  }
+  p { max-width: var(--measure); margin: 0 0 var(--space-md); }
+  p strong { color: var(--accent-deep); font-weight: 700; }
+
+  /* ---------- text+figure two col ---------- */
+  .twocol {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+  .twocol.flip { grid-template-columns: 7fr 5fr; }
+  .twocol .col-text > :first-child { margin-top: 0; }
+  figure {
+    margin: 0;
+    border: 1px solid var(--ink);
+    background: color-mix(in oklch, var(--paper) 60%, white);
+    padding: var(--space-md);
+  }
+  figure img {
+    width: 100%; height: auto; display: block;
+    filter: contrast(1.02);
+  }
+  figcaption {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-top: var(--space-sm);
+    border-top: 1px dashed var(--rule);
+    padding-top: 8px;
+  }
+  figcaption b { color: var(--ink); }
+
+  /* ---------- pull-quote / explainer card ---------- */
+  .explain {
+    border: 1px solid var(--ink);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    background: var(--paper);
+    position: relative;
+  }
+  .explain::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    background: var(--paper);
+    padding: 0 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+  }
+  .explain h4 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0 0 var(--space-sm);
+    color: var(--ink);
+  }
+  .explain p { margin-bottom: var(--space-sm); }
+  .explain p:last-child { margin-bottom: 0; }
+
+  /* ---------- step pipeline ---------- */
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    margin: var(--space-lg) 0;
+  }
+  .pipeline .step {
+    padding: var(--space-md);
+    border-left: 1px solid var(--rule);
+    position: relative;
+  }
+  .pipeline .step:first-child { border-left: none; }
+  .pipeline .num {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--accent-deep);
+    margin-bottom: 6px;
+  }
+  .pipeline .name {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+  .pipeline .desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .pipeline .file {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    word-break: break-all;
+  }
+
+  /* ---------- metric strip ---------- */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+  }
+  .metric {
+    border: 1px solid var(--ink);
+    padding: var(--space-md);
+    background: var(--paper);
+  }
+  .metric .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .metric .value {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 44px;
+    line-height: 1;
+    margin: 8px 0 4px;
+    color: var(--ink);
+  }
+  .metric .value.accent { color: var(--accent-deep); }
+  .metric .note {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ---------- table ---------- */
+  table.chart {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 13px;
+    margin: var(--space-md) 0;
+  }
+  table.chart th, table.chart td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  table.chart th {
+    font-family: var(--display);
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--ink);
+  }
+  table.chart td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--accent-deep); font-weight: 700; }
+
+  /* ---------- code block ---------- */
+  pre.code {
+    border: 1px solid var(--ink);
+    background: color-mix(in oklch, var(--paper) 70%, oklch(0.98 0 0));
+    padding: var(--space-md);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink);
+    overflow-x: auto;
+    margin: var(--space-md) 0;
+  }
+  pre.code .c { color: var(--muted); font-style: italic; }
+  pre.code .k { color: var(--accent-deep); font-weight: 700; }
+  pre.code .s { color: var(--olive); }
+
+  /* ---------- glossary list ---------- */
+  dl.glossary {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: var(--space-lg);
+    row-gap: var(--space-md);
+    margin: var(--space-md) 0;
+    border-top: 1px solid var(--rule);
+    padding-top: var(--space-md);
+  }
+  dl.glossary dt {
+    font-family: var(--display);
+    font-weight: 700;
+    color: var(--accent-deep);
+    font-size: 16px;
+    letter-spacing: 0.02em;
+  }
+  dl.glossary dd {
+    margin: 0;
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  dl.glossary dd code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--paper-deep);
+    padding: 1px 6px;
+  }
+
+  /* ---------- limitations ---------- */
+  .limits {
+    border: 1px solid var(--accent-deep);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    background: color-mix(in oklch, var(--paper) 92%, var(--accent) 8%);
+  }
+  .limits h3 {
+    margin-top: 0;
+    color: var(--accent-deep);
+  }
+  .limits ul { padding-left: 1.2em; }
+  .limits li { margin-bottom: 8px; }
+
+  /* ---------- footer ---------- */
+  footer {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--ink);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; gap: var(--space-md); }
+    .twocol, .twocol.flip { grid-template-columns: 1fr; gap: var(--space-md); }
+    .masthead { grid-template-columns: 1fr; }
+    .masthead .meta { text-align: left; }
+    .hero .marks { grid-template-columns: 1fr 1fr; }
+    .pipeline .step { border-left: none; border-top: 1px solid var(--rule); }
+    .pipeline .step:first-child { border-top: none; }
+    dl.glossary { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="masthead">
+  <div class="stamp">
+    SHIPML&nbsp;V2<br/>
+    <span style="font-family:var(--serif);font-style:italic;font-weight:400;font-size:0.45em;color:var(--accent-deep);">a NOAA AIS field report</span>
+  </div>
+  <div class="meta">
+    REPORT&nbsp;001<br/>
+    SOURCE — <b>NOAA MarineCadastre</b><br/>
+    AREA — Long Beach &amp; San Pedro Bay<br/>
+    EPOCH — 2024.01.01 → 2024.01.11<br/>
+    AUTHOR — kangmin
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div>
+    <h1>The ships<br/>tell us<br/><em>where they go.</em></h1>
+    <p class="lead">바다 위 1,193척이 11일 동안 송신한 280만 줄의 위치 신호로, 누구도 손으로 라벨을 붙이지 않은 60곳의 항만을 자동으로 찾아내고, 다음에 어디로 갈지 84.5% 확률로 맞히고, 1시간 뒤 좌표를 평균 1.78km 오차로 예측한 기록.</p>
+  </div>
+  <div class="marks">
+    <div>
+      <div class="num">1,193</div>
+      <div class="lbl">unique vessels</div>
+    </div>
+    <div>
+      <div class="num">2.8M</div>
+      <div class="lbl">AIS rows</div>
+    </div>
+    <div>
+      <div class="num">11d</div>
+      <div class="lbl">temporal window</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== AIS 가 뭐예요 ============== -->
+<section>
+  <div class="section-tag">PROLOGUE  ·  what is AIS?</div>
+  <h2>바다의 GPS 신호, AIS</h2>
+  <div class="twocol">
+    <div class="col-text">
+      <p>전 세계 모든 큰 배는 의무적으로 <strong>AIS(Automatic Identification System)</strong> 라는 장치를 켜고 다닙니다. 30초~몇 분에 한 번씩, "나는 누구이고, 어디에 있고, 얼마나 빠르게 어느 방향으로 가고 있다"는 정보를 무선으로 쏘는 장치입니다. 자동차의 블랙박스가 아니라, <strong>배 스스로가 외치는 위치 안내방송</strong>이라고 보면 됩니다.</p>
+      <p>이 신호를 미국 해안경비대(USCG)가 모아서, NOAA(미국 해양대기청)가 일반에 무료로 공개하고 있습니다. 우리는 그 공개 데이터의 11일치를 가져다 분석했습니다.</p>
+      <div class="explain" data-label="처음 보는 단어들">
+        <h4>딱 5개만 알아두기</h4>
+        <dl class="glossary">
+          <dt>MMSI</dt><dd>배의 주민등록번호. 9자리 숫자.</dd>
+          <dt>SOG</dt><dd>Speed Over Ground. 실제 지면 기준 속도 (노트).</dd>
+          <dt>COG</dt><dd>Course Over Ground. 실제 진행 방향 (각도).</dd>
+          <dt>VesselType</dt><dd>화물선/유조선/여객선 같은 선종 코드 (ITU-R M.1371 표준).</dd>
+          <dt>Status</dt><dd>항해 상태 — 운항 중 / 정박 / 어로작업 중 / 등.</dd>
+        </dl>
+      </div>
+    </div>
+    <figure>
+      <img src="shipml-noaa-images/01_position_density.png" alt="AIS 신호 밀도 — LA/Long Beach" />
+      <figcaption><b>FIG.01</b> — 11일치 신호를 모두 점으로 찍어 본 LA·롱비치 일대. 항만이 짙게 빛난다. <b>색이 진할수록 그 칸에 더 많은 신호가 누적</b>됐다는 뜻.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============== 데이터 ============== -->
+<section>
+  <div class="section-tag">CHAPTER 01  ·  data acquisition</div>
+  <h2>왜 LA·롱비치인가, 어떻게 받았는가</h2>
+  <p>NOAA는 일별 ZIP 파일 형태로 <strong>전미 AIS 데이터</strong>를 공개합니다. 하루치 압축본은 약 290MB, 한 달이면 9GB. 글로벌 전체를 보는 건 분석 부담이 크기 때문에, 트래픽이 가장 많고 항로가 명확한 <strong>로스앤젤레스·롱비치 항만</strong> 일대로 좁혔습니다 (위도 33–34°, 경도 -119 ~ -117.5°).</p>
+
+  <h3>처리 파이프라인</h3>
+  <div class="pipeline">
+    <div class="step">
+      <div class="num">01</div>
+      <div class="name">DOWNLOAD</div>
+      <div class="desc">NOAA 일별 ZIP을 4-워커 병렬로 다운로드. 503/타임아웃 시 지수 백오프 3회 재시도.</div>
+      <div class="file">pipeline/02_download_and_filter_parallel.py</div>
+    </div>
+    <div class="step">
+      <div class="num">02</div>
+      <div class="name">FILTER</div>
+      <div class="desc">압축 해제 → 위경도 BBOX로 필터 → zstd Parquet 저장 → 원본 즉시 삭제로 디스크 보호.</div>
+      <div class="file">pandas chunked read · BBOX mask</div>
+    </div>
+    <div class="step">
+      <div class="num">03</div>
+      <div class="name">COMBINE</div>
+      <div class="desc">11일치 Parquet 합본 → MMSI 기준 시계열 정렬 → ITU-R 코드를 사람이 읽는 카테고리로 변환.</div>
+      <div class="file">pipeline/03_combine_and_inspect.py</div>
+    </div>
+    <div class="step">
+      <div class="num">04</div>
+      <div class="name">PORT CALLS</div>
+      <div class="desc">SOG &lt; 0.5kn 구간을 30분 이상 묶어 정박 이벤트 추출 → DBSCAN(haversine, eps=500m)으로 항만 60개 자동 식별.</div>
+      <div class="file">pipeline/04_extract_port_calls.py</div>
+    </div>
+    <div class="step">
+      <div class="num">05</div>
+      <div class="name">FEATURES</div>
+      <div class="desc">선박별로 평균/최대 속도, 활동 반경, 정박 비율, 제원 등 14개 aggregate feature 생성.</div>
+      <div class="file">pipeline/05_vessel_features.py</div>
+    </div>
+    <div class="step">
+      <div class="num">06</div>
+      <div class="name">MODELS</div>
+      <div class="desc">선종 분류 / 다음 항만 예측 / 미래 좌표 회귀, 세 모델을 동일한 vessel-level 데이터에서 학습.</div>
+      <div class="file">models/{ship_type, next_port, future_position}/</div>
+    </div>
+  </div>
+
+  <div class="explain" data-label="입문자 쪽지">
+    <h4>"BBOX 필터"가 뭐예요?</h4>
+    <p>BBOX는 <em>bounding box</em>의 줄임말로, 지도 위에 사각형을 하나 그어 그 안의 점만 남기는 작업입니다. 미국 전체 데이터(하루 730만 행) 중 LA 박스 안에 들어오는 건 약 <strong>3.5%</strong>(약 26만 행)뿐이었습니다. 이 한 줄짜리 조건문 덕분에 9GB가 13MB로 줄어듭니다.</p>
+    <pre class="code"><span class="c"># 핵심은 이 한 줄</span>
+mask = (df.LAT.between(<span class="k">33.0</span>, <span class="k">34.0</span>) &amp;
+        df.LON.between(-<span class="k">119.0</span>, -<span class="k">117.5</span>))
+filtered = df[mask]</pre>
+  </div>
+</section>
+
+<!-- ============== 항만 자동 식별 ============== -->
+<section>
+  <div class="section-tag">CHAPTER 02  ·  unsupervised port discovery</div>
+  <h2>아무도 알려주지 않은 항만 60곳을 찾다</h2>
+  <div class="twocol flip">
+    <div class="col-text">
+      <p>이 프로젝트가 <strong>이전 버전(shipml_tp)과 가장 다른 지점</strong>입니다. 이전에는 KMeans로 12개 클러스터를 만들고 그것을 "항로 라벨"이라고 불렀는데, 사실 자기가 만든 라벨을 자기가 맞히는 셈이었습니다.</p>
+      <p>이번에는 라벨을 <strong>배의 행동에서 직접 추출</strong>합니다. 배가 30분 이상 SOG &lt; 0.5노트로 머물렀다면 그곳은 정박지입니다. 모든 정박지 좌표를 모아 <strong>DBSCAN</strong>(밀도 기반 군집화) 알고리즘에 넣으면, 자동으로 "여기는 항만 #1, 저기는 항만 #5"라는 식으로 60개 클러스터가 생깁니다.</p>
+      <p>그 결과 11일 동안 발생한 <strong>5,666건의 정박 이벤트</strong>가 60개 항만으로 묶였고, 가장 붐비는 항만 #1(롱비치 컨테이너 터미널 부근)에는 285척이 1,827번 들어왔다 나갔습니다.</p>
+
+      <h3>상위 5개 항만</h3>
+      <table class="chart">
+        <thead>
+          <tr><th>port</th><th>위치</th><th>방문 척수</th><th>총 입항 횟수</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>#1</td><td>33.737, -118.267</td><td>285</td><td class="num">1,827</td></tr>
+          <tr><td>#5</td><td>33.611, -117.909</td><td>157</td><td class="num">778</td></tr>
+          <tr><td>#3</td><td>33.978, -118.449</td><td>179</td><td class="num">494</td></tr>
+          <tr><td>#13</td><td>33.460, -117.698</td><td>48</td><td class="num">355</td></tr>
+          <tr><td>#16</td><td>33.760, -118.190</td><td>45</td><td class="num">351</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure>
+      <img src="shipml-noaa-images/02_detected_ports.png" alt="자동 식별된 항만 60곳" />
+      <figcaption><b>FIG.02</b> — 회색 점은 이동 중인 배의 AIS 신호, <b>붉은 원은 알고리즘이 자동으로 찾아낸 항만</b>. 원의 크기 = 입항 횟수. 사람이 한 번도 "여기가 항만이다"라고 알려주지 않았다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============== 선종 분류 ============== -->
+<section>
+  <div class="section-tag">CHAPTER 03  ·  ship type classification</div>
+  <h2>운항 패턴만 보고 배의 종류를 맞히다</h2>
+  <p>같은 화물선이라도 컨테이너선과 유조선의 <strong>운항 시그니처</strong>는 다릅니다. 평균 속도, 활동 반경, 정박 비율 같은 행동 통계 14개로 5가지 카테고리(Cargo·Tanker·Passenger·Fishing·ServiceVessel)를 분류했습니다.</p>
+
+  <div class="twocol">
+    <figure>
+      <img src="shipml-noaa-images/03_vessel_signature.png" alt="선종별 운항 시그니처" />
+      <figcaption><b>FIG.03</b> — 한 점이 한 척의 배. 같은 색끼리 모이는 정도가 그 선종이 얼마나 "구분 가능한가"를 보여준다. <b>여객선·서비스선</b>은 활동 반경이 좁고 속도가 다양, <b>화물·탱커</b>는 비슷한 영역에 겹쳐 있어 구분이 어렵다.</figcaption>
+    </figure>
+    <div class="col-text">
+      <h3>학습 방법</h3>
+      <pre class="code"><span class="k">model</span> = RandomForestClassifier(
+    n_estimators=<span class="k">400</span>,
+    min_samples_leaf=<span class="k">2</span>,
+    class_weight=<span class="s">"balanced_subsample"</span>,
+)
+<span class="c"># 14개 vessel-level feature 사용:</span>
+<span class="c"># sog_mean, sog_std, sog_max, sog_p90,</span>
+<span class="c"># pct_at_anchor, pct_slow, pct_cruising,</span>
+<span class="c"># radius_km, duration_h, n_observations,</span>
+<span class="c"># cog_circular_std, width, length, draft</span></pre>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="label">accuracy</div>
+          <div class="value">72.3%</div>
+          <div class="note">5개 카테고리 분류, test=83척</div>
+        </div>
+        <div class="metric">
+          <div class="label">macro F1</div>
+          <div class="value accent">69.9%</div>
+          <div class="note">클래스 불균형 보정 점수</div>
+        </div>
+      </div>
+
+      <h3>가장 강력했던 feature</h3>
+      <table class="chart">
+        <thead><tr><th>feature</th><th>중요도</th></tr></thead>
+        <tbody>
+          <tr><td>length (배 길이)</td><td class="num">0.163</td></tr>
+          <tr><td>draft (흘수)</td><td class="num">0.134</td></tr>
+          <tr><td>width (너비)</td><td class="num">0.107</td></tr>
+          <tr><td>sog_max (최대 속도)</td><td class="num">0.086</td></tr>
+          <tr><td>pct_slow (저속 비율)</td><td class="num">0.064</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <figure style="margin-top:var(--space-lg);max-width:760px;">
+    <img src="shipml-noaa-images/04_ship_type_confusion.png" alt="선종 분류 confusion matrix" />
+    <figcaption><b>FIG.04</b> — 행=실제, 열=예측. 대각선이 진할수록 잘 맞힌 것. <b>Cargo는 0.85로 가장 잘 맞히지만</b>, Fishing은 0.55로 종종 다른 카테고리와 헷갈린다 — 활동 반경이 넓은 어선이 ServiceVessel과 비슷해 보이기 때문.</figcaption>
+  </figure>
+</section>
+
+<!-- ============== 다음 항만 예측 ============== -->
+<section>
+  <div class="section-tag">CHAPTER 04  ·  next-port prediction</div>
+  <h2>다음 항만은 어디입니까</h2>
+  <div class="twocol flip">
+    <div class="col-text">
+      <p>이 모델이 이 프로젝트의 <strong>주요 신규 기여</strong>입니다. 어떤 배가 한 항만에서 출항하면 다음에 어느 항만으로 가는지 예측합니다. ETA 추정·물류 계획·해양 안전에 모두 의미 있는 문제입니다.</p>
+      <p>훈련 데이터는 04단계에서 얻은 5,666건의 정박 이벤트를 시간순으로 배열해 만든 <strong>4,555개의 (현재 항만 → 다음 항만) 페어</strong>입니다. 입력 feature는 현재 항만 ID, 선종, 출항 시각(요일·시간), 선체 제원, 평균 속도. 출력은 60개 항만 중 어디로 갈지의 확률 분포.</p>
+      <p>같은 선박이 train/test에 섞이면 부정 누수가 생기므로 <strong>MMSI 기준 GroupShuffleSplit</strong>으로 분리했습니다. 즉 test에 등장하는 배는 학습 때 한 번도 본 적 없는 배.</p>
+
+      <pre class="code"><span class="c"># MMSI 기준 분리 — 같은 배가 양쪽에 안 가도록</span>
+gss = GroupShuffleSplit(test_size=<span class="k">0.25</span>, random_state=<span class="k">42</span>)
+tr, te = next(gss.split(X, y, groups=df.MMSI))
+
+<span class="c"># 입력 — 범주형 + 수치형 혼합</span>
+cat_feats = [<span class="s">"curr_port"</span>, <span class="s">"vessel_category"</span>,
+             <span class="s">"depart_hour"</span>, <span class="s">"depart_dow"</span>]
+num_feats = [<span class="s">"duration_at_port_min"</span>, <span class="s">"width"</span>,
+             <span class="s">"length"</span>, <span class="s">"draft"</span>, <span class="s">"sog_mean"</span>]</pre>
+    </div>
+    <figure>
+      <img src="shipml-noaa-images/06_next_port_topk.png" alt="다음 항만 예측 Top-K 정확도" />
+      <figcaption><b>FIG.06</b> — Top-K = "내 예측 후보 K개 안에 진짜 정답이 있을 확률". 44개 항만 중 <b>1위 추천만 봐도 84.5%</b>가 정답, 상위 3위까지 보면 95.7%가 정답.</figcaption>
+    </figure>
+  </div>
+
+  <div class="explain" data-label="해석">
+    <h4>왜 84.5%가 인상적인가</h4>
+    <p>무작위로 찍으면 정확도는 1/44 = 약 2.3%입니다. 84.5%는 그것의 <strong>37배</strong>입니다. 게다가 같은 항만 시스템 안에서 배가 다음에 갈 곳은 강한 행동 패턴을 따른다는 사실(예: 컨테이너선은 컨테이너 터미널끼리, 유조선은 유조 터미널끼리)을 모델이 데이터만 보고 학습한 결과입니다.</p>
+  </div>
+</section>
+
+<!-- ============== 미래 좌표 ============== -->
+<section>
+  <div class="section-tag">CHAPTER 05  ·  future position regression</div>
+  <h2>1시간 뒤 그 배는 어디에 있을까</h2>
+  <p>출발점과 현재 운항 정보(LAT, LON, SOG, COG, Heading)만 주고, <strong>1시간·3시간·6시간 뒤의 좌표</strong>를 예측합니다. 이전 프로젝트(shipml_tp)는 1시간 후 평균 오차 2.80km였는데, 이번에는 <strong>1.78km</strong>로 36% 개선되었습니다.</p>
+
+  <div class="twocol">
+    <figure>
+      <img src="shipml-noaa-images/05_future_position_errors.png" alt="미래 좌표 예측 오차" />
+      <figcaption><b>FIG.05</b> — y축은 haversine 거리(지구 곡면 보정 거리). 짙은색=중앙값, 빨강=평균, 회색=상위 10% 케이스. <b>중앙값이 평균보다 훨씬 작은 것</b>은 대부분의 예측은 정확하고 일부 어려운 케이스가 평균을 끌어올린다는 뜻.</figcaption>
+    </figure>
+    <div class="col-text">
+      <h3>학습 방법</h3>
+      <p>각 선박의 시계열에서 시점 t와 t+H를 매칭하는 (t→t+H) 페어를 만듭니다. <strong>pd.merge_asof</strong>를 활용해 정확히 H시간 간격이 아니어도 ±10분 이내 가장 가까운 신호로 매칭합니다.</p>
+      <pre class="code"><span class="k">for</span> mmsi, g <span class="k">in</span> df.groupby(<span class="s">"MMSI"</span>):
+    target_t = g.BaseDateTime + horizon
+    pairs = pd.merge_asof(
+        g.assign(target_t=target_t),
+        g[[<span class="s">"BaseDateTime"</span>,<span class="s">"LAT"</span>,<span class="s">"LON"</span>]],
+        left_on=<span class="s">"target_t"</span>,
+        right_on=<span class="s">"BaseDateTime"</span>,
+        tolerance=<span class="k">timedelta</span>(minutes=<span class="k">10</span>),
+        direction=<span class="s">"nearest"</span>,
+    )</pre>
+
+      <h3>지평선별 결과</h3>
+      <table class="chart">
+        <thead><tr><th>horizon</th><th>중앙값</th><th>평균</th><th>p90</th></tr></thead>
+        <tbody>
+          <tr><td>+ 1 시간</td><td class="num">0.76 km</td><td class="num">1.78 km</td><td class="num">3.95 km</td></tr>
+          <tr><td>+ 3 시간</td><td class="num">0.58 km</td><td class="num">2.74 km</td><td class="num">6.51 km</td></tr>
+          <tr><td>+ 6 시간</td><td class="num">0.53 km</td><td class="num">3.72 km</td><td class="num">10.0 km</td></tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:14px;color:var(--ink-soft);">※ 평가는 <strong>haversine 거리</strong>(곡면 지구 위 진짜 거리)로 했습니다. 위경도 차이를 직선으로 더하는 건 적도와 극지방에서 오차가 다르므로 부적절합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== 기술 스택 ============== -->
+<section>
+  <div class="section-tag">CHAPTER 06  ·  stack &amp; reproducibility</div>
+  <h2>무엇으로 만들었나</h2>
+  <table class="chart">
+    <thead><tr><th>역할</th><th>기술</th><th>용도</th></tr></thead>
+    <tbody>
+      <tr><td>언어</td><td><strong>Python 3.14</strong></td><td>전체 파이프라인</td></tr>
+      <tr><td>데이터프레임</td><td>pandas 3.0 + pyarrow</td><td>CSV 청크 읽기, Parquet I/O</td></tr>
+      <tr><td>저장 포맷</td><td>Apache Parquet (zstd)</td><td>CSV 대비 1/5 용량, 10배 빠른 읽기</td></tr>
+      <tr><td>병렬 다운로드</td><td>concurrent.futures.ThreadPoolExecutor</td><td>4-워커 동시 ZIP 받기 + 백오프</td></tr>
+      <tr><td>군집화</td><td>scikit-learn DBSCAN (haversine)</td><td>항만 자동 식별 (라벨 없는 학습)</td></tr>
+      <tr><td>분류</td><td>RandomForestClassifier</td><td>선종 / 다음 항만</td></tr>
+      <tr><td>회귀</td><td>RandomForestRegressor</td><td>미래 좌표 (lat, lon)</td></tr>
+      <tr><td>평가</td><td>StratifiedKFold, GroupShuffleSplit</td><td>MMSI 단위 누수 방지</td></tr>
+      <tr><td>거리 함수</td><td>haversine (자체 구현)</td><td>곡면 지구 보정 km 오차</td></tr>
+      <tr><td>시각화</td><td>matplotlib</td><td>해도풍 PNG 6종</td></tr>
+    </tbody>
+  </table>
+
+  <h3>실행 순서 (재현 가능)</h3>
+  <pre class="code"><span class="c"># 1) 가상환경 + 패키지</span>
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+<span class="c"># 2) NOAA 데이터 다운로드 + LA 영역 필터 (병렬)</span>
+.venv/bin/python pipeline/02_download_and_filter_parallel.py
+
+<span class="c"># 3) 합본 + 항만 자동 식별 + feature</span>
+.venv/bin/python pipeline/03_combine_and_inspect.py
+.venv/bin/python pipeline/04_extract_port_calls.py
+.venv/bin/python pipeline/05_vessel_features.py
+
+<span class="c"># 4) 모델 학습</span>
+.venv/bin/python models/ship_type/train.py
+.venv/bin/python models/next_port/train.py
+.venv/bin/python models/future_position/train.py
+
+<span class="c"># 5) 시각화</span>
+.venv/bin/python pipeline/06_make_visualizations.py</pre>
+</section>
+
+<!-- ============== 한계 ============== -->
+<section>
+  <div class="section-tag">CHAPTER 07  ·  honest limitations</div>
+  <h2>이 보고서가 솔직하게 인정하는 것</h2>
+  <div class="limits">
+    <h3>이 숫자들의 한계</h3>
+    <ul>
+      <li><strong>11일치 데이터</strong>는 단기 패턴(평일/주말, 시간대 변화)을 잡기엔 충분하지만 계절성·명절 효과는 보지 못한다. 향후 2024년 1월 31일 전체로 확장 예정.</li>
+      <li><strong>vessel-level 학습 표본이 331척</strong>으로 작다. 분류 정확도 72.3%는 과적합 가능성을 배제할 수 없으며, 더 많은 일자가 모이면 표본 수와 함께 안정성이 개선될 것이다.</li>
+      <li><strong>Fishing(어선) 카테고리 F1 0.63</strong>은 ITU-R 코드 30("Fishing")만 사용한 결과다. 실제로는 31~37의 Special 코드를 가진 어선 변종이 많아 라벨 자체가 노이지하다.</li>
+      <li><strong>다음 항만 예측 Top-1 84.5%</strong>는 인상적이지만, 11일 안에서 서로 다른 항만 두 곳을 방문한 선박만 대상이다. 일회성 정박 선박은 학습 페어가 만들어지지 않아 평가 대상에서 제외되었다.</li>
+      <li><strong>미래 좌표 모델은 해안선을 모른다.</strong> 1시간 평균 1.78km라는 결과는 "원해에서 직선 항해하는 화물선"에 잘 맞지만, 좁은 항로·접안 구간에서는 육지를 가로질러 예측할 수 있다. 다음 단계는 NOAA 해안선 shapefile을 마스크로 사용하는 것.</li>
+    </ul>
+  </div>
+
+  <h3>다음 보고서에서 다룰 것</h3>
+  <p>다운로드는 본 보고서 작성 중에도 백그라운드에서 계속 받고 있어, 31일치 전체가 모이면 다음 보고서에서는 (1) 시간대별 항만 트래픽 패턴, (2) 평일/주말 차이, (3) Tanker ↔ Cargo 혼동을 줄이기 위한 시퀀스 모델(LSTM) 비교, (4) Flask + Leaflet 라이브 지도 데모를 다룰 예정.</p>
+</section>
+
+<footer>
+  <div>
+    <strong style="font-family:var(--display);font-size:14px;letter-spacing:.04em;">SHIPML&nbsp;V2 · REPORT 001</strong><br/>
+    Source · NOAA Office for Coastal Management · MarineCadastre AIS · Public Domain (USCG)<br/>
+    Code · github.com/your-handle/shipml_v2 (private repo)
+  </div>
+  <div style="text-align:right;">
+    Built with pandas · scikit-learn · matplotlib<br/>
+    Type · Big Shoulders Display · Spectral · Gowun Batang<br/>
+    Compiled · 2026.04.27
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
