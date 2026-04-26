@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>shipml v2 — 데이터가 말해주는 LA 항만의 15일 / REPORT 003</title>
+<meta name="description" content="LA/롱비치 AIS 380만 행에서 뽑아낸 세 가지 인사이트 — 항만 대기 시간, AIS 침묵 패턴, 항만 간 항로 네트워크 + IsolationForest 이상치 탐지." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet" />
+<style>
+  /* ---------- tokens ---------- */
+  :root {
+    --paper:        oklch(0.97 0.012 78);
+    --paper-deep:   oklch(0.93 0.022 75);
+    --ink:          oklch(0.22 0.04 220);
+    --ink-soft:     oklch(0.38 0.03 220);
+    --rule:         oklch(0.82 0.025 70);
+    --grid:         oklch(0.88 0.02 70);
+    --accent:       oklch(0.50 0.17 28);
+    --accent-deep:  oklch(0.38 0.16 28);
+    --sea:          oklch(0.72 0.05 220);
+    --sea-deep:     oklch(0.40 0.06 220);
+    --gold:         oklch(0.62 0.13 65);
+    --olive:        oklch(0.50 0.08 110);
+    --muted:        oklch(0.52 0.02 80);
+    --success:      oklch(0.50 0.13 145);
+
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
+    --space-xl: 64px;
+    --space-2xl: 96px;
+
+    --measure: 68ch;
+
+    --display: "Bricolage Grotesque", "Helvetica Neue", sans-serif;
+    --body:    "Pretendard", "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    --mono:    ui-monospace, "SF Mono", "Menlo", monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    word-break: keep-all;
+  }
+
+  ::selection { background: var(--accent); color: var(--paper); }
+
+  a { color: var(--accent-deep); text-decoration: none; border-bottom: 1px solid currentColor; }
+  a:hover { color: var(--accent); }
+
+  /* ---------- layout ---------- */
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-lg) clamp(20px, 5vw, 56px) var(--space-2xl);
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: var(--space-xl);
+  }
+  .masthead .stamp {
+    font-family: var(--display);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    font-size: clamp(26px, 3.4vw, 38px);
+    color: var(--ink);
+  }
+  .masthead .stamp span {
+    display: block;
+    font-family: var(--body);
+    font-weight: 500;
+    font-size: 0.42em;
+    color: var(--accent-deep);
+    letter-spacing: 0;
+    margin-top: 8px;
+  }
+  .masthead .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-align: right;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+  }
+  .masthead .meta b { color: var(--accent-deep); }
+
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: var(--space-xl);
+    align-items: end;
+    margin-bottom: var(--space-xl);
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    font-size: clamp(48px, 7vw, 92px);
+    margin: 0 0 var(--space-md);
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent-deep);
+  }
+  .hero .lead {
+    font-size: clamp(17px, 1.5vw, 19px);
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 44ch;
+    margin: 0 0 var(--space-md);
+    font-weight: 400;
+  }
+  .hero .marks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    border-top: 1px solid var(--ink);
+    padding-top: var(--space-md);
+  }
+  .hero .marks .num {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(34px, 4vw, 50px);
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .hero .marks .lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ---------- TL;DR Verdict ---------- */
+  .verdict {
+    border: 1.5px solid var(--ink);
+    background: color-mix(in oklch, var(--paper) 90%, white);
+    padding: var(--space-lg);
+    margin: var(--space-xl) 0 var(--space-2xl);
+    border-radius: 0;
+  }
+  .verdict h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(26px, 3vw, 38px);
+    margin: 0 0 var(--space-sm);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .verdict .vlead {
+    color: var(--ink-soft);
+    font-size: 16px;
+    margin: 0 0 var(--space-md);
+    max-width: 60ch;
+  }
+  .vrow {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: var(--space-md);
+    align-items: start;
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--rule);
+  }
+  .vrow .vmark {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 20px;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    line-height: 0;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .vrow .vmark.a { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .vrow .vmark.b { background: var(--sea-deep); color: var(--paper); border-color: var(--sea-deep); }
+  .vrow .vmark.c { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+  .vrow .vtitle {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 4px;
+    letter-spacing: -0.005em;
+  }
+  .vrow .vsub {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    max-width: 52ch;
+  }
+  .vrow .vsub b { color: var(--accent-deep); font-weight: 700; }
+  .vrow .vscore {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 32px;
+    color: var(--accent-deep);
+    line-height: 1;
+    text-align: right;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+  .vrow .vscore small {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-top: 4px;
+  }
+
+  /* ---------- chapter ---------- */
+  section { margin: var(--space-2xl) 0; scroll-margin-top: 20px; }
+  .chapter-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 4px 10px;
+    margin-bottom: var(--space-md);
+  }
+  .chapter-tag.a { background: var(--accent); }
+  .chapter-tag.b { background: var(--sea-deep); }
+  .chapter-tag.c { background: var(--gold); color: var(--ink); }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(34px, 4.5vw, 54px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 var(--space-md);
+    color: var(--ink);
+  }
+  h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(20px, 2vw, 24px);
+    margin: var(--space-lg) 0 var(--space-sm);
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  p { max-width: var(--measure); margin: 0 0 var(--space-md); line-height: 1.75; }
+  p strong { color: var(--accent-deep); font-weight: 700; }
+
+  /* ---------- gloss tooltip ---------- */
+  .gloss {
+    border-bottom: 1.5px dotted var(--accent-deep);
+    cursor: help;
+    color: var(--accent-deep);
+    font-weight: 600;
+    position: relative;
+  }
+  .gloss::after {
+    content: attr(data-def);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    font-size: 13.5px;
+    font-family: var(--body);
+    line-height: 1.55;
+    width: max-content;
+    max-width: 320px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s;
+    z-index: 200;
+    font-weight: 400;
+    text-align: left;
+    white-space: normal;
+  }
+  .gloss:hover::after, .gloss:focus::after { opacity: 1; }
+
+  /* ---------- twocol ---------- */
+  .twocol {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: var(--space-xl);
+    align-items: start;
+    margin-top: var(--space-lg);
+  }
+  .twocol.flip { grid-template-columns: 7fr 5fr; }
+  .twocol .col-text > :first-child { margin-top: 0; }
+
+  figure {
+    margin: 0;
+    border: 1px solid var(--ink);
+    background: white;
+    padding: var(--space-md);
+  }
+  figure img {
+    width: 100%; height: auto; display: block;
+    cursor: zoom-in;
+    transition: opacity 0.15s;
+  }
+  figure img:hover { opacity: 0.94; }
+  figcaption {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: var(--space-sm);
+    border-top: 1px dashed var(--rule);
+    padding-top: 10px;
+    line-height: 1.6;
+  }
+  figcaption b { color: var(--ink); font-weight: 700; }
+  .zoom-hint {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent-deep);
+    margin-top: 6px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ---------- callout ---------- */
+  .callout {
+    border: 1px solid var(--ink);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    background: color-mix(in oklch, var(--paper) 70%, white);
+    position: relative;
+  }
+  .callout::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -10px; left: 18px;
+    background: var(--paper);
+    padding: 0 10px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    font-weight: 600;
+  }
+  .callout h4 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0 0 var(--space-sm);
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .callout p { margin-bottom: var(--space-sm); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* ---------- metrics ---------- */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+  }
+  .metric {
+    border: 1px solid var(--ink);
+    padding: var(--space-md);
+    background: var(--paper);
+  }
+  .metric .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .metric .value {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 1;
+    margin: 8px 0 4px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .metric .value.accent { color: var(--accent-deep); }
+  .metric .value.sea { color: var(--sea-deep); }
+  .metric .note { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+
+  /* ---------- table ---------- */
+  table.chart {
+    width: 100%; border-collapse: collapse;
+    font-size: 14px;
+    margin: var(--space-md) 0;
+  }
+  table.chart th, table.chart td {
+    text-align: left; padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+  table.chart th {
+    font-family: var(--display); font-weight: 700;
+    color: var(--ink); font-size: 12px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  table.chart td.num {
+    font-family: var(--mono);
+    text-align: right; font-variant-numeric: tabular-nums;
+    color: var(--accent-deep); font-weight: 600;
+  }
+  table.chart td.label {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+
+  /* ---------- code ---------- */
+  pre.code {
+    border: 1px solid var(--ink);
+    background: color-mix(in oklch, var(--paper) 70%, white);
+    padding: var(--space-md);
+    font-family: var(--mono);
+    font-size: 13px; line-height: 1.6;
+    color: var(--ink); overflow-x: auto;
+    margin: var(--space-md) 0;
+  }
+  pre.code .c { color: var(--muted); font-style: italic; }
+  pre.code .k { color: var(--accent-deep); font-weight: 700; }
+  pre.code .s { color: var(--olive); }
+
+  /* ---------- key insight box ---------- */
+  .keynum {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-md);
+    align-items: center;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: var(--space-lg) 0;
+    margin: var(--space-lg) 0;
+  }
+  .keynum .big {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.9;
+    color: var(--accent-deep);
+    letter-spacing: -0.04em;
+  }
+  .keynum .body {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 50ch;
+  }
+  .keynum .body strong { color: var(--accent-deep); }
+
+  /* ---------- limits ---------- */
+  .limits {
+    border: 1px solid var(--accent-deep);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    background: color-mix(in oklch, var(--paper) 92%, var(--accent) 8%);
+  }
+  .limits h3 { margin-top: 0; color: var(--accent-deep); }
+  .limits ul { padding-left: 1.2em; }
+  .limits li { margin-bottom: 8px; line-height: 1.7; }
+
+  /* ---------- nav strip ---------- */
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: var(--space-md) 0;
+    margin: var(--space-xl) 0;
+  }
+  .toc a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    border: none;
+    padding: 4px 10px;
+    background: transparent;
+    letter-spacing: 0.04em;
+    transition: color 0.15s;
+  }
+  .toc a:hover { color: var(--accent-deep); background: var(--paper-deep); }
+
+  /* ---------- footer ---------- */
+  footer {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--ink);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: color-mix(in oklch, var(--ink) 92%, black);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 1000;
+    padding: var(--space-lg);
+    cursor: zoom-out;
+    animation: lbFade 0.2s ease;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 95vw;
+    max-height: 90vh;
+    object-fit: contain;
+    background: var(--paper);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 24px; right: 28px;
+    font-family: var(--display);
+    font-size: 26px; font-weight: 800;
+    color: var(--paper);
+    background: none; border: 1px solid var(--paper);
+    width: 44px; height: 44px;
+    cursor: pointer;
+    line-height: 0;
+    display: grid; place-items: center;
+  }
+  .lightbox-caption {
+    position: absolute;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--paper);
+    letter-spacing: 0.06em;
+    background: rgba(0,0,0,0.6);
+    padding: 8px 14px;
+    max-width: 80vw;
+    text-align: center;
+  }
+  @keyframes lbFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; gap: var(--space-md); }
+    .twocol, .twocol.flip { grid-template-columns: 1fr; gap: var(--space-md); }
+    .masthead { grid-template-columns: 1fr; }
+    .masthead .meta { text-align: left; }
+    .hero .marks { grid-template-columns: 1fr 1fr; }
+    .vrow { grid-template-columns: 44px 1fr; }
+    .vrow .vscore { grid-column: 1 / -1; text-align: left; padding-left: 60px; }
+    .keynum { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="masthead">
+  <div class="stamp">
+    SHIPML&nbsp;V2
+    <span>NOAA AIS Field Report — 003</span>
+  </div>
+  <div class="meta">
+    REPORT&nbsp;003 — <b>data insights + anomaly detection</b><br/>
+    SOURCE — <b>NOAA MarineCadastre</b><br/>
+    AREA — Long Beach &amp; San Pedro Bay, California<br/>
+    EPOCH — 2024.01.01 → 2024.01.15<br/>
+    AUTHOR — kangmin
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div>
+    <h1>배는 자기가<br/>무얼 하는지<br/><em>다 말한다.</em></h1>
+    <p class="lead">분류 모델·예측 모델로는 다 알 수 없는 것들. 380만 줄의 위치 신호 안에 숨어 있던 세 가지 패턴 — 누가 항만에서 얼마나 오래 기다리는지, 누가 AIS를 끄고 사라지는지, 어느 항만이 어느 항만과 연결되는지. 그리고 그중 하나는 머신러닝이 직접 잡아낸 이상 신호.</p>
+  </div>
+  <div class="marks">
+    <div><div class="num">5,889</div><div class="lbl">arrival events</div></div>
+    <div><div class="num">9,570</div><div class="lbl">silence events</div></div>
+    <div><div class="num">192</div><div class="lbl">port-to-port routes</div></div>
+  </div>
+</section>
+
+<!-- ============== TOC ============== -->
+<nav class="toc">
+  <a href="#a">A. 항만 혼잡도</a>
+  <a href="#b">B. AIS 침묵 + 이상 탐지</a>
+  <a href="#c">C. 항만 네트워크</a>
+  <a href="#conclusion">통합 결론</a>
+</nav>
+
+<!-- ============== Verdict ============== -->
+<section class="verdict">
+  <h2>세 가지 인사이트, 한 장으로</h2>
+  <p class="vlead">기존 보고서(REPORT 002)가 "모델이 얼마나 잘 맞히는가"였다면, 이 보고서는 "데이터 자체가 무엇을 말하는가". 모델이 학습한 패턴의 원천을 보여주는 보충 자료.</p>
+
+  <div class="vrow">
+    <div class="vmark a">A</div>
+    <div>
+      <div class="vtitle">항만 혼잡도 — LA항은 정말 막혀 있다</div>
+      <div class="vsub">상위 10개 항만의 5,889건 도착을 분석. <b>평균 대기 시간 16.4시간</b>, 중앙값 20.0시간. 도착 4건 중 1건은 6시간 이상을 기다린다. 코로나 이후 LA항 적체가 화제였던 이유가 여기.</div>
+    </div>
+    <div class="vscore">16.4h<small>average wait before docking</small></div>
+  </div>
+
+  <div class="vrow">
+    <div class="vmark b">B</div>
+    <div>
+      <div class="vtitle">AIS 침묵 + IsolationForest 이상 탐지 (ML)</div>
+      <div class="vsub">9,570건의 침묵 중 <b>1,315건이 6시간 이상</b>의 장기 침묵. 그중 <b>479건(5%)을 비지도 ML 모델이 "비정상"으로 자동 분류</b>. 시간·길이·위치 점프·선종을 같이 본 결과.</div>
+    </div>
+    <div class="vscore">479<small>ML-flagged anomalies</small></div>
+  </div>
+
+  <div class="vrow">
+    <div class="vmark c">C</div>
+    <div>
+      <div class="vtitle">항만 네트워크 — 진짜 항로 그래프</div>
+      <div class="vsub">15일 동안 발생한 1,057번의 항만 간 이동. <b>192개의 고유 경로</b>가 만들어진 이 그래프가 곧 우리의 다음-항만 예측 모델이 학습하는 정답지.</div>
+    </div>
+    <div class="vscore">192<small>unique routes / 1,057 trips</small></div>
+  </div>
+</section>
+
+<!-- ============== A. 항만 혼잡도 ============== -->
+<section id="a">
+  <span class="chapter-tag a">CHAPTER A · congestion</span>
+  <h2>항만은 왜 막혀 있나</h2>
+
+  <p>각 배가 항만에 도착해 부두에 묶이기 전, <strong>도착 직전 24시간</strong>의 AIS 신호를 봅니다. SOG가 <span class="gloss" data-def="Speed Over Ground. 실제 지면 기준 속도. 단위는 노트(knots). 1노트 ≈ 1.852 km/h.">1노트</span> 미만으로 머문 시간을 모두 더하면 그게 "기다린 시간"입니다. 사실상 바다 위에서 떠 있던 시간.</p>
+
+  <div class="keynum">
+    <div class="big">16.4<small style="font-size:0.4em;">시간</small></div>
+    <div class="body">상위 10개 항만에 도착하는 배가 <strong>부두에 묶이기 전 평균적으로 기다리는 시간</strong>. 중앙값으로는 20시간. 도착의 27%는 6시간 이상, 14%는 12시간 이상을 기다렸다.</div>
+  </div>
+
+  <div class="twocol">
+    <figure>
+      <a href="#" class="zoom-link" data-img="shipml-insights-images/A1_congestion_by_port.png" data-cap="A1 — Wait time by port (top 10 busiest)">
+        <img src="shipml-insights-images/A1_congestion_by_port.png" alt="항만별 대기 시간" />
+      </a>
+      <figcaption><b>FIG.A1</b> — 항만별로 도착하는 배가 평균(빗금)과 중앙값(채움)으로 얼마나 기다리는지. 평균이 중앙값보다 길면 일부 매우 긴 대기가 평균을 끌어올리는 분포.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+    </figure>
+    <div class="col-text">
+      <h3>방법론</h3>
+      <pre class="code"><span class="c"># 도착 직전 24시간 동안 SOG &lt; 1.0 노트인 시간을 합산</span>
+sub = df[(df.MMSI == mmsi)
+         &amp; (df.BaseDateTime &gt;= arrival - <span class="k">24h</span>)
+         &amp; (df.BaseDateTime &lt; arrival)]
+
+deltas = sub.BaseDateTime.diff().dt.total_seconds() / <span class="k">60</span>
+is_waiting = sub.SOG &lt; <span class="k">1.0</span>
+<span class="c"># 1시간 이상의 신호 gap은 제외 (AIS 침묵 영향 차단)</span>
+wait_min = deltas[is_waiting &amp; (deltas &lt; <span class="k">60</span>)].sum()</pre>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="label">arrivals analyzed</div>
+          <div class="value">5,889</div>
+          <div class="note">15일치, 상위 10개 항만</div>
+        </div>
+        <div class="metric">
+          <div class="label">share with 6h+ wait</div>
+          <div class="value accent">27%</div>
+          <div class="note">도착 4건 중 1건 이상</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="twocol flip">
+    <div class="col-text">
+      <h3>언제가 가장 막히나?</h3>
+      <p>오른쪽은 <strong>도착 시각의 시간대 × 요일</strong>로 평균 대기 시간을 그린 heatmap. 색이 진할수록 더 오래 기다린다는 뜻.</p>
+      <p>주목할 패턴 두 가지:</p>
+      <ul>
+        <li><strong>주말 도착이 평일보다 길게 기다림</strong> — 부두 작업 인력이 적어서일 가능성</li>
+        <li><strong>새벽~이른 아침 도착</strong>은 의외로 대기가 짧음 — 부두가 비어 있어 바로 들어감</li>
+      </ul>
+      <p>실용 시사점: <strong>당신이 LA항에 도착할 화물을 보낸다면, 새벽 4~6시 도착이 가장 빠르게 부두 접안된다</strong> — 적어도 이 15일치 데이터에선.</p>
+    </div>
+    <figure>
+      <a href="#" class="zoom-link" data-img="shipml-insights-images/A2_congestion_heatmap.png" data-cap="A2 — Wait time heatmap by hour × day-of-week">
+        <img src="shipml-insights-images/A2_congestion_heatmap.png" alt="시간대별 혼잡도 heatmap" />
+      </a>
+      <figcaption><b>FIG.A2</b> — 가로=도착 시각, 세로=요일. 색이 진할수록 그 시간대에 도착한 배가 더 오래 기다렸다는 뜻.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+    </figure>
+  </div>
+
+  <figure style="margin:var(--space-lg) auto 0;max-width:900px;">
+    <a href="#" class="zoom-link" data-img="shipml-insights-images/A3_congestion_distribution.png" data-cap="A3 — Wait time distribution">
+      <img src="shipml-insights-images/A3_congestion_distribution.png" alt="대기 시간 분포 히스토그램" />
+    </a>
+    <figcaption><b>FIG.A3</b> — 모든 도착의 대기 시간 분포. 분포가 0~25시간에 폭넓게 퍼져 있고, 중앙값(빨간 실선)이 평균(노란 점선)보다 큰 게 특이. 짧게 기다리는 케이스보다 긴 케이스가 더 많은 비대칭 분포.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+  </figure>
+</section>
+
+<!-- ============== B. AIS 침묵 + ML ============== -->
+<section id="b">
+  <span class="chapter-tag b">CHAPTER B · silence + ML</span>
+  <h2>왜 어떤 배는 신호가 사라지나</h2>
+
+  <p>AIS는 정상이라면 <strong>2초~몇 분에 한 번씩</strong> 신호를 보냅니다. 우리 데이터에서 30분 이상 신호가 끊긴 구간을 모두 모으니 <strong>9,570건의 "침묵"</strong>이 나왔습니다.</p>
+
+  <p>침묵은 세 가지 원인이 가능합니다:</p>
+  <ol>
+    <li><strong>음영 지역</strong> — 산·건물·기상 영향으로 수신소가 못 받음</li>
+    <li><strong>장치 끔</strong> — 정박 중 절전 모드, 또는 의도적 종료</li>
+    <li><strong>회피 행위</strong> — 불법 어업, 제재 회피, 추적 차단</li>
+  </ol>
+
+  <h3>1단계: 룰 기반 탐지</h3>
+  <div class="twocol">
+    <figure>
+      <a href="#" class="zoom-link" data-img="shipml-insights-images/B1_silence_distribution.png" data-cap="B1 — AIS silence length distribution">
+        <img src="shipml-insights-images/B1_silence_distribution.png" alt="침묵 길이 분포" />
+      </a>
+      <figcaption><b>FIG.B1</b> — x축은 침묵 길이(로그 스케일). 대부분이 1시간 이내지만, <b>1,315건이 6시간 이상</b>, 일부는 하루 이상 신호가 끊겨 있다.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+    </figure>
+    <figure>
+      <a href="#" class="zoom-link" data-img="shipml-insights-images/B2_silence_by_category.png" data-cap="B2 — Silence length by ship type">
+        <img src="shipml-insights-images/B2_silence_by_category.png" alt="선종별 침묵 길이" />
+      </a>
+      <figcaption><b>FIG.B2</b> — 선종별 침묵 중앙값. 어떤 카테고리가 평소보다 자주 침묵하는지 보여주는 룰 기반 baseline.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+    </figure>
+  </div>
+
+  <figure style="margin:var(--space-lg) auto 0;max-width:900px;">
+    <a href="#" class="zoom-link" data-img="shipml-insights-images/B3_silence_jump_scatter.png" data-cap="B3 — Silence length vs position jump">
+      <img src="shipml-insights-images/B3_silence_jump_scatter.png" alt="침묵 시간 vs 위치 점프" />
+    </a>
+    <figcaption><b>FIG.B3</b> — 가로=침묵 길이, 세로=침묵 후 위치 점프 거리. 점선(15노트 기준선) 위쪽은 "침묵 동안 비현실적으로 빨리 이동" — 의심 케이스 영역.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+  </figure>
+
+  <h3>2단계: 비지도 ML로 비정상 패턴 학습 (IsolationForest)</h3>
+  <p>룰 기반은 한계가 있습니다. "6시간 이상" 같은 임계값은 자의적이고, 카테고리·시간대·위치를 다 같이 보지 못합니다. 이걸 <strong>9,570건의 침묵 이벤트를 통째로 IsolationForest에 넣어</strong> 자동으로 비정상 패턴을 학습하게 했습니다.</p>
+
+  <pre class="code"><span class="c"># 비지도 학습 — 라벨 없이 "흔치 않은 패턴"을 자동 탐지</span>
+model = IsolationForest(
+    n_estimators=<span class="k">300</span>,
+    contamination=<span class="k">0.05</span>,   <span class="c"># 5%를 비정상으로 가정</span>
+    random_state=<span class="k">42</span>,
+)
+
+<span class="c"># 입력: 침묵 길이, 위치 점프, 추정 속도, 시각, 선종 (one-hot)</span>
+features = [<span class="s">"log_silence_h"</span>, <span class="s">"log_jump_km"</span>,
+            <span class="s">"log_speed_kn"</span>, <span class="s">"hour"</span>, <span class="s">"VesselCategory"</span>]
+model.fit(X[features])
+
+<span class="c"># 결과: anomaly_score (낮을수록 비정상)</span>
+silences[<span class="s">"is_anomaly"</span>] = model.predict(X) == -<span class="k">1</span>
+<span class="c"># → 9,570건 중 479건(5.0%)이 비정상으로 자동 분류</span></pre>
+
+  <div class="twocol">
+    <figure>
+      <a href="#" class="zoom-link" data-img="shipml-insights-images/B4_anomaly_score_distribution.png" data-cap="B4 — IsolationForest anomaly score distribution">
+        <img src="shipml-insights-images/B4_anomaly_score_distribution.png" alt="이상치 스코어 분포" />
+      </a>
+      <figcaption><b>FIG.B4</b> — 모델이 매긴 "이상도 점수" 분포. 점선 왼쪽이 비정상으로 분류된 영역. 정상과 비정상이 자연스럽게 분리되는 게 보인다.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+    </figure>
+    <figure>
+      <a href="#" class="zoom-link" data-img="shipml-insights-images/B5_anomaly_by_category.png" data-cap="B5 — Anomaly rate by ship type">
+        <img src="shipml-insights-images/B5_anomaly_by_category.png" alt="카테고리별 이상치 비율" />
+      </a>
+      <figcaption><b>FIG.B5</b> — 선종별 이상치 비율. 어떤 카테고리가 ML 기준으로 평균보다 자주 이상하게 행동하는지.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+    </figure>
+  </div>
+
+  <figure style="margin:var(--space-lg) auto 0;max-width:1000px;">
+    <a href="#" class="zoom-link" data-img="shipml-insights-images/B6_anomaly_locations.png" data-cap="B6 — Where anomalous silences happen">
+      <img src="shipml-insights-images/B6_anomaly_locations.png" alt="이상치 침묵 발생 위치" />
+    </a>
+    <figcaption><b>FIG.B6</b> — 베이지=육지, 청록=바다. 회색 점은 이동 중인 배의 위치, 파란색은 정상 침묵, <b>빨간색은 ML이 비정상이라고 판단한 침묵</b>의 위치. 항만 입구·정박지가 아닌 곳에서 빨간 점이 많다면 그게 흥미로운 신호.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+  </figure>
+
+  <div class="callout" data-label="ML 모델 설명">
+    <h4>왜 IsolationForest인가</h4>
+    <p>일반적인 분류 모델(RandomForest 등)은 "정상/비정상" 라벨이 필요합니다. 하지만 우리는 <strong>어떤 침묵이 비정상인지 알려주는 라벨이 없습니다</strong>. 그래서 <span class="gloss" data-def="비지도 학습. 정답 라벨 없이 데이터의 구조만 보고 패턴을 찾는 ML.">unsupervised learning</span>을 씁니다.</p>
+    <p>IsolationForest는 "이 점이 다른 점들로부터 얼마나 빨리 격리되는가"를 트리로 측정합니다. 구석에 외롭게 떨어진 점일수록 빨리 격리되고, 그게 곧 이상치라는 발상.</p>
+    <p><strong>한계</strong>: 모델이 "비정상"이라고 한 게 진짜 회피 행위인지, 아니면 단순한 음영 지역인지는 우리가 검증할 수 없습니다. 이 결과는 <strong>"우선 들여다볼 후보 명단"</strong>으로 쓰는 게 맞습니다.</p>
+  </div>
+</section>
+
+<!-- ============== C. 항만 네트워크 ============== -->
+<section id="c">
+  <span class="chapter-tag c">CHAPTER C · network</span>
+  <h2>항만끼리는 어떻게 연결돼 있나</h2>
+
+  <p>15일 동안 발생한 정박 이벤트 7,693건을 시간순으로 배열해, <strong>(현재 항만 → 다음 항만)</strong> 페어 1,057개를 만들었습니다. 이걸 그래프로 보면 60개 항만이 192개 고유 경로로 연결된 네트워크가 됩니다.</p>
+
+  <p>이 네트워크는 <strong>우리의 다음-항만 예측 모델이 학습하는 정답지 그 자체</strong>입니다. 모델이 78%의 정확도를 내는 이유가 바로 이 그래프 안에 있는 강한 패턴(자주 다니는 경로) 때문.</p>
+
+  <figure style="margin:var(--space-lg) auto;max-width:1100px;">
+    <a href="#" class="zoom-link" data-img="shipml-insights-images/C2_network_map.png" data-cap="C2 — Port network map: who connects to whom">
+      <img src="shipml-insights-images/C2_network_map.png" alt="항만 네트워크 지도" />
+    </a>
+    <figcaption><b>FIG.C2</b> — 베이지=육지, 청록=바다. 파란 원은 항만(크기=총 트래픽), <b>빨간 호선은 항만 간 왕래</b>(굵기=왕래 횟수). 가장 굵은 호는 #1↔#2의 연결로 15일 동안 123번 왕복.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+  </figure>
+
+  <div class="twocol">
+    <figure>
+      <a href="#" class="zoom-link" data-img="shipml-insights-images/C1_top_routes.png" data-cap="C1 — Top 15 most traveled routes">
+        <img src="shipml-insights-images/C1_top_routes.png" alt="가장 많이 다닌 경로 Top 15" />
+      </a>
+      <figcaption><b>FIG.C1</b> — 가장 많이 왕래된 항만 간 경로 15개. <b>#1 → #2가 123번</b>으로 압도적 1위. 이 두 항만은 LA-롱비치 항만 단지 안에서 컨테이너 핸들링이 분담된 자매 부두로 추정.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+    </figure>
+    <figure>
+      <a href="#" class="zoom-link" data-img="shipml-insights-images/C3_hub_ports.png" data-cap="C3 — Top hub ports (in + out traffic)">
+        <img src="shipml-insights-images/C3_hub_ports.png" alt="허브 항만 Top 10" />
+      </a>
+      <figcaption><b>FIG.C3</b> — 가장 트래픽이 많은 허브 항만. 청색=들어오는 트래픽, 빨강=나가는 트래픽. 들어오기만 하고 안 나가는 항만은 <b>최종 목적지(소비지)</b> 성격, 균형이면 <b>중계 항만</b>.<br/><span class="zoom-hint">▶ 클릭해서 확대</span></figcaption>
+    </figure>
+  </div>
+
+  <h3>가장 활발한 5개 경로</h3>
+  <table class="chart">
+    <thead><tr><th>경로</th><th>왕래 횟수</th><th>고유 선박 수</th><th>중간값 이동 시간</th></tr></thead>
+    <tbody>
+      <tr><td class="label">#1 → #2</td><td class="num">123</td><td class="num">36</td><td class="num">2.4시간</td></tr>
+      <tr><td class="label">#2 → #1</td><td class="num">87</td><td class="num">34</td><td class="num">3.1시간</td></tr>
+      <tr><td class="label">#1 → #3</td><td class="num">62</td><td class="num">22</td><td class="num">5.7시간</td></tr>
+      <tr><td class="label">#5 → #1</td><td class="num">48</td><td class="num">19</td><td class="num">12.4시간</td></tr>
+      <tr><td class="label">#3 → #1</td><td class="num">45</td><td class="num">18</td><td class="num">5.5시간</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px;">※ 경로 번호는 DBSCAN 클러스터링 시 자동 부여된 ID. 실제 항만 이름은 위치 좌표로 후속 매칭 가능.</p>
+</section>
+
+<!-- ============== 통합 결론 ============== -->
+<section id="conclusion">
+  <span class="chapter-tag">SYNTHESIS</span>
+  <h2>세 인사이트가 합쳐서 말해주는 것</h2>
+
+  <p>각각의 인사이트는 그 자체로도 의미 있지만, 셋을 합쳐 보면 LA·롱비치 항만 시스템의 <strong>운영 구조</strong>가 보입니다.</p>
+
+  <ol>
+    <li><strong>A(혼잡도)</strong>는 LA항이 만성 적체 상태임을 보여주고,</li>
+    <li><strong>C(네트워크)</strong>는 그 적체가 #1↔#2를 비롯한 소수 핵심 항만에 집중돼 있음을 보여주며,</li>
+    <li><strong>B(침묵 + ML 이상 탐지)</strong>는 그 모든 운영의 사각지대 — 데이터가 안 들어오는 시간·장소 — 를 정량화한다.</li>
+  </ol>
+
+  <p>이 세 가지를 같이 보지 않으면 우리 ML 모델 결과 해석이 어렵습니다:</p>
+  <ul>
+    <li><strong>다음 항만 예측 78%</strong>가 인상적인 이유 → C가 보여주듯 트래픽이 소수 경로에 몰려 있어 학습 신호가 강함</li>
+    <li><strong>1시간 좌표 예측 1.41km</strong>가 가능한 이유 → A가 보여주듯 많은 시간 배가 한자리에서 떠 있음 (예측이 쉬움)</li>
+    <li><strong>선종 분류 76%의 천장</strong> → B가 보여주듯 일부 카테고리는 침묵이 많아 학습 데이터 자체가 노이지함</li>
+  </ul>
+
+  <div class="limits">
+    <h3>이 보고서의 한계</h3>
+    <ul>
+      <li><strong>15일은 계절성·연중 변화를 못 본다</strong>. 항만 혼잡은 명절(추수감사절·크리스마스 직후) 직전이 피크라는 게 알려져 있는데, 1월 1~15일은 그 직후 회복기라 평소보다 차분할 수 있음.</li>
+      <li><strong>침묵의 진짜 원인은 검증 불가</strong>. ML이 "비정상"이라 한 479건이 실제 회피 행위인지, 단순히 산악 지형의 음영 지역인지는 외부 데이터(USCG 사고 기록·해안 지형) 없이는 모름.</li>
+      <li><strong>항만 이름은 추정</strong>. DBSCAN이 자동으로 만든 클러스터 ID에 실제 항만 명칭(예: "Pier J", "Pier T")을 매핑하려면 LA·LB 항만청 데이터셋과의 spatial join이 필요.</li>
+      <li><strong>이상 탐지의 contamination=0.05</strong>는 자의적 가정. "데이터의 5%는 비정상"이라는 사전 믿음을 모델에 주입한 것. 실제 비율이 1%면 위양성이 많고, 10%면 위음성이 많음.</li>
+    </ul>
+  </div>
+
+  <h3>다음 보고서에서 다룰 것</h3>
+  <p>다운로드는 본 보고서 작성 중에도 백그라운드에서 계속 받고 있습니다. 31일치가 모이면 <strong>REPORT 004</strong>에서는 (1) 평일/주말의 진짜 차이, (2) ML 이상치를 USCG 사고 기록과 spatial join, (3) 항만 ID → 실제 명칭 매핑, (4) Tanker↔Cargo 혼동을 줄이기 위한 시퀀스 모델(LSTM)을 다룰 예정.</p>
+</section>
+
+<footer>
+  <div>
+    <strong style="font-family:var(--display);font-weight:800;font-size:14px;letter-spacing:-.01em;">SHIPML&nbsp;V2 · REPORT 003</strong><br/>
+    Source · NOAA Office for Coastal Management · MarineCadastre AIS · Public Domain (USCG)<br/>
+    Companion · <a href="shipml-noaa.html">REPORT 002 (15-day ML report)</a>
+  </div>
+  <div style="text-align:right;">
+    Built with pandas · scikit-learn (IsolationForest) · matplotlib<br/>
+    Type · Bricolage Grotesque · Pretendard<br/>
+    Compiled · 2026.04.27
+  </div>
+</footer>
+
+</div>
+
+<!-- ============== LIGHTBOX ============== -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="이미지 확대 보기">
+  <button class="lightbox-close" id="lightboxClose" aria-label="닫기">×</button>
+  <img id="lightboxImg" src="" alt="" />
+  <div class="lightbox-caption" id="lightboxCap"></div>
+</div>
+
+<script>
+  (function(){
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightboxImg');
+    const lbCap = document.getElementById('lightboxCap');
+    const lbClose = document.getElementById('lightboxClose');
+
+    function open(src, cap) {
+      lbImg.src = src;
+      lbImg.alt = cap || '';
+      lbCap.textContent = cap || '';
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(() => { lbImg.src = ''; }, 200);
+    }
+
+    document.querySelectorAll('.zoom-link').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const src = a.dataset.img || a.querySelector('img')?.src;
+        const cap = a.dataset.cap || '';
+        if (src) open(src, cap);
+      });
+    });
+
+    lb.addEventListener('click', e => {
+      if (e.target === lb || e.target === lbCap) close();
+    });
+    lbClose.addEventListener('click', close);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && lb.classList.contains('open')) close();
+    });
+  })();
+</script>
+
+</body>
+</html>
