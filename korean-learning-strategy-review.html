@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Korean Learning App — Strategy Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Boldonse&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<style>
+  :root {
+    /* Paper-feel palette — warm cream, ink black, editorial vermillion */
+    --paper:       oklch(0.972 0.014 85);
+    --paper-soft:  oklch(0.953 0.018 85);
+    --paper-warm:  oklch(0.93  0.024 85);
+    --ink:         oklch(0.18  0.015 270);
+    --ink-2:       oklch(0.34  0.014 270);
+    --ink-mute:    oklch(0.50  0.012 270);
+    --ink-soft:    oklch(0.65  0.010 270);
+    --rule:        oklch(0.78  0.010 270);
+    --rule-soft:   oklch(0.86  0.010 270);
+
+    --signal:      oklch(0.52 0.21 25);   /* editorial vermillion — used VERY sparingly */
+    --signal-soft: oklch(0.92 0.06 25);
+    --data:        oklch(0.36 0.13 240);  /* deep navy — for figures */
+    --data-soft:   oklch(0.92 0.04 240);
+    --highlight:   oklch(0.93 0.10 90);   /* warm yellow underline */
+
+    --display: "Boldonse", "Cardo", "Apple SD Gothic Neo", Georgia, serif;
+    --body:    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono:    "JetBrains Mono", ui-monospace, SF Mono, monospace;
+
+    --s-1: 4px;  --s-2: 8px;  --s-3: 12px;  --s-4: 16px;  --s-5: 24px;
+    --s-6: 32px; --s-7: 48px; --s-8: 64px;  --s-9: 96px;  --s-10: 128px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.7;
+    font-feature-settings: "ss01", "ss02", "calt", "tnum" off;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* subtle paper grain */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+  }
+
+  /* ============================ PAGE ============================ */
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 56px);
+  }
+
+  /* ============================ MASTHEAD ============================ */
+
+  .masthead {
+    border-bottom: 2px solid var(--ink);
+    padding: var(--s-5) 0 var(--s-3);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--s-4);
+    align-items: end;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .masthead .left  { text-align: left; }
+  .masthead .right { text-align: right; }
+  .masthead .vol   { color: var(--ink); font-weight: 500; }
+  .masthead .center {
+    font-family: var(--display);
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* ============================ HERO ============================ */
+
+  .hero {
+    padding: var(--s-9) 0 var(--s-7);
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--s-7);
+    align-items: end;
+  }
+
+  .hero-cat {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin-bottom: var(--s-5);
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+  .hero-cat::before {
+    content: "";
+    display: inline-block;
+    width: 28px; height: 2px;
+    background: var(--signal);
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(48px, 7.5vw, 92px);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--signal);
+  }
+
+  .hero-sub {
+    margin-top: var(--s-5);
+    max-width: 32ch;
+    font-family: var(--body);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    font-weight: 400;
+  }
+
+  .hero-meta {
+    border-top: 1px solid var(--ink);
+    padding: var(--s-4) 0 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    display: grid;
+    gap: var(--s-3);
+  }
+  .hero-meta dt {
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+  }
+  .hero-meta dd {
+    color: var(--ink);
+    font-size: 14px;
+    margin-top: 1px;
+  }
+
+  /* ============================ ABSTRACT ============================ */
+
+  .abstract {
+    padding: var(--s-7) 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: var(--s-7);
+  }
+  .abstract .label {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-top: 6px;
+  }
+  .abstract p {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(20px, 2.4vw, 26px);
+    line-height: 1.45;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    max-width: 56ch;
+  }
+  .abstract p .mark {
+    background: linear-gradient(transparent 65%, var(--highlight) 65%);
+    padding: 0 2px;
+  }
+  .abstract p strong {
+    color: var(--signal);
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  /* ============================ SECTION ============================ */
+
+  section {
+    padding: var(--s-9) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sec-head {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: var(--s-7);
+    align-items: baseline;
+    margin-bottom: var(--s-7);
+  }
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--signal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .sec-num::before {
+    content: "§ ";
+    color: var(--ink-mute);
+  }
+  .sec-title {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(32px, 4.4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .sec-title small {
+    display: block;
+    font-family: var(--body);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    margin-top: var(--s-3);
+    text-transform: uppercase;
+  }
+
+  .sec-body {
+    grid-column-start: 2;
+  }
+
+  /* ============================ EDITORIAL PROSE ============================ */
+
+  .body-grid {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: var(--s-7);
+  }
+
+  .lead {
+    grid-column-start: 2;
+    font-family: var(--body);
+    font-size: 17.5px;
+    line-height: 1.75;
+    color: var(--ink-2);
+    max-width: 64ch;
+  }
+  .lead p + p { margin-top: var(--s-4); }
+  .lead em {
+    font-style: italic;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .lead strong {
+    color: var(--signal);
+    font-weight: 600;
+  }
+
+  /* Margin annotation (left column note) */
+  .annotation {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--ink-mute);
+    letter-spacing: 0.02em;
+    padding-top: 4px;
+    border-top: 1px solid var(--ink);
+    text-transform: uppercase;
+  }
+  .annotation strong {
+    color: var(--signal);
+    font-weight: 500;
+  }
+
+  /* ============================ DIAGNOSIS LISTS ============================ */
+
+  .diag-block {
+    grid-column-start: 2;
+    margin-top: var(--s-7);
+  }
+  .diag-head {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-bottom: var(--s-3);
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: var(--s-4);
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+  .diag-head .pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+  }
+  .diag-head.warn .pill { background: var(--signal); color: var(--paper); }
+
+  .diag-list {
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+  }
+  .diag-list li {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: var(--s-3);
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--rule-soft);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+  .diag-list li:last-child { border-bottom: none; }
+  .diag-list li::before {
+    content: attr(data-n);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+    padding-top: 4px;
+    letter-spacing: 0.04em;
+  }
+  .diag-list li b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .diag-list li em {
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  /* ============================ DATA TABLE ============================ */
+
+  .table-wrap {
+    grid-column-start: 2;
+    margin-top: var(--s-6);
+    overflow-x: auto;
+  }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--body);
+    font-size: 14.5px;
+  }
+  table.data thead th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    font-weight: 500;
+    padding: var(--s-3) var(--s-3);
+    border-bottom: 2px solid var(--ink);
+  }
+  table.data tbody td {
+    padding: var(--s-3);
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+    color: var(--ink-2);
+  }
+  table.data tbody td:first-child {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  table.data tbody td.num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--data);
+    text-align: right;
+    white-space: nowrap;
+  }
+  table.data tbody tr.highlight td {
+    background: var(--signal-soft);
+  }
+  table.data tbody tr.highlight td:first-child::after {
+    content: " ★";
+    color: var(--signal);
+    font-size: 12px;
+  }
+
+  /* ============================ STAT CARDS (inline, not grid) ============================ */
+
+  .stats {
+    grid-column-start: 2;
+    margin-top: var(--s-6);
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .stat {
+    padding: var(--s-5) var(--s-4);
+    border-right: 1px solid var(--rule-soft);
+  }
+  .stat:last-child { border-right: none; }
+  .stat .label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: var(--s-2);
+  }
+  .stat .figure {
+    font-family: var(--display);
+    font-size: 36px;
+    line-height: 1;
+    color: var(--data);
+    letter-spacing: -0.02em;
+    font-feature-settings: "tnum";
+  }
+  .stat .figure .unit {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-mute);
+    margin-left: 4px;
+    letter-spacing: 0;
+  }
+  .stat .caption {
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: var(--s-2);
+    line-height: 1.45;
+  }
+
+  /* ============================ TIER BLOCKS ============================ */
+
+  .tier {
+    grid-column-start: 2;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: var(--s-5);
+    padding: var(--s-6) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tier:last-child { border-bottom: none; }
+  .tier .marker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal);
+  }
+  .tier .marker .ord {
+    display: block;
+    font-family: var(--display);
+    font-size: 56px;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-top: var(--s-2);
+  }
+  .tier h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(24px, 2.8vw, 30px);
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin-bottom: var(--s-3);
+  }
+  .tier p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-2);
+    max-width: 64ch;
+  }
+  .tier p strong { color: var(--ink); font-weight: 600; }
+  .tier p em     { font-style: italic; color: var(--signal); }
+
+  .tier .picks {
+    list-style: none;
+    margin-top: var(--s-4);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: var(--s-3);
+  }
+  .tier .picks li {
+    padding: var(--s-3) var(--s-4);
+    background: var(--paper-soft);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    border-top: 2px solid var(--ink);
+  }
+  .tier .picks li b {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--data);
+    margin-bottom: 4px;
+  }
+
+  /* ============================ ACTION LIST ============================ */
+
+  .actions {
+    grid-column-start: 2;
+    counter-reset: act;
+  }
+  .act {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: var(--s-4);
+    padding: var(--s-5) 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .act::before {
+    counter-increment: act;
+    content: counter(act, decimal-leading-zero);
+    font-family: var(--display);
+    font-size: 36px;
+    color: var(--ink-soft);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .act h4 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: var(--s-1);
+  }
+  .act p {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+    max-width: 60ch;
+  }
+  .act .when {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal);
+    white-space: nowrap;
+    padding-top: 6px;
+  }
+
+  /* ============================ FOOTER ============================ */
+
+  footer {
+    padding: var(--s-7) 0 var(--s-9);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-5);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  footer .colophon {
+    border-top: 2px solid var(--ink);
+    padding-top: var(--s-3);
+  }
+  footer .sources {
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-3);
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--body);
+    font-size: 12.5px;
+    line-height: 1.7;
+  }
+  footer .sources a {
+    color: var(--data);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  footer .sources a:hover {
+    border-color: var(--data);
+  }
+  footer h5 {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    margin-bottom: var(--s-2);
+    font-weight: 500;
+  }
+
+  /* ============================ RESPONSIVE ============================ */
+
+  @media (max-width: 880px) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+      padding: var(--s-7) 0;
+    }
+    .hero-meta { border-top: 1px solid var(--rule); padding-top: var(--s-4); }
+    .abstract { grid-template-columns: 1fr; gap: var(--s-3); }
+    .sec-head { grid-template-columns: 1fr; gap: var(--s-3); margin-bottom: var(--s-5); }
+    .body-grid { grid-template-columns: 1fr; gap: var(--s-4); }
+    .annotation { border-top: none; border-left: 2px solid var(--ink); padding: 0 0 0 var(--s-3); }
+    .lead, .diag-block, .table-wrap, .tier, .stats, .actions {
+      grid-column-start: auto;
+    }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .tier { grid-template-columns: 1fr; gap: var(--s-3); }
+    .tier .marker .ord { font-size: 40px; }
+    .act { grid-template-columns: 40px 1fr; }
+    .act::before { font-size: 28px; }
+    .act .when { grid-column: 2; padding-top: 0; }
+    footer { grid-template-columns: 1fr; }
+    .masthead { grid-template-columns: 1fr; gap: var(--s-2); text-align: left; }
+    .masthead .left, .masthead .right { text-align: left; }
+    .masthead .center { font-size: 16px; }
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ============================ MASTHEAD ============================ -->
+    <header class="masthead">
+      <div class="left"><span class="vol">VOL. 01</span> &nbsp; ISS. 003</div>
+      <div class="center">Korean Learning Strategy Review</div>
+      <div class="right">2026 · 05 · 05 — INTERNAL</div>
+    </header>
+
+    <!-- ============================ HERO ============================ -->
+    <section class="hero">
+      <div>
+        <div class="hero-cat">Strategy Memo · Pre-monetization Diagnosis</div>
+        <h1 class="hero-title">
+          MZ를 가르치는 앱은,<br>
+          어떻게 <em>돈을 벌어야</em> 하는가
+        </h1>
+        <p class="hero-sub">
+          MVP가 끝났다. 다음 단계는 매출이다. 시장은 이미 와 있다.
+          남은 것은 어떤 결제 동기를, 어떤 순서로, 누구에게 먼저 들이밀 것인가의 문제뿐이다.
+        </p>
+      </div>
+
+      <dl class="hero-meta">
+        <div><dt>Filed by</dt><dd>Strategy / kangmin</dd></div>
+        <div><dt>Subject</dt><dd>Korean Learning App, post-MVP</dd></div>
+        <div><dt>Audience</dt><dd>PM · Founder</dd></div>
+        <div><dt>Decision sought</dt><dd>수익화 모델 / 출시 시장 / 우선순위</dd></div>
+      </dl>
+    </section>
+
+    <!-- ============================ ABSTRACT ============================ -->
+    <section class="abstract">
+      <div class="label">Abstract</div>
+      <p>
+        제품은 거의 다 만들어졌다 — <span class="mark">엽전, 캐릭터 꾸미기, 가상화폐, 친구 시스템</span>까지.
+        시장은 폭발 중이다 — 글로벌 한국어 학습 시장 <strong>$7.2B / CAGR 25%</strong>.
+        구독을 짧게, 코스메틱을 길게, 한류 어휘팩으로 정점을 찍는다.
+      </p>
+    </section>
+
+    <!-- ============================ §01 DIAGNOSIS ============================ -->
+    <section id="diagnosis">
+      <div class="sec-head">
+        <div class="sec-num">01 · Diagnosis</div>
+        <h2 class="sec-title">
+          프로젝트는 어디까지 와 있는가
+          <small>Where the product stands today</small>
+        </h2>
+      </div>
+
+      <div class="body-grid">
+        <aside class="annotation">
+          MVP Phase 1–7 완료, Phase 8(친구·MZ력) 진행. 콘텐츠 257 / 27일 / 9 카테고리.
+          <br><br>
+          <strong>관전 포인트.</strong> 결제 그릇이 이미 거의 다 깔려 있음.
+        </aside>
+
+        <div class="lead">
+          <p>
+            MVP의 핵심 회로 — 학습(사전·퀴즈) · 보상(엽전·출석) · 표현(캐릭터 꾸미기) · 관계(친구·MZ력) —
+            가 전부 작동하는 상태다. 다국어 인프라(en/ja/ko)는 19개 화면에 적용되어 있고,
+            Supabase 무료 티어 위에서 운영비 없이 검증할 수 있다.
+            <em>수익화에 필요한 인프라의 70%는 이미 손에 쥐고 있다는 뜻이다.</em>
+          </p>
+          <p>
+            그러나 매출 직전에 짚어야 할 빈자리가 네 군데 있다 —
+            측정 도구, 콘텐츠 운영 사이클, 출시 시장 결정, 친구→매출 회로.
+            이 넷 중 하나라도 비어 있으면 결제는 시작되어도 <strong>가설 검증으로 이어지지 않는다.</strong>
+          </p>
+        </div>
+
+        <!-- KPI cards -->
+        <div class="stats">
+          <div class="stat">
+            <div class="label">콘텐츠</div>
+            <div class="figure">257<span class="unit">terms</span></div>
+            <div class="caption">9 카테고리, 일본어/영어 풀 번역.</div>
+          </div>
+          <div class="stat">
+            <div class="label">데일리 퀴즈</div>
+            <div class="figure">27<span class="unit">days</span></div>
+            <div class="caption">256 문제, 관리자 웹 큐레이션.</div>
+          </div>
+          <div class="stat">
+            <div class="label">로컬라이즈</div>
+            <div class="figure">19<span class="unit">screens</span></div>
+            <div class="caption">EN · JA · KO 트리플 적용.</div>
+          </div>
+          <div class="stat">
+            <div class="label">월 운영비</div>
+            <div class="figure">$0<span class="unit">/mo</span></div>
+            <div class="caption">Supabase 무료 티어로 검증 단계 커버.</div>
+          </div>
+        </div>
+
+        <!-- Strengths -->
+        <div class="diag-block">
+          <div class="diag-head"><span class="pill">강점</span> Strengths</div>
+          <ul class="diag-list">
+            <li data-n="A"><b>차별화의 칼날이 좁고 분명하다.</b> "MZ 신조어 + 한류 관심층"은 Duolingo·LingoDeer가 들어오지 않는 결.</li>
+            <li data-n="B"><b>수익화 인프라가 이미 깔려 있다.</b> 엽전(virtual currency) · 캐릭터 꾸미기 · 인벤토리 · 거래내역 — 결제 시스템만 얹으면 된다.</li>
+            <li data-n="C"><b>다국어가 사전 처리되어 있다.</b> 글로벌 출시의 가장 비싼 장벽이 이미 넘어진 상태.</li>
+            <li data-n="D"><b>운영비 0원 검증.</b> 가설이 틀려도 잃을 게 없다. 구독·IAP 가격 실험을 손해 없이 돌릴 수 있다.</li>
+          </ul>
+        </div>
+
+        <!-- Weaknesses -->
+        <div class="diag-block">
+          <div class="diag-head warn"><span class="pill">위험</span> Risks</div>
+          <ul class="diag-list">
+            <li data-n="01"><b>측정 도구 부재.</b> KPI(D7 25% / 구매율 30%)는 정의됐는데 측정 인프라가 안 보임. 결제를 켜기 전에 <em>Funnel을 먼저 깔아야 한다.</em></li>
+            <li data-n="02"><b>콘텐츠 노화.</b> MZ 신조어는 6–12개월이면 늙는다. 257개로 출발은 좋지만 <em>주간/월간 큐레이션 운영 사이클</em>이 문서화되어 있지 않음.</li>
+            <li data-n="03"><b>출시 시장이 결정되지 않았다.</b> 영어권+일본권 동시 = 마케팅 분산. 한쪽부터 깊게.</li>
+            <li data-n="04"><b>친구→매출 회로가 비어 있다.</b> 친구 추가의 동기가 약하다. <em>같이 풀면 보너스 / 친구에게 엽전 선물</em> 같은 회로 없이는 Phase 8이 데드 위크.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ §02 PERSONA ============================ -->
+    <section id="persona">
+      <div class="sec-head">
+        <div class="sec-num">02 · Persona</div>
+        <h2 class="sec-title">
+          달수 — 자산이 될 수 있는 캐릭터
+          <small>Evaluation of the mascot persona</small>
+        </h2>
+      </div>
+
+      <div class="body-grid">
+        <aside class="annotation">
+          외계인 / 17세 / 안드로메다 외곽 「달라(Dalla)」 출신.
+          <br><br>
+          <strong>핵심 자산.</strong> 페르소나에 "MZ 패션 어설프게"가 박혀있다는 사실 — 코스메틱 IAP의 내적 정당성.
+        </aside>
+
+        <div class="lead">
+          <p>
+            달수의 페르소나가 가진 가장 단단한 자산은 외관도 백스토리도 아니다.
+            <em>"MZ 패션을 어설프게 따라 함"</em> 이라는 한 줄이 페르소나에 박혀있다는 사실 자체다.
+            이 한 줄이 옷·모자·액세서리 IAP의 모든 정당화를 떠받친다 —
+            <strong>옷 입히고 싶은 캐릭터가 있어야 옷을 팔 수 있다.</strong>
+          </p>
+          <p>
+            동시에 두 가지가 비어 있다. 하나, 좋은 디테일(성별 없음 / 1200살 / 첫 한국어 "치맥")이
+            프로필 안 백스토리 화면에만 있어 정작 사용자에게 도달할 경로가 없다.
+            둘, 사용자가 달수를 "내 분신"으로 받아들일지 "옆의 친구"로 받아들일지가 결정되지 않았다 —
+            매출은 분신 인식에서 더 강하게 일어난다.
+          </p>
+        </div>
+
+        <div class="diag-block">
+          <div class="diag-head"><span class="pill">평가</span> Verdict</div>
+          <ul class="diag-list">
+            <li data-n="✓"><b>이름과 외형은 완성형이다.</b> 한국적 친근함(달수) + 영문 발음 명확성(DALSU) + 보름달 모티프의 시각적 식별성.</li>
+            <li data-n="✓"><b>공감 회로가 정확하다.</b> "외계인이 한국어 배우는 중" = 학습자 본인의 모습. 영어·일본권에 자기 투영이 자연스럽다.</li>
+            <li data-n="!"><b>도달 경로가 좁다.</b> 4곳 노출 원칙은 좋지만 정작 가장 자주 보이는 화면(꾸미기 화면)에 페르소나가 닿지 않는다.</li>
+            <li data-n="!"><b>포지션이 모호하다.</b> 분신 vs 친구 — 결정 후 카피·아이템 설명에 명문화 필요.</li>
+          </ul>
+        </div>
+
+        <div class="diag-block">
+          <div class="diag-head"><span class="pill">권고</span> Recommendations</div>
+          <ul class="diag-list">
+            <li data-n="→"><b>아이템 설명에 달수 톤 한 줄.</b> 양말+슬리퍼 아이템에 "달수가 처음 보고 충격받은 조합" — 사용자가 옷을 사면서 페르소나를 흡수.</li>
+            <li data-n="→"><b>분기 한정 의상에 작은 일화.</b> "달수의 첫 명절", "달수의 첫 K-콘서트" — 마케팅과 페르소나가 같이 자란다.</li>
+            <li data-n="→"><b>포지션은 "내 분신" 으로.</b> 코스메틱·구독 매출의 인식 기반이 더 단단하다. 페르소나 문서에 한 줄 명시.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ §03 MARKET ============================ -->
+    <section id="market">
+      <div class="sec-head">
+        <div class="sec-num">03 · Market</div>
+        <h2 class="sec-title">
+          시장은 이미 와 있다
+          <small>What the data says</small>
+        </h2>
+      </div>
+
+      <div class="body-grid">
+        <aside class="annotation">
+          한국어는 한류 카테고리 중 지불 의향 1위 (78.5%).
+          <br><br>
+          <strong>해석.</strong> "수요가 없어서 안 사는" 시장이 아니다. 결제 채널이 정리되어 있지 않을 뿐.
+        </aside>
+
+        <div class="lead">
+          <p>
+            글로벌 한국어 학습 시장은 2024년 <strong>$7.2B</strong> 규모로,
+            2025–2034 연평균 <strong>25.1%</strong> 성장이 예상된다 (Research and Markets).
+            한류 경험자의 <strong>78.5%</strong>가 한국어 관련 콘텐츠에 대해 지불 의향이 있다고 답했다 —
+            한국 콘텐츠 카테고리 전체에서 가장 높은 수치다 (KOFICE).
+          </p>
+          <p>
+            소비자들이 "왜 안 사는가"가 아니라 "어떤 형태로 사고 싶은가"의 시장이라는 뜻이다.
+            지금부터의 결정은 시장 진입 여부가 아니라 <em>어느 결제 채널을 어떤 순서로 열 것인가</em>다.
+          </p>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats">
+          <div class="stat">
+            <div class="label">한국어 학습 시장</div>
+            <div class="figure">$7.2<span class="unit">B (2024)</span></div>
+            <div class="caption">CAGR 25.1% (2025–2034).</div>
+          </div>
+          <div class="stat">
+            <div class="label">한류 + 한국어 WTP</div>
+            <div class="figure">78.5<span class="unit">%</span></div>
+            <div class="caption">한류 경험자 지불 의향, 카테고리 1위.</div>
+          </div>
+          <div class="stat">
+            <div class="label">Duolingo 구독 비중</div>
+            <div class="figure">80<span class="unit">% +</span></div>
+            <div class="caption">광고 7%, 가상 재화 IAP 5%+.</div>
+          </div>
+          <div class="stat">
+            <div class="label">코스메틱 IAP</div>
+            <div class="figure">80<span class="unit">%</span></div>
+            <div class="caption">Fortnite·Roblox·LOL의 IAP 매출 점유.</div>
+          </div>
+        </div>
+
+        <!-- Pricing comparison -->
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>경쟁자</th>
+                <th>월</th>
+                <th>연</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>LingoDeer</td><td class="num">$11.99</td><td class="num">$79.99</td><td>Lifetime $159.99</td></tr>
+              <tr><td>Eggbun</td><td class="num">$12.00</td><td class="num">—</td><td>하루 1레슨 무료</td></tr>
+              <tr><td>Duolingo Super</td><td class="num">$13.99</td><td class="num">$83.88</td><td>표준 단가</td></tr>
+              <tr><td>Duolingo Family</td><td class="num">—</td><td class="num">$119.99</td><td>6인 ÷ = $20/년/인</td></tr>
+              <tr><td>TTMIK Premium</td><td class="num">subscription</td><td class="num">—</td><td>+ 교재·eBook 다채널</td></tr>
+              <tr class="highlight"><td>제안: MZ 패스</td><td class="num">$4.99</td><td class="num">$39.99</td><td>Duolingo의 1/2 anchor</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ §04 MONETIZATION ============================ -->
+    <section id="monetization">
+      <div class="sec-head">
+        <div class="sec-num">04 · Monetization</div>
+        <h2 class="sec-title">
+          어떻게 받을 것인가 — 3 트랙
+          <small>Three tracks, in order</small>
+        </h2>
+      </div>
+
+      <div class="body-grid">
+        <aside class="annotation">
+          가챠는 도입하지 않는다.
+          <br><br>
+          하트·라이프 잠금형 페이월도 도입하지 않는다.
+          <br><br>
+          <strong>이유.</strong> 규제 위험 + 평판 + Duolingo 2026 톤 다운 트렌드.
+        </aside>
+
+        <div class="lead">
+          <p>
+            세 트랙을 동시에 깔지 않는다. <em>Tier 1을 먼저, 검증된 후 Tier 2, 그다음 Tier 3.</em>
+            첫 결제가 살아나면 두 번째가 쉬워지고, 두 번째가 살아나면 세 번째는 그릇만 얹으면 된다.
+          </p>
+        </div>
+
+        <!-- Tier 1 -->
+        <article class="tier">
+          <div class="marker">
+            Tier · One
+            <span class="ord">01</span>
+            Now → 3 mo
+          </div>
+          <div>
+            <h3>인프라 그대로 활용 — 엽전 패키지 + 한정 의상</h3>
+            <p>
+              지금 깔려있는 엽전 시스템에 결제 버튼을 더하는 게 첫 매출의 가장 빠른 길이다.
+              한정 의상은 <em>희소성</em>으로 결제 즉시성을 만든다.
+              광고는 끼우지 않거나, 끼울 거면 보상형(퀴즈 한 번 더, 엽전 보너스)만.
+              하단 배너·전면 광고는 <strong>학습 몰입을 파괴</strong>하므로 도입 금지.
+            </p>
+            <ul class="picks">
+              <li><b>엽전 팩 / IAP</b>$0.99 (50) · $4.99 (300) · $9.99 (700+보너스)</li>
+              <li><b>한정 의상 / IAP</b>$1.99 ~ $4.99 개당. 분기 시즌제.</li>
+              <li><b>보상형 광고 / 옵셔널</b>퀴즈 한 번 더, 엽전 +5. 강요 없이.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Tier 2 -->
+        <article class="tier">
+          <div class="marker">
+            Tier · Two
+            <span class="ord">02</span>
+            3 → 6 mo
+          </div>
+          <div>
+            <h3>구독 도입 — "MZ 패스" 월 $4.99 / 연 $39.99</h3>
+            <p>
+              Duolingo Super의 약 <strong>1/2 가격대</strong>를 anchor로 잡는다.
+              학생·취미 학습자의 진입 장벽이 낮아지고, "Duolingo는 비싸지만 이건 부담 없네" 의 인식을 만든다.
+              구독 가치는 <em>기능 잠금이 아니라 치장의 우월감</em>으로 — 매월 클럽 한정 의상 1종이 해지를 막는다.
+              해지해도 그동안 받은 룩은 영구 소장 (해지 저항).
+            </p>
+            <ul class="picks">
+              <li><b>광고 제거</b>Tier 1의 보상형 광고 제거.</li>
+              <li><b>월 한정 의상</b>구독자만 받는 매월 1종.</li>
+              <li><b>무제한 카테고리·랜덤 퀴즈</b>현재도 무료지만 보상은 무한.</li>
+              <li><b>학습 데이터 백업</b>기기 변경 안전망 — 결제 정당화.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Tier 3 -->
+        <article class="tier">
+          <div class="marker">
+            Tier · Three
+            <span class="ord">03</span>
+            6 → 12 mo
+          </div>
+          <div>
+            <h3>한류 직격 — 콘텐츠 IAP &amp; 시즌 패스</h3>
+            <p>
+              78.5% WTP의 직격탄. <em>학습이 아니라 덕질의 결제 동기</em>를 건드린다.
+              K-pop 어휘팩, K-드라마 어휘팩, BTS 가사로 배우는 한국어 같은 팬덤 어휘팩 IAP 중심.
+              분기 시즌 패스로 낱개 대비 30% 이득 묶음 — ARPU를 끌어올린다.
+            </p>
+            <ul class="picks">
+              <li><b>K-pop 어휘팩</b>$2.99 ~ $5.99 / 그룹·아티스트별.</li>
+              <li><b>K-드라마 어휘팩</b>인기 작품 어휘 + 명대사 50선.</li>
+              <li><b>분기 시즌 패스</b>의상 3-5종 + 한정 어휘팩 + 보너스 엽전 묶음.</li>
+              <li><b>Family Plan (옵션)</b>Duolingo 모델 차용 — 6인 / $59.99/년.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================ §05 KPI ============================ -->
+    <section id="kpi">
+      <div class="sec-head">
+        <div class="sec-num">05 · KPI</div>
+        <h2 class="sec-title">
+          숫자로 무엇을 본다고 할 것인가
+          <small>What success looks like, numerically</small>
+        </h2>
+      </div>
+
+      <div class="body-grid">
+        <aside class="annotation">
+          첫 90일에는 <strong>전환율보다 단가</strong>를 본다.
+          <br><br>
+          가격 anchor가 잘 먹는지가 LTV 결정의 핵심.
+        </aside>
+
+        <div class="lead">
+          <p>
+            결제를 켜는 순간 보아야 할 다섯 숫자다. 첫 90일은 작은 실험을 빠르게 — 단가가 맞는지,
+            구독이 살아나는지, D7이 결제 후 끊기지 않는지가 첫 가설들이다.
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>지표</th>
+                <th>1차 목표</th>
+                <th>산업 평균</th>
+                <th>의미</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>ARPDAU</td><td class="num">$0.05–0.10</td><td class="num">$0.05–0.15</td><td>일평균 사용자당 매출. 첫 결제 신호.</td></tr>
+              <tr><td>유료 전환율 (D90)</td><td class="num">2–3%</td><td class="num">3–5%</td><td>가입 → 첫 결제 비율. 가격 검증.</td></tr>
+              <tr><td>광고 ARPU</td><td class="num">$0.5/월</td><td class="num">$0.5–1.5</td><td>보상형 광고만 켤 경우의 보조 매출.</td></tr>
+              <tr><td>D7 리텐션</td><td class="num">25%</td><td class="num">20–30%</td><td>학습 앱 평균. 결제 이전의 건강 지표.</td></tr>
+              <tr><td>LTV / CAC</td><td class="num">&gt; 3</td><td class="num">3+</td><td>광고비 집행 시 단위경제의 건강.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ §06 NEXT ACTIONS ============================ -->
+    <section id="next">
+      <div class="sec-head">
+        <div class="sec-num">06 · Next</div>
+        <h2 class="sec-title">
+          다음 5 액션, 순서대로
+          <small>Five moves, sequential</small>
+        </h2>
+      </div>
+
+      <div class="body-grid">
+        <aside class="annotation">
+          <strong>금기.</strong> 다섯 개 동시 시작 안 함. 1번이 끝나야 2번이 의미 있다.
+        </aside>
+
+        <ol class="actions">
+          <li class="act">
+            <div>
+              <h4>분석 도구 도입 — Firebase Analytics + Funnel</h4>
+              <p>가입 → D1 → D7 → 첫 결제까지 4단 funnel 정의. 모든 다음 결정의 기반.</p>
+            </div>
+            <div class="when">~ 1주</div>
+          </li>
+          <li class="act">
+            <div>
+              <h4>한 시장 결정 — 영어권 vs 일본권</h4>
+              <p>한류 데이터·결제 의향·문화적 친밀감 모두 <em>일본권</em>이 강하다. 일본권부터.</p>
+            </div>
+            <div class="when">~ 2주</div>
+          </li>
+          <li class="act">
+            <div>
+              <h4>Tier 1 IAP 출시 — 엽전 팩 + 시즌 의상 1종</h4>
+              <p>스토어 결제·환불·미성년 처리 한 번에 검증. 첫 매출 신호 확보.</p>
+            </div>
+            <div class="when">~ 4주</div>
+          </li>
+          <li class="act">
+            <div>
+              <h4>달수 페르소나 보강 — 분신 포지션 명문화</h4>
+              <p>아이템 설명에 달수 톤 한 줄, 분기 한정 의상에 작은 일화.</p>
+            </div>
+            <div class="when">~ 6주</div>
+          </li>
+          <li class="act">
+            <div>
+              <h4>콘텐츠 운영 사이클 문서화 — 주간 신조어 5개</h4>
+              <p>큐레이션 루틴 / 기여 채널 / AI 보조 가능성. 노화 방지의 유일한 방법.</p>
+            </div>
+            <div class="when">~ 8주</div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================ FOOTER ============================ -->
+    <footer>
+      <div class="colophon">
+        <h5>Colophon</h5>
+        Set in Boldonse (display) &amp; Pretendard (body) &amp; JetBrains Mono.<br>
+        Filed 2026 · 05 · 05 — Internal Strategy Memo<br>
+        Korean Learning App / Pre-monetization Diagnosis
+      </div>
+      <div class="sources">
+        <h5>References</h5>
+        <a href="https://www.businessofapps.com/data/duolingo-statistics/">Duolingo Revenue Statistics 2026 — Business of Apps</a>,
+        <a href="https://www.classcentral.com/report/duolingo-2026-strategy/">Duolingo 2026 Strategy</a>,
+        <a href="https://www.researchandmarkets.com/reports/6065736/korean-language-learning-market-opportunity">Korean Language Learning Market 2025–2034</a>,
+        <a href="https://kevurugames.com/blog/game-monetization-statistics-in-app-purchases-ads-and-premium-models/">Game Monetization Statistics — Cosmetics 80%</a>,
+        <a href="https://pinlearn.com/how-to-monetize-a-language-learning-app/">How to Monetize a Language Learning App</a>,
+        <a href="https://joyofkorean.com/apps-to-learn-korean/">Korean Learning Apps Pricing Review</a>,
+        <a href="https://talktomeinkorean.com/pricing/">TTMIK Pricing</a>.
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
