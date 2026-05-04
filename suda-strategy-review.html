@@ -520,6 +520,89 @@
     margin-bottom: 4px;
   }
 
+  /* ============================ COMBO / CALLOUT ============================ */
+
+  .callout {
+    grid-column-start: 2;
+    margin-top: var(--s-6);
+    padding: var(--s-5) var(--s-5) var(--s-5) var(--s-7);
+    background: var(--paper-warm);
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .callout .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin-bottom: var(--s-2);
+  }
+  .callout p {
+    font-family: var(--display);
+    font-size: 22px;
+    line-height: 1.4;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .callout p strong { color: var(--signal); font-weight: 500; font-style: italic; }
+
+  /* ============================ PHASE ROLLOUT ============================ */
+
+  .rollout {
+    grid-column-start: 2;
+    margin-top: var(--s-6);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 2px solid var(--ink);
+  }
+  .rollout-phase {
+    padding: var(--s-5) var(--s-4);
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .rollout-phase:last-child { border-right: none; }
+  .rollout-phase .when {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin-bottom: var(--s-2);
+  }
+  .rollout-phase h4 {
+    font-family: var(--display);
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: var(--s-3);
+  }
+  .rollout-phase ul {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: grid;
+    gap: var(--s-2);
+  }
+  .rollout-phase li {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    padding-left: 14px;
+    position: relative;
+  }
+  .rollout-phase li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--data);
+    font-family: var(--mono);
+    font-size: 11px;
+    top: 2px;
+  }
+
   /* ============================ ACTION LIST ============================ */
 
   .actions {
@@ -625,9 +708,11 @@
     .sec-head { grid-template-columns: 1fr; gap: var(--s-3); margin-bottom: var(--s-5); }
     .body-grid { grid-template-columns: 1fr; gap: var(--s-4); }
     .annotation { border-top: none; border-left: 2px solid var(--ink); padding: 0 0 0 var(--s-3); }
-    .lead, .diag-block, .table-wrap, .tier, .stats, .actions {
+    .lead, .diag-block, .table-wrap, .tier, .stats, .actions, .callout, .rollout {
       grid-column-start: auto;
     }
+    .rollout { grid-template-columns: 1fr; }
+    .rollout-phase { border-right: none; }
     .stats { grid-template-columns: 1fr 1fr; }
     .tier { grid-template-columns: 1fr; gap: var(--s-3); }
     .tier .marker .ord { font-size: 40px; }
@@ -686,7 +771,7 @@
       <p>
         제품은 거의 다 만들어졌다 — <span class="mark">엽전, 캐릭터 꾸미기, 가상화폐, 친구 시스템</span>까지.
         그런데 우리는 <strong>가르치는 앱이 아니다</strong> — 꾸미는 게 메인이고, MZ는 그 사이에 스며든다.
-        그래서 <span class="mark">코스메틱이 중심, 구독은 가볍게, 팬덤 콘텐츠는 보너스</span>의 순서다.
+        구독은 우리 사용자에 맞지 않는다 — <span class="mark">자주, 작게, 시즌 단위로</span>의 소액결제 7채널이 답이다.
       </p>
     </section>
 
@@ -898,115 +983,189 @@
               <tr><td>Duolingo Super</td><td class="num">$13.99</td><td class="num">$83.88</td><td>표준 단가</td></tr>
               <tr><td>Duolingo Family</td><td class="num">—</td><td class="num">$119.99</td><td>6인 ÷ = $20/년/인</td></tr>
               <tr><td>TTMIK Premium</td><td class="num">subscription</td><td class="num">—</td><td>+ 교재·eBook 다채널</td></tr>
-              <tr class="highlight"><td>제안: MZ 패스</td><td class="num">$4.99</td><td class="num">$39.99</td><td>Duolingo의 1/2 anchor</td></tr>
+              <tr class="highlight"><td>SUDA · 결제 평균</td><td class="num">$3–5/회</td><td class="num">분기 1회</td><td>구독 X · 자주·작게·시즌 단위</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- ============================ §04 MONETIZATION ============================ -->
-    <section id="monetization">
+    <!-- ============================ §04 FEATURES ============================ -->
+    <section id="features">
       <div class="sec-head">
-        <div class="sec-num">04 · Monetization</div>
+        <div class="sec-num">04 · Features</div>
         <h2 class="sec-title">
-          어떻게 받을 것인가 — 3 트랙
-          <small>Three tracks, in order</small>
+          무엇을 더 만들 것인가
+          <small>Feature additions that fit the concept</small>
         </h2>
       </div>
 
       <div class="body-grid">
         <aside class="annotation">
-          가챠는 도입하지 않는다.
+          기능 선정의 기준 한 가지.
           <br><br>
-          하트·라이프 잠금형 페이월도 도입하지 않는다.
-          <br><br>
-          <strong>이유.</strong> 규제 위험 + 평판 + Duolingo 2026 톤 다운 트렌드.
+          <strong>"꾸미면서 / 놀면서 / 친구와" 흡수되는가</strong> — 가르치는 형태면 채택하지 않는다.
         </aside>
 
         <div class="lead">
           <p>
-            세 트랙을 동시에 깔지 않는다. <em>Tier 1을 먼저, 검증된 후 Tier 2, 그다음 Tier 3.</em>
-            첫 결제가 살아나면 두 번째가 쉬워지고, 두 번째가 살아나면 세 번째는 그릇만 얹으면 된다.
+            아래 10개 중 모두 만들지 않는다. <em>가장 강한 한 줄</em>을 먼저 — 그 다음 반응을 보고
+            결정한다. 기능 자체보다 <strong>UGC와 바이럴 회로가 결제 동선과 어떻게 연결되는가</strong>가
+            중요하다.
           </p>
         </div>
 
-        <!-- Tier 1 -->
-        <article class="tier">
-          <div class="marker">
-            Tier · One
-            <span class="ord">01</span>
-            Now → 3 mo
-          </div>
-          <div>
-            <h3>인프라 그대로 활용 — 엽전 패키지 + 한정 의상</h3>
-            <p>
-              지금 깔려있는 엽전 시스템에 결제 버튼을 더하는 게 첫 매출의 가장 빠른 길이다.
-              한정 의상은 <em>희소성</em>으로 결제 즉시성을 만든다.
-              광고는 끼우지 않거나, 끼울 거면 보상형(퀴즈 한 번 더, 엽전 보너스)만.
-              하단 배너·전면 광고는 <strong>학습 몰입을 파괴</strong>하므로 도입 금지.
-            </p>
-            <ul class="picks">
-              <li><b>엽전 팩 / IAP</b>$0.99 (50) · $4.99 (300) · $9.99 (700+보너스)</li>
-              <li><b>한정 의상 / IAP</b>$1.99 ~ $4.99 개당. 분기 시즌제.</li>
-              <li><b>보상형 광고 / 옵셔널</b>퀴즈 한 번 더, 엽전 +5. 강요 없이.</li>
-            </ul>
-          </div>
-        </article>
+        <div class="diag-block">
+          <div class="diag-head"><span class="pill">사용자 제시</span> Already on the table</div>
+          <ul class="diag-list">
+            <li data-n="01"><b>아재개그 챌린지.</b> 한국 유머의 입문격. 외국인이 <em>"이게 왜 웃긴 거지?"</em> 의 즐거움을 발견한다. 매주 1개 정도가 적당.</li>
+            <li data-n="02"><b>시대별 줄임말 퀴즈.</b> 2000s → 2010s → 2020s → 2025+. 핵심 사전과 겹치지 않게 <em>"세대"</em>를 축으로 차별화.</li>
+            <li data-n="03"><b>나만의 유행어 만들기.</b> UGC + 바이럴 + 결제 회로를 한 줄로 묶을 수 있는 <em>가장 강한 후보</em>. 단어 합성 → 친구 공유 → 좋아요 → 보상.</li>
+          </ul>
+        </div>
 
-        <!-- Tier 2 -->
-        <article class="tier">
-          <div class="marker">
-            Tier · Two
-            <span class="ord">02</span>
-            3 → 6 mo
-          </div>
-          <div>
-            <h3>구독 도입 — "MZ 패스" 월 $4.99 / 연 $39.99</h3>
-            <p>
-              Duolingo Super의 약 <strong>1/2 가격대</strong>를 anchor로 잡는다.
-              학생·취미 학습자의 진입 장벽이 낮아지고, "Duolingo는 비싸지만 이건 부담 없네" 의 인식을 만든다.
-              구독 가치는 <em>기능 잠금이 아니라 치장의 우월감</em>으로 — 매월 클럽 한정 의상 1종이 해지를 막는다.
-              해지해도 그동안 받은 룩은 영구 소장 (해지 저항).
-            </p>
-            <ul class="picks">
-              <li><b>광고 제거</b>Tier 1의 보상형 광고 제거.</li>
-              <li><b>월 한정 의상</b>구독자만 받는 매월 1종.</li>
-              <li><b>무제한 카테고리·랜덤 퀴즈</b>현재도 무료지만 보상은 무한.</li>
-              <li><b>학습 데이터 백업</b>기기 변경 안전망 — 결제 정당화.</li>
-            </ul>
-          </div>
-        </article>
+        <div class="diag-block">
+          <div class="diag-head"><span class="pill">추가 추천</span> Worth considering</div>
+          <ul class="diag-list">
+            <li data-n="04"><b>달수의 한 마디.</b> 매일 달수가 짧은 인사를 던진다. 사용자가 답하면 친밀도 +. 단순 출석을 페르소나로 변환.</li>
+            <li data-n="05"><b>롤플레이 카톡 시뮬레이션.</b> "친구가 '드러눕' 보냄" → 어떻게 답할지 4지선다. 진짜 한국인처럼 답하는 연습.</li>
+            <li data-n="06"><b>K-드라마 명대사 빈칸.</b> 짧은 클립 + 빈칸 채우기. 학습이 아니라 <em>덕질</em>의 형태.</li>
+            <li data-n="07"><b>스티커 만들기 키트.</b> 신조어 + 달수 표정 조합으로 자기 스티커 제작 → 카톡 내보내기. <em>바이럴의 핵심.</em></li>
+            <li data-n="08"><b>MZ vs 아재 대결 모드.</b> 같은 상황을 양쪽 표현으로 비교. 양쪽이 동시에 흡수되는 게임.</li>
+            <li data-n="09"><b>친구 대결 (Phase 8 활용).</b> 주 1회 같은 퀴즈 동시 도전, 점수 비교. <em>친구→매출 회로의 교두보.</em></li>
+            <li data-n="10"><b>MZ 검정고시 (분기 종합).</b> 의식 이벤트화. 통과하면 한정 칭호 + 의상 — 결제 트리거로도 작용.</li>
+          </ul>
+        </div>
 
-        <!-- Tier 3 -->
-        <article class="tier">
-          <div class="marker">
-            Tier · Three
-            <span class="ord">03</span>
-            6 → 12 mo
-          </div>
-          <div>
-            <h3>덕질 채널 — 무드팩 &amp; 시즌 패스</h3>
-            <p>
-              78.5% WTP의 직격탄. <em>학습이 아니라 덕질의 결제 동기</em>를 건드린다.
-              "외우게 하는" 게 아니라 "팬이 모으고 싶은" 컬렉션 형태 — K-pop 무드팩, K-드라마 무드팩,
-              한정 의상 콜라보. 분기 시즌 패스로 낱개 대비 30% 이득 묶음 — ARPU를 끌어올린다.
-            </p>
-            <ul class="picks">
-              <li><b>K-pop 무드팩</b>가사·콘서트 표현·팬덤 슬랭 + 한정 의상. $2.99~$5.99.</li>
-              <li><b>K-드라마 무드팩</b>명대사 컬렉션 + 작품 의상 콜라보.</li>
-              <li><b>분기 시즌 패스</b>의상 3-5종 + 한정 무드팩 + 보너스 엽전 묶음.</li>
-              <li><b>Family Plan (옵션)</b>Duolingo 모델 차용 — 6인 / $59.99/년.</li>
-            </ul>
-          </div>
-        </article>
+        <div class="callout">
+          <div class="tag">★ Strongest Combo</div>
+          <p>
+            <strong>나만의 유행어 만들기</strong> → 친구·커뮤니티 공유 → 인기 얻으면 보상 →
+            <strong>스티커 키트</strong>로 카톡 내보내기.
+            UGC + 바이럴 + 페르소나 + 결제 회로가 한 줄로 묶이는 유일한 라인.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- ============================ §05 KPI ============================ -->
+    <!-- ============================ §05 MONETIZATION ============================ -->
+    <section id="monetization">
+      <div class="sec-head">
+        <div class="sec-num">05 · Monetization</div>
+        <h2 class="sec-title">
+          어떻게 받을 것인가 — 구독 없이, 7채널
+          <small>No subscription. Frequent, small, seasonal.</small>
+        </h2>
+      </div>
+
+      <div class="body-grid">
+        <aside class="annotation">
+          구독은 도입하지 않는다.
+          <br><br>
+          <strong>이유.</strong> 외국인 캐주얼 학습자에게 <em>월 결제 약정</em>은 거부감. 자주·작게·시즌 단위가 우리 사용자에 맞다.
+          <br><br>
+          가챠 / 하트·라이프 페이월도 X.
+        </aside>
+
+        <div class="lead">
+          <p>
+            결제는 <em>매번 사용자가 사고 싶어서 사는</em> 형태로만 일어난다.
+            구독 모델 대비 ARPU는 낮지만 만족도가 높고 환불이 적다 — 그리고 운영비 0원이라 마진이 좋다.
+            핵심은 <strong>자주, 작게, 자연스럽게</strong>. 매번 새로운 결제가 작은 즐거움이 되도록.
+          </p>
+        </div>
+
+        <!-- 7 channel table -->
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>채널</th>
+                <th>가격</th>
+                <th>트리거</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>01</td><td><b>엽전 패키지</b><br><span style="font-size:13px; color: var(--ink-mute);">Yup Coin Pack</span></td><td class="num">$0.99 / $4.99<br>$9.99 / $19.99</td><td>부족할 때 즉시. 첫 구매 +30% 보너스.</td></tr>
+              <tr><td>02</td><td><b>개별 의상 IAP</b><br><span style="font-size:13px; color: var(--ink-mute);">Single Outfit</span></td><td class="num">$1.99 ~ $4.99</td><td>꾸미기 화면에서 즉결. 컬렉션 진행도 자극.</td></tr>
+              <tr><td>03</td><td><b>무드팩 IAP</b><br><span style="font-size:13px; color: var(--ink-mute);">K-pop · K-드라마 · 아재개그 · 시대별 줄임말</span></td><td class="num">$2.99 ~ $5.99</td><td>콘텐츠 영구 소유. 팬덤 동기.</td></tr>
+              <tr class="highlight"><td>04</td><td><b>시즌 패스 (분기 1회 일회 구매)</b><br><span style="font-size:13px; color: var(--ink-mute);">Quarterly Pass — 구독 X</span></td><td class="num">$14.99</td><td>의상 3-5종 + 무드팩 1 + 엽전 묶음. 낱개 대비 35% 이득.</td></tr>
+              <tr><td>05</td><td><b>광고 제거 평생권</b><br><span style="font-size:13px; color: var(--ink-mute);">Ad-free Lifetime</span></td><td class="num">$4.99 일회</td><td>"구독 싫지만 광고도 싫다" 층. 영구 소유.</td></tr>
+              <tr><td>06</td><td><b>시즌 한정 묶음</b><br><span style="font-size:13px; color: var(--ink-mute);">Halloween · 명절 · 여름 · 발렌타인</span></td><td class="num">$7.99 ~ $14.99</td><td>연 4회. 한 시즌 지나면 못 산다.</td></tr>
+              <tr><td>07</td><td><b>친구에게 선물하기</b><br><span style="font-size:13px; color: var(--ink-mute);">Gift to a Friend</span></td><td class="num">$0.99 ~ $4.99</td><td>받은 친구도 보너스 → 자연스러운 초대 회로.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Price psychology -->
+        <div class="diag-block">
+          <div class="diag-head"><span class="pill">가격대 심리</span> Price Bands</div>
+          <div class="table-wrap" style="margin-top: 0;">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>가격대</th>
+                  <th>심리</th>
+                  <th>빈도</th>
+                  <th>역할</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>$0.99 미만</td><td>가벼운 충동</td><td class="num">매우 자주</td><td>첫 결제 게이트 낮추기</td></tr>
+                <tr><td>$1 — $5</td><td>"커피 한 잔"</td><td class="num">자주</td><td>메인 결제 구간</td></tr>
+                <tr><td>$5 — $15</td><td>묶음 / 시즌</td><td class="num">분기 1회</td><td>큰 매출 도약 지점</td></tr>
+                <tr><td>$15 +</td><td>거의 안 팔림</td><td class="num">특별</td><td>평생권 / 컬렉션 한정</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Phased rollout -->
+        <div class="rollout">
+          <div class="rollout-phase">
+            <div class="when">Phase A · 0–3 mo</div>
+            <h4>가장 단순한 그릇부터</h4>
+            <ul>
+              <li>엽전 패키지 (#01)</li>
+              <li>개별 의상 IAP (#02)</li>
+              <li>광고 제거 평생권 (#05)</li>
+            </ul>
+          </div>
+          <div class="rollout-phase">
+            <div class="when">Phase B · 3–6 mo</div>
+            <h4>덕질 회로 추가</h4>
+            <ul>
+              <li>무드팩 (#03) — 아재개그 / 시대별 줄임말 먼저</li>
+              <li>시즌 패스 첫 분기 출시 (#04)</li>
+            </ul>
+          </div>
+          <div class="rollout-phase">
+            <div class="when">Phase C · 6–12 mo</div>
+            <h4>친구·시즌 회로</h4>
+            <ul>
+              <li>친구 선물하기 (#07)</li>
+              <li>시즌 한정 묶음 정기 운영 (#06)</li>
+              <li>UGC 인기 작품 응원하기 ($0.99)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="tag">★ Why no subscription</div>
+          <p>
+            매번 사용자가 <strong>능동적으로 결정</strong>하는 결제는 만족도가 높고 환불이 적다.
+            시즌 패스(#04)가 사실상 분기 갱신의 효과를 내지만 자동 갱신은 없다 — 매 분기 사용자가
+            "이번에도 살까?" 를 능동적으로 결정한다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ §06 KPI ============================ -->
     <section id="kpi">
       <div class="sec-head">
-        <div class="sec-num">05 · KPI</div>
+        <div class="sec-num">06 · KPI</div>
         <h2 class="sec-title">
           숫자로 무엇을 본다고 할 것인가
           <small>What success looks like, numerically</small>
@@ -1017,13 +1176,13 @@
         <aside class="annotation">
           첫 90일에는 <strong>전환율보다 단가</strong>를 본다.
           <br><br>
-          가격 anchor가 잘 먹는지가 LTV 결정의 핵심.
+          소액결제 모델은 결제 사용자 비율(5–8%)이 구독보다 <strong>높게</strong> 나오는 게 정상. 진입장벽이 낮으니까.
         </aside>
 
         <div class="lead">
           <p>
             결제를 켜는 순간 보아야 할 다섯 숫자다. 첫 90일은 작은 실험을 빠르게 — 단가가 맞는지,
-            구독이 살아나는지, D7이 결제 후 끊기지 않는지가 첫 가설들이다.
+            첫 결제가 두 번째로 이어지는지, D7이 결제 후 끊기지 않는지가 첫 가설들이다.
           </p>
         </div>
 
@@ -1039,29 +1198,38 @@
             </thead>
             <tbody>
               <tr><td>ARPDAU</td><td class="num">$0.05–0.10</td><td class="num">$0.05–0.15</td><td>일평균 사용자당 매출. 첫 결제 신호.</td></tr>
-              <tr><td>유료 전환율 (D90)</td><td class="num">2–3%</td><td class="num">3–5%</td><td>가입 → 첫 결제 비율. 가격 검증.</td></tr>
-              <tr><td>광고 ARPU</td><td class="num">$0.5/월</td><td class="num">$0.5–1.5</td><td>보상형 광고만 켤 경우의 보조 매출.</td></tr>
+              <tr><td>결제 사용자 비율</td><td class="num">5–8%</td><td class="num">3–5% (구독)</td><td>소액결제 모델은 진입장벽이 낮아 더 높게 나오는 게 정상.</td></tr>
+              <tr><td>결제 사용자 월 평균</td><td class="num">$3–5</td><td class="num">—</td><td>구독 대비 낮지만 환불·해지 부담 없음.</td></tr>
+              <tr><td>전체 ARPU/MAU</td><td class="num">$0.15–0.40</td><td class="num">—</td><td>1만 MAU = 월 $1.5K–4K. 5만 MAU = 월 $7.5K–20K.</td></tr>
               <tr><td>D7 리텐션</td><td class="num">25%</td><td class="num">20–30%</td><td>학습 앱 평균. 결제 이전의 건강 지표.</td></tr>
-              <tr><td>LTV / CAC</td><td class="num">&gt; 3</td><td class="num">3+</td><td>광고비 집행 시 단위경제의 건강.</td></tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="callout">
+          <div class="tag">★ Revenue projection</div>
+          <p>
+            <strong>1만 MAU 기준 월 $1,500–4,000.</strong>
+            5만 MAU 기준 월 $7,500–20,000. Duolingo ARPU의 약 절반 수준이지만
+            운영비 0원이라 마진이 좋다.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- ============================ §06 NEXT ACTIONS ============================ -->
+    <!-- ============================ §07 NEXT ACTIONS ============================ -->
     <section id="next">
       <div class="sec-head">
-        <div class="sec-num">06 · Next</div>
+        <div class="sec-num">07 · Next</div>
         <h2 class="sec-title">
-          다음 5 액션, 순서대로
-          <small>Five moves, sequential</small>
+          다음 6 액션, 순서대로
+          <small>Six moves, sequential</small>
         </h2>
       </div>
 
       <div class="body-grid">
         <aside class="annotation">
-          <strong>금기.</strong> 다섯 개 동시 시작 안 함. 1번이 끝나야 2번이 의미 있다.
+          <strong>금기.</strong> 동시에 시작하지 않는다. 하나가 검증돼야 다음이 의미 있다.
         </aside>
 
         <ol class="actions">
@@ -1081,24 +1249,31 @@
           </li>
           <li class="act">
             <div>
-              <h4>Tier 1 IAP 출시 — 엽전 팩 + 시즌 의상 1종</h4>
-              <p>스토어 결제·환불·미성년 처리 한 번에 검증. 첫 매출 신호 확보.</p>
+              <h4>Phase A IAP 출시 — 엽전 팩 + 의상 + 광고 제거 평생권</h4>
+              <p>채널 #01·#02·#05를 동시에. 스토어 결제·환불·미성년 처리 한 번에 검증.</p>
             </div>
             <div class="when">~ 4주</div>
+          </li>
+          <li class="act">
+            <div>
+              <h4>나만의 유행어 만들기 + 스티커 키트 — UGC 회로</h4>
+              <p>가장 강한 기능 콤보. 친구 공유 → 좋아요 → 보상까지 한 줄로 잇는다.</p>
+            </div>
+            <div class="when">~ 6주</div>
           </li>
           <li class="act">
             <div>
               <h4>달수 페르소나 보강 — 분신 포지션 명문화</h4>
               <p>아이템 설명에 달수 톤 한 줄, 분기 한정 의상에 작은 일화.</p>
             </div>
-            <div class="when">~ 6주</div>
+            <div class="when">~ 8주</div>
           </li>
           <li class="act">
             <div>
-              <h4>콘텐츠 운영 사이클 문서화 — 주간 신조어 5개</h4>
-              <p>큐레이션 루틴 / 기여 채널 / AI 보조 가능성. 노화 방지의 유일한 방법.</p>
+              <h4>첫 시즌 패스 + 무드팩 출시 — Phase B 진입</h4>
+              <p>아재개그 / 시대별 줄임말 무드팩 먼저. 시즌 패스로 묶음 구매 검증.</p>
             </div>
-            <div class="when">~ 8주</div>
+            <div class="when">~ 12주</div>
           </li>
         </ol>
       </div>
