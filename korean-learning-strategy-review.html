@@ -324,14 +324,11 @@
 
   .diag-list {
     list-style: none;
-    display: grid;
-    gap: var(--s-3);
+    display: block;
   }
   .diag-list li {
-    display: grid;
-    grid-template-columns: 26px 1fr;
-    gap: var(--s-3);
-    padding: var(--s-3) 0;
+    position: relative;
+    padding: var(--s-3) 0 var(--s-3) 38px;
     border-bottom: 1px solid var(--rule-soft);
     font-size: 16px;
     line-height: 1.65;
@@ -343,8 +340,11 @@
     font-family: var(--mono);
     font-size: 12px;
     color: var(--ink-mute);
-    padding-top: 4px;
     letter-spacing: 0.04em;
+    position: absolute;
+    left: 0;
+    top: calc(var(--s-3) + 4px);
+    width: 26px;
   }
   .diag-list li b {
     color: var(--ink);
@@ -661,12 +661,14 @@
       <div>
         <div class="hero-cat">Strategy Memo · Pre-monetization Diagnosis</div>
         <h1 class="hero-title">
-          MZ를 가르치는 앱은,<br>
-          어떻게 <em>돈을 벌어야</em> 하는가
+          꾸미는 사이<br>
+          한국이 <em>스며드는</em> 앱은,<br>
+          어떻게 돈을 벌어야 하는가
         </h1>
         <p class="hero-sub">
-          MVP가 끝났다. 다음 단계는 매출이다. 시장은 이미 와 있다.
-          남은 것은 어떤 결제 동기를, 어떤 순서로, 누구에게 먼저 들이밀 것인가의 문제뿐이다.
+          가르치지 않는다. 외워지지도 않는다. 캐릭터를 꾸미는 동안
+          MZ 신조어가 자연스럽게 옆에 와 있는 — 그런 재미난 앱이다.
+          MVP는 끝났고, 시장은 와 있다.
         </p>
       </div>
 
@@ -683,8 +685,8 @@
       <div class="label">Abstract</div>
       <p>
         제품은 거의 다 만들어졌다 — <span class="mark">엽전, 캐릭터 꾸미기, 가상화폐, 친구 시스템</span>까지.
-        시장은 폭발 중이다 — 글로벌 한국어 학습 시장 <strong>$7.2B / CAGR 25%</strong>.
-        구독을 짧게, 코스메틱을 길게, 한류 어휘팩으로 정점을 찍는다.
+        그런데 우리는 <strong>가르치는 앱이 아니다</strong> — 꾸미는 게 메인이고, MZ는 그 사이에 스며든다.
+        그래서 <span class="mark">코스메틱이 중심, 구독은 가볍게, 팬덤 콘텐츠는 보너스</span>의 순서다.
       </p>
     </section>
 
@@ -707,13 +709,18 @@
 
         <div class="lead">
           <p>
-            MVP의 핵심 회로 — 학습(사전·퀴즈) · 보상(엽전·출석) · 표현(캐릭터 꾸미기) · 관계(친구·MZ력) —
-            가 전부 작동하는 상태다. 다국어 인프라(en/ja/ko)는 19개 화면에 적용되어 있고,
-            Supabase 무료 티어 위에서 운영비 없이 검증할 수 있다.
-            <em>수익화에 필요한 인프라의 70%는 이미 손에 쥐고 있다는 뜻이다.</em>
+            MVP의 핵심 회로 — <em>표현(캐릭터 꾸미기) · 보상(엽전·출석) · 침투(사전·퀴즈) · 관계(친구·MZ력)</em> —
+            가 전부 작동하는 상태다. 순서가 중요하다 — <strong>꾸미기가 메인이고, 학습은 그 옆에 놓여 있는 부산물</strong>이다.
+            다국어 인프라(en/ja/ko)는 19개 화면에 적용되어 있고, Supabase 무료 티어 위에서 운영비 없이 검증할 수 있다.
+            수익화에 필요한 인프라의 70%는 이미 손에 쥐고 있다는 뜻이다.
           </p>
           <p>
-            그러나 매출 직전에 짚어야 할 빈자리가 네 군데 있다 —
+            카테고리는 한국어 학습이지만 사용자 경험은 캐릭터 꾸미기 — 이 인식 분리가
+            모든 수익화 결정의 출발점이다. 그릇은 학습 앱, 안의 음식은 꾸미기 게임.
+            그래서 결제 동기도 <em>학습 가치</em>가 아니라 <em>치장의 즐거움</em>에서 나와야 한다.
+          </p>
+          <p>
+            매출 직전에 짚어야 할 빈자리는 네 군데다 —
             측정 도구, 콘텐츠 운영 사이클, 출시 시장 결정, 친구→매출 회로.
             이 넷 중 하나라도 비어 있으면 결제는 시작되어도 <strong>가설 검증으로 이어지지 않는다.</strong>
           </p>
@@ -979,16 +986,16 @@
             6 → 12 mo
           </div>
           <div>
-            <h3>한류 직격 — 콘텐츠 IAP &amp; 시즌 패스</h3>
+            <h3>덕질 채널 — 무드팩 &amp; 시즌 패스</h3>
             <p>
               78.5% WTP의 직격탄. <em>학습이 아니라 덕질의 결제 동기</em>를 건드린다.
-              K-pop 어휘팩, K-드라마 어휘팩, BTS 가사로 배우는 한국어 같은 팬덤 어휘팩 IAP 중심.
-              분기 시즌 패스로 낱개 대비 30% 이득 묶음 — ARPU를 끌어올린다.
+              "외우게 하는" 게 아니라 "팬이 모으고 싶은" 컬렉션 형태 — K-pop 무드팩, K-드라마 무드팩,
+              한정 의상 콜라보. 분기 시즌 패스로 낱개 대비 30% 이득 묶음 — ARPU를 끌어올린다.
             </p>
             <ul class="picks">
-              <li><b>K-pop 어휘팩</b>$2.99 ~ $5.99 / 그룹·아티스트별.</li>
-              <li><b>K-드라마 어휘팩</b>인기 작품 어휘 + 명대사 50선.</li>
-              <li><b>분기 시즌 패스</b>의상 3-5종 + 한정 어휘팩 + 보너스 엽전 묶음.</li>
+              <li><b>K-pop 무드팩</b>가사·콘서트 표현·팬덤 슬랭 + 한정 의상. $2.99~$5.99.</li>
+              <li><b>K-드라마 무드팩</b>명대사 컬렉션 + 작품 의상 콜라보.</li>
+              <li><b>분기 시즌 패스</b>의상 3-5종 + 한정 무드팩 + 보너스 엽전 묶음.</li>
               <li><b>Family Plan (옵션)</b>Duolingo 모델 차용 — 6인 / $59.99/년.</li>
             </ul>
           </div>
