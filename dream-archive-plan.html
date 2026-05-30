@@ -15,9 +15,9 @@
     --lilac:#a99be0;
     --glow:#c7b8ff;
     --moon:#f3ecd8;
-    --ink:#e9e7f5;
-    --muted:#9a93c4;
-    --faint:#6f689a;
+    --ink:#f4f2fc;
+    --muted:#ccc6ec;
+    --faint:#a59ed0;
     --line:rgba(167,155,224,.16);
     --card:rgba(28,24,58,.45);
     --accent:#b6a4ff;
@@ -27,6 +27,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
+    font-weight:500;
     background:
       radial-gradient(1200px 800px at 80% -10%, rgba(120,90,200,.30), transparent 60%),
       radial-gradient(900px 700px at 10% 20%, rgba(70,110,160,.22), transparent 55%),
@@ -74,7 +75,7 @@
     background:linear-gradient(120deg,#fff 0%,#cdbcff 45%,#9ec7e8 100%);
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
     margin-bottom:26px;letter-spacing:-.01em}
-  .lead{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:560px;font-family:"Gowun Batang",serif}
+  .lead{font-size:clamp(17px,2.4vw,21px);color:#ded8f5;max-width:560px;font-family:"Gowun Batang",serif}
   .scroll-hint{position:absolute;bottom:34px;color:var(--faint);font-size:12px;letter-spacing:.2em;animation:bob 2.4s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(8px);opacity:1}}
 
@@ -101,7 +102,7 @@
   .card:hover{border-color:rgba(182,164,255,.4);transform:translateY(-3px);box-shadow:0 14px 40px rgba(60,40,120,.3)}
   .card .ico{font-size:26px;margin-bottom:12px;display:block}
   .card h3{font-size:17px;color:#efe9ff;margin-bottom:8px;font-family:"Gowun Batang",serif}
-  .card p{font-size:14px;color:var(--muted);line-height:1.7}
+  .card p{font-size:14.5px;color:var(--muted);line-height:1.72}
 
   /* 타임라인 로드맵 */
   .timeline{position:relative;padding-left:34px}
@@ -222,7 +223,7 @@
     <p class="section-sub">기록은 전부 무료. AI 해석만 유료.</p>
     <div class="grid two">
       <div class="card"><span class="ico">🌙</span><h3>빠른 기록</h3><p>어두운 새벽에도 부담 없이. 다크 모드 에디터, 꿈 꾼 날짜와 기록한 날짜를 분리해 저장.</p></div>
-      <div class="card"><span class="ico">📅</span><h3>달력 · 목록 다시보기</h3><p>언제 무슨 꿈을 꿨는지 타임라인으로. 경쟁 웹 서비스엔 없는 달력 뷰.</p></div>
+      <div class="card"><span class="ico">📜</span><h3>목록 · 타임라인 다시보기</h3><p>쌓인 꿈을 시간 순으로 되짚는다. 달력 보기는 곁들이는 보조 뷰.</p></div>
       <div class="card"><span class="ico">🏷️</span><h3>검색 · 태그</h3><p>인물·장소·감정·사물 태그로 분류. "날아다니는 꿈"만 모아보기.</p></div>
       <div class="card"><span class="ico">🪄</span><h3>AI 해석 <small style="color:var(--rose)">유료</small></h3><p>요약·감정·주제 추출에 더해 <b>전통 해몽 / 심리 / 감정</b> 렌즈 선택. 신비주의 아닌 차분한 톤.</p></div>
     </div>
@@ -238,7 +239,7 @@
       <li><b>새벽 3:47</b> — 꿈에서 깸. 머리맡에서 떠오르는 대로 빠르게 적는다. 판단·정리 없이 그냥 붙잡기.</li>
       <li><b>오전 9:12</b> — 출근길. 어젯밤 꿈을 다듬는다. 제목 붙이고, 태그·감정 고르기.</li>
       <li><b>점심시간</b> — 궁금하면 "해석하기". AI가 차분하게 의미를 풀어준다.</li>
-      <li><b>한 달 뒤</b> — 달력으로 돌아본다. 반복되는 상징과 감정의 결이 보이기 시작한다.</li>
+      <li><b>한 달 뒤</b> — 쌓인 목록을 되짚는다. 반복되는 상징과 감정의 결이 보이기 시작한다.</li>
     </ul>
   </div>
 </section>
@@ -269,7 +270,7 @@
     <table class="table">
       <thead><tr><th>서비스</th><th>웹</th><th>앱</th><th>특징 / 빈틈</th></tr></thead>
       <tbody>
-        <tr><td>Elsewhere</td><td class="chk">O</td><td class="chk">O</td><td>문학·일러스트 미학, AI 렌즈 다양 · <b style="color:var(--rose)">달력 뷰 없음</b></td></tr>
+        <tr><td>Elsewhere</td><td class="chk">O</td><td class="chk">O</td><td>문학·일러스트 미학, AI 렌즈 다양 · <b style="color:var(--rose)">영어권 전용</b></td></tr>
         <tr><td>Dream Journal Ultimate</td><td class="chk">O</td><td class="chk">O</td><td>무제한 무료 + 소셜 + 잘게 쪼갠 가격</td></tr>
         <tr><td>Oniri</td><td class="no">—</td><td class="chk">O</td><td>기능 최강, 자각몽 툴 · 모바일 전용, 과한 페이월</td></tr>
         <tr class="ours"><td>우리</td><td class="chk">O</td><td class="chk">O</td><td>한국어 · 해몽 · 몽환 · 단건결제 (빈 자리 정조준)</td></tr>
@@ -290,7 +291,7 @@
         <span class="tag">PHASE 1 · MVP</span>
         <h3>개인 아카이브 (웹, PC 중심)</h3>
         <ul>
-          <li>텍스트 기록 · 달력 / 목록</li>
+          <li>텍스트 기록 · 목록 / 타임라인</li>
           <li>검색 · 태그 · 감정</li>
           <li>AI 해석 (유료, 한국어 렌즈)</li>
           <li>내보내기 (무료) · 계정 · 결제</li>
