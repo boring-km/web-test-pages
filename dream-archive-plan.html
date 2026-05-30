@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>꿈 아카이브 · 기획</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0a0a18;
+    --deep:#0d0b24;
+    --violet:#5b4b9e;
+    --lilac:#a99be0;
+    --glow:#c7b8ff;
+    --moon:#f3ecd8;
+    --ink:#e9e7f5;
+    --muted:#9a93c4;
+    --faint:#6f689a;
+    --line:rgba(167,155,224,.16);
+    --card:rgba(28,24,58,.45);
+    --accent:#b6a4ff;
+    --rose:#e8a7c8;
+    --aqua:#8fd4e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 800px at 80% -10%, rgba(120,90,200,.30), transparent 60%),
+      radial-gradient(900px 700px at 10% 20%, rgba(70,110,160,.22), transparent 55%),
+      radial-gradient(1000px 900px at 50% 120%, rgba(180,120,180,.18), transparent 60%),
+      linear-gradient(180deg, #07060f 0%, #0a0a1c 40%, #0c0a22 100%);
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:"Gowun Dodum",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.85;
+    overflow-x:hidden;
+  }
+  /* 별 + 안개 레이어 */
+  .sky{position:fixed;inset:0;z-index:-1;pointer-events:none}
+  .stars{position:absolute;inset:0;
+    background-image:
+      radial-gradient(1.4px 1.4px at 20% 30%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 70% 20%, #d9d2ff, transparent),
+      radial-gradient(1px 1px at 40% 70%, #fff, transparent),
+      radial-gradient(1.6px 1.6px at 85% 60%, #cfe6ff, transparent),
+      radial-gradient(1px 1px at 55% 45%, #fff, transparent),
+      radial-gradient(1.3px 1.3px at 12% 80%, #efe7ff, transparent),
+      radial-gradient(1px 1px at 90% 88%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 33% 12%, #fff, transparent);
+    animation:twinkle 7s ease-in-out infinite;
+    opacity:.7;
+  }
+  @keyframes twinkle{0%,100%{opacity:.35}50%{opacity:.85}}
+  .orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5;mix-blend-mode:screen;animation:drift 22s ease-in-out infinite}
+  .orb.a{width:380px;height:380px;background:radial-gradient(circle,#7a5bd0,transparent 70%);top:-60px;left:-80px}
+  .orb.b{width:300px;height:300px;background:radial-gradient(circle,#4d7bb0,transparent 70%);top:40%;right:-60px;animation-delay:-7s}
+  .orb.c{width:340px;height:340px;background:radial-gradient(circle,#c87ab0,transparent 70%);bottom:-80px;left:30%;animation-delay:-13s}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.12)}}
+
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px}
+
+  /* HERO */
+  header{min-height:92vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
+  .moon{width:120px;height:120px;border-radius:50%;
+    background:radial-gradient(circle at 38% 35%, #fff8e6, #f0e4c0 45%, #cdbf94 75%, #b3a47e);
+    box-shadow:0 0 60px 14px rgba(243,236,216,.35), inset -16px -10px 30px rgba(90,80,50,.35);
+    margin-bottom:38px;animation:floaty 9s ease-in-out infinite}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+  .eyebrow{font-size:13px;letter-spacing:.45em;color:var(--lilac);text-transform:uppercase;margin-bottom:22px}
+  h1{font-family:"Gowun Batang",serif;font-weight:700;font-size:clamp(40px,8vw,76px);line-height:1.15;
+    background:linear-gradient(120deg,#fff 0%,#cdbcff 45%,#9ec7e8 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:26px;letter-spacing:-.01em}
+  .lead{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:560px;font-family:"Gowun Batang",serif}
+  .scroll-hint{position:absolute;bottom:34px;color:var(--faint);font-size:12px;letter-spacing:.2em;animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(8px);opacity:1}}
+
+  /* SECTIONS */
+  section{padding:72px 0;position:relative}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease}
+  .reveal.in{opacity:1;transform:none}
+  .kicker{font-size:12px;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+  h2{font-family:"Gowun Batang",serif;font-weight:700;font-size:clamp(26px,4.5vw,38px);margin-bottom:10px;color:#f1edff;letter-spacing:-.01em}
+  .section-sub{color:var(--faint);font-size:15px;margin-bottom:34px}
+  p.body{color:var(--muted);font-size:16px;margin-bottom:16px}
+
+  /* 한줄 정의 강조 */
+  .definition{font-family:"Gowun Batang",serif;font-size:clamp(22px,4vw,32px);line-height:1.55;text-align:center;
+    color:#efe9ff;padding:10px 0}
+  .definition em{font-style:normal;background:linear-gradient(120deg,var(--rose),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+  /* glass cards */
+  .grid{display:grid;gap:18px}
+  .grid.two{grid-template-columns:repeat(2,1fr)}
+  .grid.three{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 24px;
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:.3s;position:relative;overflow:hidden}
+  .card:hover{border-color:rgba(182,164,255,.4);transform:translateY(-3px);box-shadow:0 14px 40px rgba(60,40,120,.3)}
+  .card .ico{font-size:26px;margin-bottom:12px;display:block}
+  .card h3{font-size:17px;color:#efe9ff;margin-bottom:8px;font-family:"Gowun Batang",serif}
+  .card p{font-size:14px;color:var(--muted);line-height:1.7}
+
+  /* 타임라인 로드맵 */
+  .timeline{position:relative;padding-left:34px}
+  .timeline::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(180deg,var(--accent),transparent)}
+  .phase{position:relative;margin-bottom:34px}
+  .phase::before{content:"";position:absolute;left:-31px;top:6px;width:16px;height:16px;border-radius:50%;
+    background:radial-gradient(circle,#fff,var(--accent));box-shadow:0 0 14px var(--glow)}
+  .phase .tag{display:inline-block;font-size:11px;letter-spacing:.15em;color:var(--night);background:var(--lilac);
+    border-radius:999px;padding:3px 12px;margin-bottom:10px;font-weight:700}
+  .phase h3{font-family:"Gowun Batang",serif;font-size:20px;color:#f1edff;margin-bottom:10px}
+  .phase ul{list-style:none}
+  .phase li{font-size:14.5px;color:var(--muted);padding-left:18px;position:relative;margin-bottom:6px}
+  .phase li::before{content:"◦";position:absolute;left:0;color:var(--accent)}
+
+  /* 경쟁사 테이블 */
+  .table{width:100%;border-collapse:collapse;font-size:14px;overflow:hidden;border-radius:14px}
+  .table th,.table td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--line)}
+  .table th{color:var(--lilac);font-weight:400;font-size:12px;letter-spacing:.08em;background:rgba(40,34,78,.4)}
+  .table td{color:var(--muted)}
+  .table tr:hover td{background:rgba(40,34,78,.25)}
+  .chk{color:var(--aqua)}.no{color:var(--faint)}
+  .ours td{background:rgba(120,90,200,.18)!important;color:#efe9ff}
+  .ours td:first-child{font-weight:700;color:#fff}
+
+  /* 가격 */
+  .price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .price-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;backdrop-filter:blur(12px)}
+  .price-card .label{font-size:13px;color:var(--lilac);letter-spacing:.1em;margin-bottom:6px}
+  .price-card .range{font-family:"Gowun Batang",serif;font-size:26px;color:#fff;margin-bottom:4px}
+  .price-card .sweet{font-size:13px;color:var(--aqua);margin-bottom:10px}
+  .price-card .why{font-size:13px;color:var(--muted);line-height:1.6}
+  .note{background:rgba(182,164,255,.08);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:12px;padding:18px 20px;margin-top:24px;font-size:14.5px;color:var(--ink)}
+  .note strong{color:var(--glow)}
+
+  /* 차별화 강조 박스 */
+  .hero-diff{background:linear-gradient(135deg,rgba(120,90,200,.22),rgba(200,120,180,.14));
+    border:1px solid rgba(182,164,255,.3);border-radius:22px;padding:36px 30px;text-align:center}
+  .hero-diff .big{font-family:"Gowun Batang",serif;font-size:clamp(22px,4vw,30px);color:#fff;margin-bottom:12px}
+  .hero-diff p{color:var(--lilac);font-size:15px}
+  .pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}
+  .pill{font-size:13px;color:#efe9ff;background:rgba(40,34,78,.5);border:1px solid var(--line);
+    border-radius:999px;padding:8px 16px}
+
+  ul.flow{list-style:none;counter-reset:s}
+  ul.flow li{counter-increment:s;position:relative;padding:14px 0 14px 48px;border-bottom:1px solid var(--line);color:var(--muted);font-size:15px}
+  ul.flow li::before{content:counter(s);position:absolute;left:0;top:12px;width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--night);font-weight:700;
+    background:radial-gradient(circle,#fff,var(--lilac))}
+  ul.flow li b{color:#efe9ff}
+
+  footer{text-align:center;padding:60px 24px 80px;color:var(--faint);font-size:13px}
+  footer .moon-sm{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 38% 35%,#fff8e6,#cdbf94);margin:0 auto 18px;opacity:.7}
+  .back{display:inline-block;margin-top:18px;color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:.2s}
+  .back:hover{border-color:var(--accent)}
+
+  @media(max-width:680px){
+    .grid.two,.grid.three,.price-grid{grid-template-columns:1fr}
+    .table{font-size:12.5px}.table th,.table td{padding:10px 8px}
+    section{padding:54px 0}
+  }
+</style>
+</head>
+<body>
+<div class="sky">
+  <div class="stars"></div>
+  <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+</div>
+
+<header>
+  <div class="wrap">
+    <div class="moon"></div>
+    <div class="eyebrow">Dream Archive · 기획</div>
+    <h1>자다 깬 꿈을,<br>흘려보내지 않도록</h1>
+    <p class="lead">새벽에 꾼 꿈은 눈 뜨면 사라진다.<br>빠르게 붙잡아 보관하고, 원하면 AI가 해석해주는<br>한국어 꿈 아카이브.</p>
+  </div>
+  <div class="scroll-hint">아래로 ↓</div>
+</header>
+
+<section>
+  <div class="wrap reveal">
+    <p class="definition">"꿈은 깨는 순간 휘발한다.<br><em>붙잡고, 모으고, 들여다보는</em> 공간."</p>
+  </div>
+</section>
+
+<!-- 문제 / 기회 -->
+<section>
+  <div class="wrap reveal">
+    <div class="kicker">왜 만드는가</div>
+    <h2>흩어지는 꿈, 비어있는 한국어 시장</h2>
+    <p class="section-sub">두 가지 빈틈에서 출발한다.</p>
+    <div class="grid two">
+      <div class="card"><span class="ico">🌫️</span><h3>꿈은 너무 빨리 사라진다</h3><p>깬 직후 몇 분이 골든타임. 어둡고 반쯤 잠든 상태에서 기록의 마찰이 크면 그대로 휘발한다. "빠르고 부담 없는 붙잡기"가 핵심.</p></div>
+      <div class="card"><span class="ico">🇰🇷</span><h3>한국어 서비스가 사실상 없다</h3><p>해외엔 좋은 꿈 일기 앱이 여럿. 하지만 본격적인 <b>한국어 네이티브</b> 서비스는 거의 없다. 언어·정서·해몽 문화가 통째로 빈 시장.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 타겟 -->
+<section>
+  <div class="wrap reveal">
+    <div class="kicker">누구를 위한</div>
+    <h2>타겟 사용자</h2>
+    <div class="grid three">
+      <div class="card"><span class="ico">📓</span><h3>기록하는 사람</h3><p>꿈을 아카이빙하고 싶지만 SNS의 부담은 싫은 사람.</p></div>
+      <div class="card"><span class="ico">🔮</span><h3>해석이 궁금한 사람</h3><p>"이 꿈 무슨 의미지?" 가볍게 들여다보고 싶은 사람.</p></div>
+      <div class="card"><span class="ico">✨</span><h3>꿈을 즐기는 사람</h3><p>기이하고 재미있는 자신의 꿈을 모아보는 걸 좋아하는 사람.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 핵심 가치 -->
+<section>
+  <div class="wrap reveal">
+    <div class="kicker">무엇을 준다</div>
+    <h2>핵심 가치</h2>
+    <p class="section-sub">기록은 전부 무료. AI 해석만 유료.</p>
+    <div class="grid two">
+      <div class="card"><span class="ico">🌙</span><h3>빠른 기록</h3><p>어두운 새벽에도 부담 없이. 다크 모드 에디터, 꿈 꾼 날짜와 기록한 날짜를 분리해 저장.</p></div>
+      <div class="card"><span class="ico">📅</span><h3>달력 · 목록 다시보기</h3><p>언제 무슨 꿈을 꿨는지 타임라인으로. 경쟁 웹 서비스엔 없는 달력 뷰.</p></div>
+      <div class="card"><span class="ico">🏷️</span><h3>검색 · 태그</h3><p>인물·장소·감정·사물 태그로 분류. "날아다니는 꿈"만 모아보기.</p></div>
+      <div class="card"><span class="ico">🪄</span><h3>AI 해석 <small style="color:var(--rose)">유료</small></h3><p>요약·감정·주제 추출에 더해 <b>전통 해몽 / 심리 / 감정</b> 렌즈 선택. 신비주의 아닌 차분한 톤.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 사용 흐름 -->
+<section>
+  <div class="wrap reveal">
+    <div class="kicker">어떻게 쓰나</div>
+    <h2>하룻밤의 흐름</h2>
+    <ul class="flow">
+      <li><b>새벽 3:47</b> — 꿈에서 깸. 머리맡에서 떠오르는 대로 빠르게 적는다. 판단·정리 없이 그냥 붙잡기.</li>
+      <li><b>오전 9:12</b> — 출근길. 어젯밤 꿈을 다듬는다. 제목 붙이고, 태그·감정 고르기.</li>
+      <li><b>점심시간</b> — 궁금하면 "해석하기". AI가 차분하게 의미를 풀어준다.</li>
+      <li><b>한 달 뒤</b> — 달력으로 돌아본다. 반복되는 상징과 감정의 결이 보이기 시작한다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 차별화 -->
+<section>
+  <div class="wrap reveal">
+    <div class="hero-diff">
+      <div class="big">우리의 자리 — 한국어, 그리고 몽환</div>
+      <p>경쟁자는 전부 영어권. 한국어는 무주공산이다.</p>
+      <div class="pills">
+        <span class="pill">🇰🇷 한국어 네이티브</span>
+        <span class="pill">🐷 전통 해몽 + 심리 렌즈</span>
+        <span class="pill">🌌 몽환적 미학</span>
+        <span class="pill">🎟️ 단건 결제 + 한국 결제수단</span>
+        <span class="pill">🆓 기본기능 완전 무료</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 경쟁사 -->
+<section>
+  <div class="wrap reveal">
+    <div class="kicker">시장 지형</div>
+    <h2>경쟁 서비스</h2>
+    <p class="section-sub">세 강자 모두 "기록은 무료, AI는 과금" 모델. 우리 방향이 검증된 셈.</p>
+    <table class="table">
+      <thead><tr><th>서비스</th><th>웹</th><th>앱</th><th>특징 / 빈틈</th></tr></thead>
+      <tbody>
+        <tr><td>Elsewhere</td><td class="chk">O</td><td class="chk">O</td><td>문학·일러스트 미학, AI 렌즈 다양 · <b style="color:var(--rose)">달력 뷰 없음</b></td></tr>
+        <tr><td>Dream Journal Ultimate</td><td class="chk">O</td><td class="chk">O</td><td>무제한 무료 + 소셜 + 잘게 쪼갠 가격</td></tr>
+        <tr><td>Oniri</td><td class="no">—</td><td class="chk">O</td><td>기능 최강, 자각몽 툴 · 모바일 전용, 과한 페이월</td></tr>
+        <tr class="ours"><td>우리</td><td class="chk">O</td><td class="chk">O</td><td>한국어 · 해몽 · 몽환 · 단건결제 (빈 자리 정조준)</td></tr>
+      </tbody>
+    </table>
+    <p class="body" style="margin-top:18px;font-size:14px;color:var(--faint)">공통 패턴: AI 해석·이미지 생성이 사실상 기본 사양, 가격 앵커 $4.99/월·$49.99/년, 모바일 iOS 편중. 진짜 웹앱은 드물다.</p>
+  </div>
+</section>
+
+<!-- 로드맵 -->
+<section>
+  <div class="wrap reveal">
+    <div class="kicker">어떻게 키우나</div>
+    <h2>로드맵</h2>
+    <p class="section-sub">최종 형태는 모바일 앱 + PC 웹. 개인 아카이브부터 시작한다.</p>
+    <div class="timeline">
+      <div class="phase">
+        <span class="tag">PHASE 1 · MVP</span>
+        <h3>개인 아카이브 (웹, PC 중심)</h3>
+        <ul>
+          <li>텍스트 기록 · 달력 / 목록</li>
+          <li>검색 · 태그 · 감정</li>
+          <li>AI 해석 (유료, 한국어 렌즈)</li>
+          <li>내보내기 (무료) · 계정 · 결제</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <span class="tag">PHASE 2 · 모바일</span>
+        <h3>새벽을 위한 앱</h3>
+        <ul>
+          <li>위젯 1탭 음성 녹음 · 자동 전사</li>
+          <li>"붙잡기 ↔ 다듬기" 2단계 분리</li>
+          <li>부드러운 리마인더 알림</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <span class="tag">PHASE 3 · 전시관</span>
+        <h3>함께 보는 꿈</h3>
+        <ul>
+          <li>익명 공개 전시관 · 큐레이션</li>
+          <li>반응(공감·기억남음·비슷한꿈) · 안전장치</li>
+          <li>AI 이미지 생성 · 꿈 갤러리</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 가격 분석 -->
+<section>
+  <div class="wrap reveal">
+    <div class="kicker">얼마를 받나</div>
+    <h2>가격 — 적정선 분석</h2>
+    <p class="section-sub">확정이 아니라 범위. 출시 후 실험으로 좁힌다.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="label">무료</div>
+        <div class="range">₩0</div>
+        <div class="sweet">기록·달력·검색·태그·내보내기 무제한 + AI 맛보기 월 2~3회</div>
+        <div class="why">기본기능 과금이 해외 사용자 최다 불만. 무료로 열어두고 AI 맛보기로 전환 유도.</div>
+      </div>
+      <div class="price-card">
+        <div class="label">구독 · 월간</div>
+        <div class="range">₩3,900 ~ 6,900</div>
+        <div class="sweet">스윗스팟 ~₩4,900</div>
+        <div class="why">한국 심리적 저항선 ₩7,000 아래. 글로벌 꿈앱 앵커 $4.99와 정합.</div>
+      </div>
+      <div class="price-card">
+        <div class="label">구독 · 연간</div>
+        <div class="range">₩39,000 ~ 59,000</div>
+        <div class="sweet">스윗스팟 ~₩45,000</div>
+        <div class="why">2~3개월 무료 효과. 낮은 연간가 + 긴 체험이 리텐션에 유리.</div>
+      </div>
+      <div class="price-card">
+        <div class="label">크레딧 · 단건</div>
+        <div class="range">₩500 ~ 1,000</div>
+        <div class="sweet">묶음 10건 ₩4,900</div>
+        <div class="why">"꿈 안 꾸는 달은 손해"라는 구독 저항을 정면 해소. 불규칙 사용자용.</div>
+      </div>
+    </div>
+    <div class="note">
+      <strong>권고.</strong> 가격을 못 박지 말고 <strong>₩4,900/월 ± 2,000</strong> 범위에서 출시 후 실험. 구독 + 단건 크레딧 병행이 한국의 구독 저항과 불규칙한 꿈 빈도를 동시에 잡는다. AI 분석 1건 원가는 수십~수백 원 수준이라 어느 모델이든 마진은 충분하다.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="moon-sm"></div>
+  <div>꿈 아카이브 · 기획 문서 · 2026</div>
+  <div style="color:var(--faint);margin-top:6px">기술 설계(프레임워크·데이터 구조)는 별도 문서로 분리.</div>
+  <a class="back" href="index.html">← 실험실로</a>
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
