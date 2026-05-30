@@ -36,7 +36,8 @@
     background-attachment:fixed;
     color:var(--ink);
     font-family:"Gowun Dodum",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    line-height:1.85;
+    line-height:1.9;
+    font-size:18px;
     overflow-x:hidden;
   }
   /* 별 + 안개 레이어 */
@@ -75,7 +76,7 @@
     background:linear-gradient(120deg,#fff 0%,#cdbcff 45%,#9ec7e8 100%);
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
     margin-bottom:26px;letter-spacing:-.01em}
-  .lead{font-size:clamp(17px,2.4vw,21px);color:#ded8f5;max-width:560px;font-family:"Gowun Batang",serif}
+  .lead{font-size:clamp(19px,2.7vw,24px);color:#ded8f5;max-width:580px;font-family:"Gowun Batang",serif}
   .scroll-hint{position:absolute;bottom:34px;color:var(--faint);font-size:12px;letter-spacing:.2em;animation:bob 2.4s ease-in-out infinite}
   @keyframes bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(8px);opacity:1}}
 
@@ -83,13 +84,13 @@
   section{padding:72px 0;position:relative}
   .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease}
   .reveal.in{opacity:1;transform:none}
-  .kicker{font-size:12px;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
-  h2{font-family:"Gowun Batang",serif;font-weight:700;font-size:clamp(26px,4.5vw,38px);margin-bottom:10px;color:#f1edff;letter-spacing:-.01em}
-  .section-sub{color:var(--faint);font-size:15px;margin-bottom:34px}
-  p.body{color:var(--muted);font-size:16px;margin-bottom:16px}
+  .kicker{font-size:13px;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+  h2{font-family:"Gowun Batang",serif;font-weight:700;font-size:clamp(30px,5vw,42px);margin-bottom:10px;color:#f1edff;letter-spacing:-.01em}
+  .section-sub{color:var(--faint);font-size:17px;margin-bottom:34px}
+  p.body{color:var(--muted);font-size:18px;margin-bottom:16px}
 
   /* 한줄 정의 강조 */
-  .definition{font-family:"Gowun Batang",serif;font-size:clamp(22px,4vw,32px);line-height:1.55;text-align:center;
+  .definition{font-family:"Gowun Batang",serif;font-size:clamp(24px,4.3vw,35px);line-height:1.55;text-align:center;
     color:#efe9ff;padding:10px 0}
   .definition em{font-style:normal;background:linear-gradient(120deg,var(--rose),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 
@@ -100,9 +101,9 @@
   .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 24px;
     backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:.3s;position:relative;overflow:hidden}
   .card:hover{border-color:rgba(182,164,255,.4);transform:translateY(-3px);box-shadow:0 14px 40px rgba(60,40,120,.3)}
-  .card .ico{font-size:26px;margin-bottom:12px;display:block}
-  .card h3{font-size:17px;color:#efe9ff;margin-bottom:8px;font-family:"Gowun Batang",serif}
-  .card p{font-size:14.5px;color:var(--muted);line-height:1.72}
+  .card .ico{font-size:30px;margin-bottom:12px;display:block}
+  .card h3{font-size:19px;color:#efe9ff;margin-bottom:8px;font-family:"Gowun Batang",serif}
+  .card p{font-size:16px;color:var(--muted);line-height:1.74}
 
   /* 타임라인 로드맵 */
   .timeline{position:relative;padding-left:34px}
@@ -111,17 +112,17 @@
   .phase{position:relative;margin-bottom:34px}
   .phase::before{content:"";position:absolute;left:-31px;top:6px;width:16px;height:16px;border-radius:50%;
     background:radial-gradient(circle,#fff,var(--accent));box-shadow:0 0 14px var(--glow)}
-  .phase .tag{display:inline-block;font-size:11px;letter-spacing:.15em;color:var(--night);background:var(--lilac);
-    border-radius:999px;padding:3px 12px;margin-bottom:10px;font-weight:700}
-  .phase h3{font-family:"Gowun Batang",serif;font-size:20px;color:#f1edff;margin-bottom:10px}
+  .phase .tag{display:inline-block;font-size:12px;letter-spacing:.15em;color:var(--night);background:var(--lilac);
+    border-radius:999px;padding:4px 13px;margin-bottom:10px;font-weight:700}
+  .phase h3{font-family:"Gowun Batang",serif;font-size:23px;color:#f1edff;margin-bottom:10px}
   .phase ul{list-style:none}
-  .phase li{font-size:14.5px;color:var(--muted);padding-left:18px;position:relative;margin-bottom:6px}
+  .phase li{font-size:16.5px;color:var(--muted);padding-left:18px;position:relative;margin-bottom:7px}
   .phase li::before{content:"◦";position:absolute;left:0;color:var(--accent)}
 
   /* 경쟁사 테이블 */
-  .table{width:100%;border-collapse:collapse;font-size:14px;overflow:hidden;border-radius:14px}
-  .table th,.table td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--line)}
-  .table th{color:var(--lilac);font-weight:400;font-size:12px;letter-spacing:.08em;background:rgba(40,34,78,.4)}
+  .table{width:100%;border-collapse:collapse;font-size:15.5px;overflow:hidden;border-radius:14px}
+  .table th,.table td{padding:14px 15px;text-align:left;border-bottom:1px solid var(--line)}
+  .table th{color:var(--lilac);font-weight:400;font-size:13px;letter-spacing:.08em;background:rgba(40,34,78,.4)}
   .table td{color:var(--muted)}
   .table tr:hover td{background:rgba(40,34,78,.25)}
   .chk{color:var(--aqua)}.no{color:var(--faint)}
@@ -131,31 +132,31 @@
   /* 가격 */
   .price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   .price-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;backdrop-filter:blur(12px)}
-  .price-card .label{font-size:13px;color:var(--lilac);letter-spacing:.1em;margin-bottom:6px}
-  .price-card .range{font-family:"Gowun Batang",serif;font-size:26px;color:#fff;margin-bottom:4px}
-  .price-card .sweet{font-size:13px;color:var(--aqua);margin-bottom:10px}
-  .price-card .why{font-size:13px;color:var(--muted);line-height:1.6}
+  .price-card .label{font-size:14px;color:var(--lilac);letter-spacing:.1em;margin-bottom:6px}
+  .price-card .range{font-family:"Gowun Batang",serif;font-size:30px;color:#fff;margin-bottom:4px}
+  .price-card .sweet{font-size:15px;color:var(--aqua);margin-bottom:10px}
+  .price-card .why{font-size:15px;color:var(--muted);line-height:1.65}
   .note{background:rgba(182,164,255,.08);border:1px solid var(--line);border-left:3px solid var(--accent);
-    border-radius:12px;padding:18px 20px;margin-top:24px;font-size:14.5px;color:var(--ink)}
+    border-radius:12px;padding:20px 22px;margin-top:24px;font-size:16.5px;color:var(--ink);line-height:1.75}
   .note strong{color:var(--glow)}
 
   /* 차별화 강조 박스 */
   .hero-diff{background:linear-gradient(135deg,rgba(120,90,200,.22),rgba(200,120,180,.14));
     border:1px solid rgba(182,164,255,.3);border-radius:22px;padding:36px 30px;text-align:center}
   .hero-diff .big{font-family:"Gowun Batang",serif;font-size:clamp(22px,4vw,30px);color:#fff;margin-bottom:12px}
-  .hero-diff p{color:var(--lilac);font-size:15px}
+  .hero-diff p{color:var(--lilac);font-size:17px}
   .pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}
-  .pill{font-size:13px;color:#efe9ff;background:rgba(40,34,78,.5);border:1px solid var(--line);
-    border-radius:999px;padding:8px 16px}
+  .pill{font-size:15px;color:#efe9ff;background:rgba(40,34,78,.5);border:1px solid var(--line);
+    border-radius:999px;padding:9px 17px}
 
   ul.flow{list-style:none;counter-reset:s}
-  ul.flow li{counter-increment:s;position:relative;padding:14px 0 14px 48px;border-bottom:1px solid var(--line);color:var(--muted);font-size:15px}
+  ul.flow li{counter-increment:s;position:relative;padding:15px 0 15px 50px;border-bottom:1px solid var(--line);color:var(--muted);font-size:17px}
   ul.flow li::before{content:counter(s);position:absolute;left:0;top:12px;width:30px;height:30px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--night);font-weight:700;
     background:radial-gradient(circle,#fff,var(--lilac))}
   ul.flow li b{color:#efe9ff}
 
-  footer{text-align:center;padding:60px 24px 80px;color:var(--faint);font-size:13px}
+  footer{text-align:center;padding:60px 24px 80px;color:var(--faint);font-size:15px}
   footer .moon-sm{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 38% 35%,#fff8e6,#cdbf94);margin:0 auto 18px;opacity:.7}
   .back{display:inline-block;margin-top:18px;color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:.2s}
   .back:hover{border-color:var(--accent)}
@@ -276,7 +277,7 @@
         <tr class="ours"><td>우리</td><td class="chk">O</td><td class="chk">O</td><td>한국어 · 해몽 · 몽환 · 단건결제 (빈 자리 정조준)</td></tr>
       </tbody>
     </table>
-    <p class="body" style="margin-top:18px;font-size:14px;color:var(--faint)">공통 패턴: AI 해석·이미지 생성이 사실상 기본 사양, 가격 앵커 $4.99/월·$49.99/년, 모바일 iOS 편중. 진짜 웹앱은 드물다.</p>
+    <p class="body" style="margin-top:18px;font-size:15.5px;color:var(--faint)">공통 패턴: AI 해석·이미지 생성이 사실상 기본 사양, 가격 앵커 $4.99/월·$49.99/년, 모바일 iOS 편중. 진짜 웹앱은 드물다.</p>
   </div>
 </section>
 
