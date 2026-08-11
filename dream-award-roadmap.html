@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>그림드림 — 공모전 로드맵 2026</title>
+<meta name="description" content="꿈 기록 아카이브 '그림드림'의 공모전·어워드 출품 로드맵. 2026.08 조사 기준.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   VIEWPORT FITTING: MANDATORY BASE
+   =========================================== */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.slide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-height: 100%;
+  overflow: hidden;
+  padding: var(--slide-padding);
+}
+
+:root {
+  /* 그림드림 페이퍼 라이트 — 파란 잉크 단색 절제 */
+  --paper: #f9f6f0;
+  --paper-deep: #f1ecE2;
+  --ink: #33302a;
+  --ink-soft: #6b6459;
+  --blue: #23509e;
+  --blue-soft: #23509e22;
+  --blue-faint: #23509e10;
+  --line: #d9d2c4;
+
+  --serif: 'Gowun Batang', serif;
+  --sans: 'IBM Plex Sans KR', sans-serif;
+
+  --title-size: clamp(1.7rem, 5vw, 3.6rem);
+  --h2-size: clamp(1.25rem, 3.2vw, 2.2rem);
+  --h3-size: clamp(1rem, 2.2vw, 1.35rem);
+  --body-size: clamp(0.8rem, 1.5vw, 1.05rem);
+  --small-size: clamp(0.68rem, 1vw, 0.85rem);
+
+  --slide-padding: clamp(1rem, 4vw, 3.5rem);
+  --content-gap: clamp(0.5rem, 2vw, 1.6rem);
+  --element-gap: clamp(0.25rem, 1vw, 0.9rem);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--body-size);
+  line-height: 1.6;
+}
+
+/* 종이 결 — 아주 옅은 가로줄 (인쇄물 느낌, 텍스처 최소) */
+.slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 47px,
+    #33302a06 47px,
+    #33302a06 48px
+  );
+  pointer-events: none;
+}
+
+h1, h2 { font-family: var(--serif); font-weight: 700; color: var(--ink); }
+h1 { font-size: var(--title-size); line-height: 1.25; }
+h2 { font-size: var(--h2-size); line-height: 1.3; }
+h3 { font-size: var(--h3-size); font-weight: 700; }
+
+.inner {
+  width: 100%;
+  max-width: min(92vw, 980px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-gap);
+}
+
+/* 슬라이드 번호 도장 — 카드 고유번호 오마주 */
+.stamp {
+  position: absolute;
+  top: clamp(0.8rem, 2.5vw, 1.6rem);
+  right: clamp(1rem, 3vw, 2rem);
+  font-family: var(--serif);
+  font-size: var(--small-size);
+  color: var(--blue);
+  border: 1.5px solid var(--blue);
+  border-radius: 50%;
+  width: clamp(2rem, 4vw, 2.6rem);
+  height: clamp(2rem, 4vw, 2.6rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(6deg);
+  opacity: 0.75;
+  z-index: 2;
+}
+
+.kicker {
+  font-family: var(--sans);
+  font-size: var(--small-size);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--blue);
+  text-transform: uppercase;
+}
+
+.lead { font-size: clamp(0.9rem, 1.8vw, 1.2rem); color: var(--ink-soft); }
+.lead strong, p strong, li strong { color: var(--ink); }
+.blue { color: var(--blue); }
+.muted { color: var(--ink-soft); }
+.small { font-size: var(--small-size); }
+
+/* 잉크 밑줄 — 손으로 그은 느낌의 곡선 */
+.underline-ink {
+  background: linear-gradient(transparent 68%, var(--blue-soft) 68%, var(--blue-soft) 92%, transparent 92%);
+}
+
+/* 카드 (종이 카드 오마주) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+.card {
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: clamp(0.7rem, 1.8vw, 1.2rem);
+  box-shadow: 2px 3px 0 #33302a0d;
+  position: relative;
+}
+.card .no {
+  font-family: var(--serif);
+  font-size: var(--small-size);
+  color: var(--blue);
+  position: absolute;
+  top: 0.55rem;
+  right: 0.75rem;
+  opacity: 0.8;
+}
+.card h3 { margin-bottom: 0.25em; }
+.card .meta { font-size: var(--small-size); color: var(--ink-soft); line-height: 1.55; }
+.card .tag {
+  display: inline-block;
+  font-size: var(--small-size);
+  font-weight: 700;
+  color: var(--blue);
+  background: var(--blue-faint);
+  border: 1px solid var(--blue-soft);
+  border-radius: 3px;
+  padding: 0.05em 0.5em;
+  margin-bottom: 0.4em;
+}
+.card.pick { border: 1.5px solid var(--blue); box-shadow: 3px 4px 0 var(--blue-soft); }
+
+/* 표 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--small-size);
+  background: #fffdf8;
+  border: 1px solid var(--line);
+}
+th, td { padding: clamp(0.3rem, 1vw, 0.55rem) clamp(0.4rem, 1.2vw, 0.8rem); text-align: left; border-bottom: 1px solid var(--line); }
+th { font-family: var(--serif); color: var(--blue); font-weight: 700; border-bottom: 1.5px solid var(--blue-soft); white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+td.num { font-family: var(--serif); white-space: nowrap; }
+tr.hl td { background: var(--blue-faint); }
+
+/* 타임라인 */
+.timeline { display: flex; flex-direction: column; gap: clamp(0.3rem, 1vh, 0.6rem); }
+.t-row { display: flex; gap: clamp(0.6rem, 2vw, 1.2rem); align-items: baseline; }
+.t-month {
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--blue);
+  min-width: clamp(4.2rem, 9vw, 5.5rem);
+  font-size: var(--body-size);
+  text-align: right;
+}
+.t-body { flex: 1; border-left: 1.5px solid var(--blue-soft); padding-left: clamp(0.6rem, 2vw, 1.2rem); padding-bottom: 0.15rem; font-size: var(--small-size); color: var(--ink-soft); }
+.t-body strong { color: var(--ink); }
+.t-body .due { color: var(--blue); font-weight: 700; }
+
+/* 리스트 */
+.bullet-list { list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1vh, 0.8rem); }
+.bullet-list li { padding-left: 1.5em; position: relative; font-size: var(--body-size); line-height: 1.5; }
+.bullet-list li::before { content: "✎"; position: absolute; left: 0; color: var(--blue); }
+
+.check-list { list-style: none; display: flex; flex-direction: column; gap: clamp(0.4rem, 1vh, 0.7rem); }
+.check-list li { padding-left: 1.8em; position: relative; font-size: var(--body-size); }
+.check-list li::before {
+  content: "";
+  position: absolute; left: 0; top: 0.28em;
+  width: 0.85em; height: 0.85em;
+  border: 1.5px solid var(--blue);
+  border-radius: 2px;
+}
+
+/* 인용 */
+blockquote {
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 2.6vw, 1.8rem);
+  line-height: 1.6;
+  color: var(--ink);
+  border: none;
+  max-width: 22em;
+}
+blockquote .attr { display: block; margin-top: 1em; font-size: var(--small-size); font-family: var(--sans); color: var(--ink-soft); }
+
+/* 손그림 SVG 장식 */
+.doodle { color: var(--blue); opacity: 0.9; }
+.doodle svg { display: block; }
+
+/* 내비게이션 */
+.nav-dots {
+  position: fixed;
+  right: clamp(0.5rem, 1.5vw, 1.2rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  z-index: 10;
+}
+.nav-dots button {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--blue);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+.nav-dots button.active { background: var(--blue); transform: scale(1.25); }
+.nav-dots button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+.page-indicator {
+  position: fixed;
+  bottom: clamp(0.6rem, 2vw, 1.2rem);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--serif);
+  font-size: var(--small-size);
+  color: var(--ink-soft);
+  z-index: 10;
+}
+.keyboard-hint {
+  position: fixed;
+  bottom: clamp(0.6rem, 2vw, 1.2rem);
+  right: clamp(1rem, 3vw, 2rem);
+  font-size: var(--small-size);
+  color: var(--ink-soft);
+  opacity: 0.7;
+  z-index: 10;
+}
+
+/* 등장 애니메이션 */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.slide.visible .reveal { opacity: 1; transform: none; }
+.slide.visible .reveal:nth-child(2) { transition-delay: 0.08s; }
+.slide.visible .reveal:nth-child(3) { transition-delay: 0.16s; }
+.slide.visible .reveal:nth-child(4) { transition-delay: 0.24s; }
+.slide.visible .reveal:nth-child(5) { transition-delay: 0.32s; }
+
+/* 반응형 축소 */
+@media (max-height: 700px) {
+  :root {
+    --slide-padding: clamp(0.75rem, 3vw, 2rem);
+    --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+    --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+    --h2-size: clamp(1rem, 3vw, 1.75rem);
+  }
+}
+@media (max-height: 600px) {
+  :root {
+    --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+    --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+    --title-size: clamp(1.1rem, 4vw, 2rem);
+    --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+  }
+  .nav-dots, .keyboard-hint, .stamp, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+  :root {
+    --slide-padding: clamp(0.4rem, 2vw, 1rem);
+    --title-size: clamp(1rem, 3.5vw, 1.5rem);
+    --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+    --body-size: clamp(0.65rem, 1vw, 0.85rem);
+  }
+}
+@media (max-width: 600px) {
+  :root { --title-size: clamp(1.4rem, 7vw, 2.5rem); }
+  .grid { grid-template-columns: 1fr; }
+  .t-month { min-width: 3.6rem; font-size: var(--small-size); }
+  .keyboard-hint { display: none; }
+  table { font-size: 0.68rem; }
+  th, td { padding: 0.3rem 0.4rem; }
+  .hide-mobile { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<main id="deck">
+
+<!-- 1. 표지 -->
+<section class="slide" aria-label="표지">
+  <div class="slide-content">
+    <div class="inner" style="align-items:center; text-align:center;">
+      <div class="doodle reveal decorative" aria-hidden="true">
+        <!-- 손그림 서랍 -->
+        <svg width="120" height="90" viewBox="0 0 120 90" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 30 Q13 26 17 25 L102 24 Q107 24 106 29 L105 76 Q105 80 100 80 L19 81 Q14 81 14 76 Z"/>
+          <path d="M15 44 L105 43"/>
+          <path d="M15 62 L105 61"/>
+          <path d="M52 34 Q60 32 68 34"/>
+          <path d="M52 52 Q60 50 68 52"/>
+          <path d="M52 71 Q60 69 68 71"/>
+          <path d="M30 24 L32 12 Q32 9 36 9 L84 8 Q88 8 88 12 L89 24" opacity="0.55"/>
+        </svg>
+      </div>
+      <p class="kicker reveal">그림드림 × 공모전 로드맵 · 2026.08 조사</p>
+      <h1 class="reveal">꿈을 서랍에 넣듯,<br><span class="underline-ink">마감을 달력에 넣자</span></h1>
+      <p class="lead reveal">수익화는 목표는 되지만 <strong>마감</strong>은 못 된다.<br>공모전 마감일이 우리 사이드 프로젝트의 심장박동이 되어줄 것.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 왜 공모전인가 -->
+<section class="slide" aria-label="왜 공모전인가">
+  <span class="stamp" aria-hidden="true">02</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">왜 공모전인가</p>
+      <h2 class="reveal">하나를 만들어, 여러 곳에 낸다</h2>
+      <ul class="bullet-list reveal">
+        <li><strong>외부 마감:</strong> "언젠가 출시"가 아니라 날짜 박힌 데드라인. 미루기 불가.</li>
+        <li><strong>심사 피드백:</strong> 우리 둘만의 감상이 아닌, 심사위원의 눈으로 검증.</li>
+        <li><strong>포트폴리오 실적:</strong> 수상 로고·연감 게재·케이스 스터디. 디자이너 커리어에 직접 남는 자산.</li>
+        <li><strong>1작업 다출품:</strong> 같은 프로젝트를 국내 어워드 + 국제 어워드에 카테고리만 바꿔 재활용.</li>
+      </ul>
+      <p class="muted small reveal">이 문서는 GPT 조사를 팩트체크하고, 국내 후보를 새로 조사해 합친 결과물 (2026-08-11 기준).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 한눈에 결론 -->
+<section class="slide" aria-label="결론 요약">
+  <span class="stamp" aria-hidden="true">03</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">한눈에 보는 결론</p>
+      <h2 class="reveal">추천 조합: 국내 2 + 국제 2</h2>
+      <div class="grid reveal">
+        <div class="card pick">
+          <span class="no">№ 1</span>
+          <span class="tag">국제 · 최우선</span>
+          <h3>UX Design Awards</h3>
+          <p class="meta">접수 <strong>9/1 ~ 11/11</strong> · <strong>€70~320</strong><br>Concept 카테고리 = 미출시 앱 OK<br>독일 IDZ 주관, GPT가 놓친 보석</p>
+        </div>
+        <div class="card pick">
+          <span class="no">№ 2</span>
+          <span class="tag">국제 · 여유 마감</span>
+          <h3>Indigo Design Award</h3>
+          <p class="meta">Early Bird <strong>9/30</strong> → 최종 <strong>2027/1/31</strong><br>프리랜서 $150부터 · UX/UI/App 중심<br>GPT 추천 3개 중 가성비 1위</p>
+        </div>
+        <div class="card">
+          <span class="no">№ 3</span>
+          <span class="tag">국내 · 상금형</span>
+          <h3>새싹 해커톤 · 빅콘테스트</h3>
+          <p class="meta"><strong>9월 공고</strong> 주시 (접수 9~11월 예상)<br>새싹: 만 39세 이하, 총상금 1,500만원<br>빅콘: 2026년 9~12월 진행 공지됨</p>
+        </div>
+        <div class="card">
+          <span class="no">№ 4</span>
+          <span class="tag">국내 · 어워드형</span>
+          <h3>스마트앱·웹어워드 코리아</h3>
+          <p class="meta">앱: <strong>~10/31</strong> · 웹: <strong>~11/10</strong> · 각 20만원<br>단, 스마트앱어워드는 <strong>출시된 앱</strong>만<br>→ 10월 출시가 곧 국내 마감</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 국내 상금형 -->
+<section class="slide" aria-label="국내 상금형 공모전">
+  <span class="stamp" aria-hidden="true">04</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">국내 트랙 ① · 상금형</p>
+      <h2 class="reveal">9월 공고를 기다리는 두 개</h2>
+      <div class="grid reveal">
+        <div class="card">
+          <span class="no">추정</span>
+          <h3>새싹(SeSAC) 해커톤</h3>
+          <p class="meta">서울경제진흥원 · 만 15~39세 (직장인 가능)<br>2025년: 접수 9/30~11/7, 12월 초 본선<br>AI 활용 앱/웹 서비스. <strong>출품 형태가 정확히 일치</strong><br>총상금 1,500만원 · sesac.seoul.kr</p>
+        </div>
+        <div class="card">
+          <span class="no">반확정</span>
+          <h3>빅콘테스트</h3>
+          <p class="meta">과기정통부 주최 · 일반인 팀 가능<br>공식 사이트에 <strong>"2026년 9~12월 진행"</strong> 명시<br>AI데이터활용 리그가 서비스형 출품에 적합<br>bigcontest.or.kr</p>
+        </div>
+      </div>
+      <p class="muted small reveal">✎ 둘 다 8월 말~9월 공고. <strong>9월 첫 주에 두 사이트 확인</strong>이 첫 번째 할 일.<br>✎ 참고: 컨셉 적합도 최상인 <strong>서울디자인어워드</strong>(UX/UI 분야, 무료, 프로토타입 가능)는 매년 3~6월 접수라 2027년 봄 타깃으로 예약.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 국내 어워드형 -->
+<section class="slide" aria-label="국내 어워드형">
+  <span class="stamp" aria-hidden="true">05</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">국내 트랙 ② · 어워드형</p>
+      <h2 class="reveal">출시만 하면 낼 수 있는 것들</h2>
+      <div class="grid reveal">
+        <div class="card">
+          <span class="no">확정</span>
+          <h3>스마트앱어워드 코리아</h3>
+          <p class="meta">KIPFA · 사전등록 <strong>~10/19</strong>, 최종 <strong>~10/31</strong><br>등록비 20만원 · <strong>운영 중인 앱만</strong> 출품 가능<br>→ Flutter 앱 10월 출시가 전제조건</p>
+        </div>
+        <div class="card">
+          <span class="no">확정</span>
+          <h3>웹어워드 코리아</h3>
+          <p class="meta">KIPFA · 사전등록 <strong>~11/3</strong>, 최종 <strong>~11/10</strong><br>등록비 20만원 · 운영 중인 웹사이트 대상<br>→ 이미 있는 Next.js 웹으로 출품 가능</p>
+        </div>
+        <div class="card">
+          <span class="no">추정</span>
+          <h3>코리아디자인어워드</h3>
+          <p class="meta">월간 〈디자인〉 · 매년 가을 접수 (9~10월 예상)<br>수상 시 '한국 디자인 연감' 게재<br>→ <strong>디자이너 포트폴리오에 가장 값진 국내 실적</strong></p>
+        </div>
+      </div>
+      <p class="muted small reveal">상금은 없지만 어워드 마크와 연감 게재가 남는다. 디자이너에게는 이쪽이 본편.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 해외 3종 검증 -->
+<section class="slide" aria-label="해외 어워드 검증">
+  <span class="stamp" aria-hidden="true">06</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">국제 트랙 · GPT 답변 팩트체크</p>
+      <h2 class="reveal">마감일은 전부 정확, <span class="blue">비용이 빠져 있었다</span></h2>
+      <div class="reveal" style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr><th>어워드</th><th>마감 (검증됨)</th><th>참가비</th><th>미출시 컨셉</th><th>비고</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Indigo</strong></td>
+              <td class="num">EB 9/30 · 11/30 · 최종 27/1/31</td>
+              <td class="num">$100~250 <span class="muted">(−15% EB)</span></td>
+              <td>명시 없음 <span class="muted">(문의 필요)</span></td>
+              <td>UX/UI/App 중심, 개인 가능</td>
+            </tr>
+            <tr>
+              <td><strong>IAUD</strong></td>
+              <td class="num">2차 10/1~10/31</td>
+              <td class="num">¥72,600 <span class="muted">(2차는 1차의 2.6배)</span></td>
+              <td class="blue"><strong>가능</strong></td>
+              <td>UD/접근성 특화, 수상마크 로열티 주의</td>
+            </tr>
+            <tr>
+              <td><strong>A' Design</strong></td>
+              <td class="num">Std 9/30 · Late 27/2/28</td>
+              <td class="num">€248~2,915 <span class="muted">(변동제)</span></td>
+              <td class="blue"><strong>가능</strong></td>
+              <td>예비점수까지 무료, 노미네이션 시 과금</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted small reveal">✎ IAUD는 접근성 서사가 강할 때만, A'는 예산 여유 있을 때만. 순수 가성비는 Indigo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 스포트라이트 UXDA -->
+<section class="slide" aria-label="UX Design Awards 스포트라이트">
+  <span class="stamp" aria-hidden="true">07</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">스포트라이트 · GPT가 놓친 카드</p>
+      <h2 class="reveal">UX Design Awards <span class="muted" style="font-size:0.6em;">(독일 IDZ 주관)</span></h2>
+      <div class="grid reveal">
+        <div class="card pick">
+          <span class="no">기간</span>
+          <h3>2026.9.1 → 11.11</h3>
+          <p class="meta">Spring 2027 사이클 접수.<br>우리 6개월 플랜과 정확히 겹침.</p>
+        </div>
+        <div class="card pick">
+          <span class="no">비용</span>
+          <h3>€70 ~ €320</h3>
+          <p class="meta">New Talent €70 · Product/Concept €320.<br>국제 어워드 중 최저가 수준.</p>
+        </div>
+        <div class="card pick">
+          <span class="no">형식</span>
+          <h3>Concept 카테고리</h3>
+          <p class="meta">프로토타입·리서치 프로젝트를 <strong>명시적으로</strong> 받는 카테고리. 미출시여도 당당하게.</p>
+        </div>
+      </div>
+      <blockquote class="reveal" style="font-size:clamp(0.95rem,2vw,1.3rem);">
+        "서랍을 뒤져 잊은 꿈을 발굴한다"는 안티-검색 UX는<br>심사장에서 흔치 않은 이야기다. <span class="blue">스토리로 이길 수 있는 판.</span>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 마감 달력 -->
+<section class="slide" aria-label="마감 달력">
+  <span class="stamp" aria-hidden="true">08</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">마감 달력 · 2026.09 → 2027.02</p>
+      <h2 class="reveal">날짜가 곧 로드맵이다</h2>
+      <div class="timeline reveal">
+        <div class="t-row"><div class="t-month">9월</div><div class="t-body"><span class="due">9/1</span> UX Design Awards 접수 시작 · <span class="due">9/30</span> Indigo Early Bird(−15%) & A' Standard 마감 · 새싹·빅콘 공고 확인</div></div>
+        <div class="t-row"><div class="t-month">10월</div><div class="t-body"><span class="due">10/19</span> 스마트앱어워드 사전등록 · <span class="due">10/31</span> 최종 마감 <strong>(출시 필요)</strong> · <span class="due">10/1~31</span> IAUD 2차 (선택)</div></div>
+        <div class="t-row"><div class="t-month">11월</div><div class="t-body"><span class="due">11/10</span> 웹어워드 코리아 · <span class="due">11/11</span> <strong>UX Design Awards 마감</strong> · <span class="due">11/30</span> Indigo Extended EB(−10%)</div></div>
+        <div class="t-row"><div class="t-month">12월</div><div class="t-body">새싹 본선(예상) · 케이스 스터디 집필 · 사용자 테스트</div></div>
+        <div class="t-row"><div class="t-month">1월</div><div class="t-body"><span class="due">1/31</span> Indigo 최종 마감, 완성본 제출</div></div>
+        <div class="t-row"><div class="t-month">2월</div><div class="t-body"><span class="due">2/28</span> A' Design Late 마감 (예산 되면) · 결과 기다리며 다음 시즌 준비</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. 6개월 플랜 -->
+<section class="slide" aria-label="6개월 플랜">
+  <span class="stamp" aria-hidden="true">09</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">6개월 플랜 · 만드는 쪽 일정</p>
+      <h2 class="reveal">8월의 우리 → 1월의 우리</h2>
+      <div class="timeline reveal">
+        <div class="t-row"><div class="t-month">8월</div><div class="t-body"><strong>디자인 시스템·핵심 화면 확정</strong> (Figma): 서랍·카드·발굴 인터랙션의 시각 언어 완성</div></div>
+        <div class="t-row"><div class="t-month">9월</div><div class="t-body">웹 MVP 폴리시 + <strong>UX Design Awards 제출물 준비</strong> (Concept로 선출품 가능) · 국내 공고 대응</div></div>
+        <div class="t-row"><div class="t-month">10월</div><div class="t-body"><strong>Flutter 앱 스토어 출시</strong> → 스마트앱어워드 출품 · 실사용 데이터 쌓기 시작</div></div>
+        <div class="t-row"><div class="t-month">11월</div><div class="t-body">UXDA·웹어워드 최종 제출 · 사용자 피드백 수집 → 개선</div></div>
+        <div class="t-row"><div class="t-month">12월</div><div class="t-body"><strong>케이스 스터디 집필</strong>: 리서치·결정·결과를 이야기로. 어워드 제출물의 반은 글이다</div></div>
+        <div class="t-row"><div class="t-month">1월</div><div class="t-body">Indigo 최종 제출: 출시 3개월 차의 실제 서비스 + 케이스 스터디로 완전체 출품</div></div>
+      </div>
+      <p class="muted small reveal">✎ 한 번의 제작으로 국내 2~3곳 + 국제 2곳 출품. 마감이 겹치지 않게 설계된 순서.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10. 디자이너에게 -->
+<section class="slide" aria-label="디자이너에게">
+  <span class="stamp" aria-hidden="true">10</span>
+  <div class="slide-content">
+    <div class="inner" style="align-items:center; text-align:center;">
+      <div class="doodle reveal decorative" aria-hidden="true">
+        <!-- 손그림 돋보기 -->
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <circle cx="34" cy="32" r="19" transform="rotate(-4 34 32)"/>
+          <path d="M48 47 Q58 57 65 66"/>
+          <path d="M25 26 Q29 21 36 22" opacity="0.5"/>
+        </svg>
+      </div>
+      <p class="kicker reveal">디자이너에게</p>
+      <blockquote class="reveal">
+        이 프로젝트는 예쁜 화면이 아니라<br>
+        <span class="underline-ink">'발굴'이라는 감정을 설계하는 일</span>이다.<br>
+        서랍의 깊이가 비밀의 깊이가 되는 앱은 아직 없다.
+        <span class="attr">— 심사위원이 기억하는 건 언제나 화면이 아니라 이야기</span>
+      </blockquote>
+      <p class="lead reveal small">안티-검색 철학 · 파란 잉크 한 색의 절제 · 손그림이 유일한 장식.<br>이미 어워드 케이스 스터디의 뼈대가 서 있다. 살을 붙이는 건 당신의 몫.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11. 다음 액션 -->
+<section class="slide" aria-label="다음 액션">
+  <span class="stamp" aria-hidden="true">11</span>
+  <div class="slide-content">
+    <div class="inner">
+      <p class="kicker reveal">다음 액션 · 이번 주</p>
+      <h2 class="reveal">오늘 서랍에 넣을 것들</h2>
+      <ul class="check-list reveal">
+        <li><strong>UX Design Awards 계정 만들기</strong>: ux-design-awards.com, 접수 시작(9/1) 전에 요강·제출물 형식 파악</li>
+        <li><strong>9월 첫 주 알림 등록</strong>: 새싹(sesac.seoul.kr)·빅콘테스트(bigcontest.or.kr) 공고 확인 일정 캘린더에</li>
+        <li><strong>디자인 킥오프 잡기</strong>: 8월 안에 화면 설계 확정해야 10월 출시가 산다</li>
+        <li><strong>Indigo 컨셉 출품 가능 여부 문의</strong>: 미출시 상태 출품 규정 이메일 확인</li>
+        <li><strong>위비티·씽굿 주간 모니터링</strong>: 국내 신규 공고 헐거운 그물 하나 쳐두기</li>
+      </ul>
+      <p class="muted small reveal">조사 기준일 2026-08-11 · [확정]/[추정] 구분은 본문 참조 · 지원 전 공식 사이트 재확인 필수.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav class="nav-dots" aria-label="슬라이드 이동"></nav>
+<div class="page-indicator" aria-live="polite">1 / 11</div>
+<div class="keyboard-hint" aria-hidden="true">↑↓ · 스페이스로 넘기기</div>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsNav = document.querySelector('.nav-dots');
+  const indicator = document.querySelector('.page-indicator');
+  let current = 0;
+
+  slides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', (i + 1) + '번 슬라이드로 이동');
+    b.addEventListener('click', () => goTo(i));
+    dotsNav.appendChild(b);
+  });
+  const dots = Array.from(dotsNav.children);
+
+  function setCurrent(i) {
+    current = i;
+    dots.forEach((d, j) => d.classList.toggle('active', j === i));
+    indicator.textContent = (i + 1) + ' / ' + slides.length;
+  }
+
+  function goTo(i) {
+    const idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides[idx].scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+
+  // 현재 슬라이드 추적 + 등장 애니메이션
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        setCurrent(slides.indexOf(e.target));
+      }
+    });
+  }, { threshold: 0.55 });
+  slides.forEach((s) => io.observe(s));
+
+  // 키보드
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    else if (e.key === 'End') { e.preventDefault(); goTo(slides.length - 1); }
+  });
+
+  setCurrent(0);
+})();
+</script>
+
+</body>
+</html>
