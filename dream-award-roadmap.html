@@ -232,6 +232,18 @@ blockquote {
 }
 blockquote .attr { display: block; margin-top: 1em; font-size: var(--small-size); font-family: var(--sans); color: var(--ink-soft); }
 
+/* 링크 — 파란 잉크 점선 밑줄 */
+.slide a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--blue-soft);
+  transition: border-color 0.15s, opacity 0.15s;
+}
+.slide a:hover { border-bottom-color: var(--blue); opacity: 0.8; }
+.slide a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.slide a[target="_blank"]::after { content: "\2197"; font-size: 0.68em; margin-left: 0.14em; vertical-align: super; opacity: 0.7; }
+h2 a, h3 a { color: inherit; }
+
 /* 손그림 SVG 장식 */
 .doodle { color: var(--blue); opacity: 0.9; }
 .doodle svg { display: block; }
@@ -385,25 +397,25 @@ blockquote .attr { display: block; margin-top: 1em; font-size: var(--small-size)
         <div class="card pick">
           <span class="no">№ 1</span>
           <span class="tag">국제 · 최우선</span>
-          <h3>UX Design Awards</h3>
+          <h3><a href="https://ux-design-awards.com" target="_blank" rel="noopener">UX Design Awards</a></h3>
           <p class="meta">접수 <strong>9/1 ~ 11/11</strong> · <strong>€70~320</strong><br>Concept 카테고리 = 미출시 앱 OK<br>독일 IDZ 주관, GPT가 놓친 보석</p>
         </div>
         <div class="card pick">
           <span class="no">№ 2</span>
           <span class="tag">국제 · 여유 마감</span>
-          <h3>Indigo Design Award</h3>
+          <h3><a href="https://www.indigoaward.com" target="_blank" rel="noopener">Indigo Design Award</a></h3>
           <p class="meta">Early Bird <strong>9/30</strong> → 최종 <strong>2027/1/31</strong><br>프리랜서 $150부터 · UX/UI/App 중심<br>GPT 추천 3개 중 가성비 1위</p>
         </div>
         <div class="card">
           <span class="no">№ 3</span>
           <span class="tag">국내 · 상금형</span>
-          <h3>새싹 해커톤 · 빅콘테스트</h3>
+          <h3><a href="https://sesac.seoul.kr" target="_blank" rel="noopener">새싹 해커톤</a> · <a href="https://www.bigcontest.or.kr" target="_blank" rel="noopener">빅콘테스트</a></h3>
           <p class="meta"><strong>9월 공고</strong> 주시 (접수 9~11월 예상)<br>새싹: 만 39세 이하, 총상금 1,500만원<br>빅콘: 2026년 9~12월 진행 공지됨</p>
         </div>
         <div class="card">
           <span class="no">№ 4</span>
           <span class="tag">국내 · 어워드형</span>
-          <h3>스마트앱·웹어워드 코리아</h3>
+          <h3><a href="https://www.i-award.or.kr/Smart/" target="_blank" rel="noopener">스마트앱</a>·<a href="https://www.i-award.or.kr/Web/" target="_blank" rel="noopener">웹어워드 코리아</a></h3>
           <p class="meta">앱: <strong>~10/31</strong> · 웹: <strong>~11/10</strong> · 각 20만원<br>단, 스마트앱어워드는 <strong>출시된 앱</strong>만<br>→ 10월 출시가 곧 국내 마감</p>
         </div>
       </div>
@@ -421,13 +433,13 @@ blockquote .attr { display: block; margin-top: 1em; font-size: var(--small-size)
       <div class="grid reveal">
         <div class="card">
           <span class="no">추정</span>
-          <h3>새싹(SeSAC) 해커톤</h3>
-          <p class="meta">서울경제진흥원 · 만 15~39세 (직장인 가능)<br>2025년: 접수 9/30~11/7, 12월 초 본선<br>AI 활용 앱/웹 서비스. <strong>출품 형태가 정확히 일치</strong><br>총상금 1,500만원 · sesac.seoul.kr</p>
+          <h3><a href="https://sesac.seoul.kr" target="_blank" rel="noopener">새싹(SeSAC) 해커톤</a></h3>
+          <p class="meta">서울경제진흥원 · 만 15~39세 (직장인 가능)<br>2025년: 접수 9/30~11/7, 12월 초 본선<br>AI 활용 앱/웹 서비스. <strong>출품 형태가 정확히 일치</strong><br>총상금 1,500만원 · <a href="https://sesac.seoul.kr" target="_blank" rel="noopener">sesac.seoul.kr</a></p>
         </div>
         <div class="card">
           <span class="no">반확정</span>
-          <h3>빅콘테스트</h3>
-          <p class="meta">과기정통부 주최 · 일반인 팀 가능<br>공식 사이트에 <strong>"2026년 9~12월 진행"</strong> 명시<br>AI데이터활용 리그가 서비스형 출품에 적합<br>bigcontest.or.kr</p>
+          <h3><a href="https://www.bigcontest.or.kr" target="_blank" rel="noopener">빅콘테스트</a></h3>
+          <p class="meta">과기정통부 주최 · 일반인 팀 가능<br>공식 사이트에 <strong>"2026년 9~12월 진행"</strong> 명시<br>AI데이터활용 리그가 서비스형 출품에 적합<br><a href="https://www.bigcontest.or.kr" target="_blank" rel="noopener">bigcontest.or.kr</a></p>
         </div>
       </div>
       <p class="muted small reveal">✎ 둘 다 8월 말~9월 공고. <strong>9월 첫 주에 두 사이트 확인</strong>이 첫 번째 할 일.<br>✎ 참고: 컨셉 적합도 최상인 <strong>서울디자인어워드</strong>(UX/UI 분야, 무료, 프로토타입 가능)는 매년 3~6월 접수라 2027년 봄 타깃으로 예약.</p>
@@ -445,17 +457,17 @@ blockquote .attr { display: block; margin-top: 1em; font-size: var(--small-size)
       <div class="grid reveal">
         <div class="card">
           <span class="no">확정</span>
-          <h3>스마트앱어워드 코리아</h3>
+          <h3><a href="https://www.i-award.or.kr/Smart/" target="_blank" rel="noopener">스마트앱어워드 코리아</a></h3>
           <p class="meta">KIPFA · 사전등록 <strong>~10/19</strong>, 최종 <strong>~10/31</strong><br>등록비 20만원 · <strong>운영 중인 앱만</strong> 출품 가능<br>→ Flutter 앱 10월 출시가 전제조건</p>
         </div>
         <div class="card">
           <span class="no">확정</span>
-          <h3>웹어워드 코리아</h3>
+          <h3><a href="https://www.i-award.or.kr/Web/" target="_blank" rel="noopener">웹어워드 코리아</a></h3>
           <p class="meta">KIPFA · 사전등록 <strong>~11/3</strong>, 최종 <strong>~11/10</strong><br>등록비 20만원 · 운영 중인 웹사이트 대상<br>→ 이미 있는 Next.js 웹으로 출품 가능</p>
         </div>
         <div class="card">
           <span class="no">추정</span>
-          <h3>코리아디자인어워드</h3>
+          <h3><a href="https://design.co.kr" target="_blank" rel="noopener">코리아디자인어워드</a></h3>
           <p class="meta">월간 〈디자인〉 · 매년 가을 접수 (9~10월 예상)<br>수상 시 '한국 디자인 연감' 게재<br>→ <strong>디자이너 포트폴리오에 가장 값진 국내 실적</strong></p>
         </div>
       </div>
@@ -478,21 +490,21 @@ blockquote .attr { display: block; margin-top: 1em; font-size: var(--small-size)
           </thead>
           <tbody>
             <tr>
-              <td><strong>Indigo</strong></td>
+              <td><strong><a href="https://www.indigoaward.com" target="_blank" rel="noopener">Indigo</a></strong></td>
               <td class="num">EB 9/30 · 11/30 · 최종 27/1/31</td>
               <td class="num">$100~250 <span class="muted">(−15% EB)</span></td>
               <td>명시 없음 <span class="muted">(문의 필요)</span></td>
               <td>UX/UI/App 중심, 개인 가능</td>
             </tr>
             <tr>
-              <td><strong>IAUD</strong></td>
+              <td><strong><a href="https://www.iaud.net/global/award/11261/" target="_blank" rel="noopener">IAUD</a></strong></td>
               <td class="num">2차 10/1~10/31</td>
               <td class="num">¥72,600 <span class="muted">(2차는 1차의 2.6배)</span></td>
               <td class="blue"><strong>가능</strong></td>
               <td>UD/접근성 특화, 수상마크 로열티 주의</td>
             </tr>
             <tr>
-              <td><strong>A' Design</strong></td>
+              <td><strong><a href="https://competition.adesignaward.com/design-award-dates.html" target="_blank" rel="noopener">A' Design</a></strong></td>
               <td class="num">Std 9/30 · Late 27/2/28</td>
               <td class="num">€248~2,915 <span class="muted">(변동제)</span></td>
               <td class="blue"><strong>가능</strong></td>
@@ -512,7 +524,7 @@ blockquote .attr { display: block; margin-top: 1em; font-size: var(--small-size)
   <div class="slide-content">
     <div class="inner">
       <p class="kicker reveal">스포트라이트 · GPT가 놓친 카드</p>
-      <h2 class="reveal">UX Design Awards <span class="muted" style="font-size:0.6em;">(독일 IDZ 주관)</span></h2>
+      <h2 class="reveal"><a href="https://ux-design-awards.com" target="_blank" rel="noopener">UX Design Awards</a> <span class="muted" style="font-size:0.6em;">(독일 IDZ 주관)</span></h2>
       <div class="grid reveal">
         <div class="card pick">
           <span class="no">기간</span>
@@ -609,11 +621,11 @@ blockquote .attr { display: block; margin-top: 1em; font-size: var(--small-size)
       <p class="kicker reveal">다음 액션 · 이번 주</p>
       <h2 class="reveal">오늘 서랍에 넣을 것들</h2>
       <ul class="check-list reveal">
-        <li><strong>UX Design Awards 계정 만들기</strong>: ux-design-awards.com, 접수 시작(9/1) 전에 요강·제출물 형식 파악</li>
-        <li><strong>9월 첫 주 알림 등록</strong>: 새싹(sesac.seoul.kr)·빅콘테스트(bigcontest.or.kr) 공고 확인 일정 캘린더에</li>
+        <li><strong>UX Design Awards 계정 만들기</strong>: <a href="https://ux-design-awards.com" target="_blank" rel="noopener">ux-design-awards.com</a>, 접수 시작(9/1) 전에 요강·제출물 형식 파악</li>
+        <li><strong>9월 첫 주 알림 등록</strong>: 새싹(<a href="https://sesac.seoul.kr" target="_blank" rel="noopener">sesac.seoul.kr</a>)·빅콘테스트(<a href="https://www.bigcontest.or.kr" target="_blank" rel="noopener">bigcontest.or.kr</a>) 공고 확인 일정 캘린더에</li>
         <li><strong>디자인 킥오프 잡기</strong>: 8월 안에 화면 설계 확정해야 10월 출시가 산다</li>
         <li><strong>Indigo 컨셉 출품 가능 여부 문의</strong>: 미출시 상태 출품 규정 이메일 확인</li>
-        <li><strong>위비티·씽굿 주간 모니터링</strong>: 국내 신규 공고 헐거운 그물 하나 쳐두기</li>
+        <li><strong><a href="https://www.wevity.com" target="_blank" rel="noopener">위비티</a>·<a href="https://thinkyou.co.kr" target="_blank" rel="noopener">씽굿</a> 주간 모니터링</strong>: 국내 신규 공고 헐거운 그물 하나 쳐두기</li>
       </ul>
       <p class="muted small reveal">조사 기준일 2026-08-11 · [확정]/[추정] 구분은 본문 참조 · 지원 전 공식 사이트 재확인 필수.</p>
     </div>
